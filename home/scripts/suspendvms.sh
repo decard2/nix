@@ -2,4 +2,4 @@
 #
 # 90virtualbox: scan for active virtual machines and pause them on host suspend
 
-VBoxManage list runningvms | while read line; do VBoxManage controlvm "$(expr match "$line" '"\(.*\)"')" pause; done
+VBoxManage list runningvms | while read line; do VBoxManage controlvm "$(expr match "$line" '"\(.*\)"')" savestate; done
