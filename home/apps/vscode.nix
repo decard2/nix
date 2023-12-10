@@ -17,6 +17,7 @@
       "git.autofetch" = true;
       "git.enableSmartCommit" = true;
       "update.mode" = "manual";
+      "workbench.startupEditor" = "none";
     };
   };
 }
