@@ -11,14 +11,14 @@
       lemerald = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
-          ./nixos/configuration.nix
+          ./system
           hyprland.nixosModules.default
           { programs.hyprland.enable = true; }
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.decard = import ./home.nix;
+            home-manager.users.decard = import ./home;
             home-manager.extraSpecialArgs = { inherit inputs; };
           }
         ];
