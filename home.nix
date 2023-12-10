@@ -8,8 +8,7 @@
   home.packages = with pkgs; [
     #cli    
     zsh
-    oh-my-zsh
-    git
+    oh-my-zsh    
     kitty
     btop
     shadowsocks-rust
@@ -34,6 +33,12 @@
   home.stateVersion = "23.11";
   programs.home-manager.enable = true;
 
+  programs.git = {
+    enable = true;
+    userName  = "Decard";
+    userEmail = "mail@dayreon.ru";
+  };
+  
   gtk = {
     enable = true;
     theme = {
