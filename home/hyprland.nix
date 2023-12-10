@@ -17,6 +17,8 @@
             bind = $mod, Q, killactive,
             bind=,XF86MonBrightnessDown, exec, brightnessctl -q s 2%-
             bind=,XF86MonBrightnessUp, exec, brightnessctl -q s +2%
+            bind = $mod, W, exec, VirtualBoxVM --startvm win10 --separate
+            bind = $mod SHIFT, W, exec, ./scripts/suspendvms.sh
 
             # Apps to start on login
             exec-once = ${pkgs.xdg-desktop-portal-hyprland}/libexec/xdg-desktop-portal-hyprland      
@@ -92,10 +94,16 @@
             10)}
             # Fixes
             # blurry X11 apps, hidpi
-            exec-once = xprop -root -f _XWAYLAND_GLOBAL_OUTPUT_SCALE 24c -set _XWAYLAND_GLOBAL_OUTPUT_SCALE 2
+            exec-once = xprop -root -f _XWAYLAND_GLOBAL_OUTPUT_SCALE 48c -set _XWAYLAND_GLOBAL_OUTPUT_SCALE 2
+            xwayland {
+              force_zero_scaling = true
+            };
             # ENV
-            env = NIXOS_OZONE_WL, 1      
-            env=XCURSOR_SIZE,24      
+            env=NIXOS_OZONE_WL, 1      
+            env=XCURSOR_SIZE,48
+            env=GDK_SCALE,2    
+            env=QT_AUTO_SCREEN_SCALE_FACTOR,0
+            env=QT_SCALE_FACTOR,2 
             env=XDG_SESSION_TYPE,wayland      
             #env=WLR_NO_HARDWARE_CURSORS,1      
             env=GDK_BACKEND,wayland,x11

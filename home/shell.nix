@@ -1,5 +1,8 @@
 { config, pkgs, ... }:
 {
+  home.packages = with pkgs; [
+    btop
+  ];
   programs.git = {
     enable = true;
     userName  = "Decard";
