@@ -5,7 +5,8 @@
     ./shell.nix
     ./de.nix
     ./hyprland.nix
-    ./apps
+    ./dev.nix
+    ./apps    
   ];
 
   home.username = "decard";
