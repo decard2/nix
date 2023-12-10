@@ -38,7 +38,7 @@
     userName  = "Decard";
     userEmail = "mail@dayreon.ru";
   };
-  
+
   gtk = {
     enable = true;
     theme = {
@@ -91,6 +91,8 @@
       "editor.fontSize" = 16;
       "workbench.activityBar.location" = "top";
       "explorer.confirmDelete" = false;
+      "git.autofetch" = true;
+      "git.enableSmartCommit" = true;
     };
   };
 
