@@ -37,6 +37,8 @@
   security.sudo.extraConfig = ''
     Defaults timestamp_timeout=300
   '';
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;  
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
