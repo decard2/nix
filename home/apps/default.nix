@@ -1,12 +1,11 @@
 { inputs, config, pkgs, ... }:
 {
-  imports = [
+  imports = [    
     ./vscode.nix
     ./firefox.nix
   ];
   home.packages = with pkgs; [
     shadowsocks-rust
-    firefox
-    telegram-desktop
+    telegram-desktop    
   ];
 }
