@@ -6,9 +6,14 @@
     brightnessctl
     polkit-kde-agent
     xdg-desktop-portal-hyprland
-  ];  
+  ];
 
   gtk = {
+    enable = true;
+    theme = {
+      name = "Breeze-Dark";
+      package = pkgs.libsForQt5.breeze-gtk;
+    };
     gtk3.extraConfig = {
       Settings = ''
         gtk-application-prefer-dark-theme=1
@@ -20,12 +25,12 @@
       '';
     };
   };
-  
-/*   qt.enable = true;
+
+  qt.enable = true;
   qt.platformTheme = "gtk";
   qt.style.name = "Breeze-Dark";
-  qt.style.package = pkgs.libsForQt5.breeze-gtk; */
-  
+  qt.style.package = pkgs.libsForQt5.breeze-gtk;
+
   services.dunst = {
     enable = true;
     settings = {
@@ -51,7 +56,7 @@
     };
   };
 
-/*   home.pointerCursor = {
+  /*   home.pointerCursor = {
     size = 32;
     package = pkgs.capitaine-cursors;
     name = "capitaine-cursors";
