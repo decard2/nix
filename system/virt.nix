@@ -1,5 +1,6 @@
 { config, pkgs, ... }:
-{  
+{
   virtualisation.virtualbox.host.enable = true;
-  users.extraGroups.vboxusers.members = [ "decard" ];
+  virtualisation.virtualbox.guest.enable = true;
+  users.extraGroups.vboxusers.members = [ "decard" ];  
 }
