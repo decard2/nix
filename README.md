@@ -1,6 +1,12 @@
-# Удаление всех генераций кроме Х-последних
+# Update packages
 ```zsh
 cd nix
-./system/scripts/trimgens.sh 7 0 home-manager
+nix flake update
+sudo nixos-rebuild switch --flake .#lemerald
+```
+# Delete generations
+```zsh
+cd nix
+nix-collect-garbage -d
 sudo nixos-rebuild switch --flake .#lemerald
 ```
