@@ -2,7 +2,7 @@
 ```zsh
 cd nix
 nix flake update
-sudo nixos-rebuild switch --flake .#lemerald
+sudo nixos-rebuild boot --flake .#lemerald
 ```
 # Delete generations
 ```zsh
