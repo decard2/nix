@@ -17,15 +17,18 @@
             bind = $mod, Q, killactive,
             bind=,XF86MonBrightnessDown, exec, brightnessctl -q s 2%-
             bind=,XF86MonBrightnessUp, exec, brightnessctl -q s +2%
-            bind = $mod, W, exec, VirtualBoxVM --startvm win10 --separate
-            bind = SUPER_SHIFT, W, exec, /home/decard/nix/home/scripts/suspendvms.sh
+            bind = $mod, W, exec, /home/decard/nix/home/scripts/runvm.sh
+            bind = SUPER_SHIFT, W, exec, virsh --connect qemu:///system suspend win10
             bind = $mod, c, exec, chromium-browser
+            bind = SUPER, V, exec, cliphist list | tofi  | cliphist decode | wl-copy
 
             # Apps to start on login
             exec-once = ${pkgs.xdg-desktop-portal-hyprland}/libexec/xdg-desktop-portal-hyprland      
             exec-once = ${pkgs.polkit-kde-agent}/bin/polkit-kde-authentication-agent-1            
             exec-once = [workspace special:terminal silent] $term
             exec-once = [workspace special:tg silent] telegram-desktop
+            exec-once = wl-paste --type text --watch cliphist store #Stores only text data
+            exec-once = wl-paste --type image --watch cliphist store #Stores only image data
       
             general {
               cursor_inactive_timeout = 3

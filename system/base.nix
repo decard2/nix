@@ -1,5 +1,5 @@
 { config, pkgs, ... }:
-{  
+{
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   networking.hostName = "lemerald"; # Define your hostname.
@@ -19,12 +19,17 @@
   };
   security.sudo.extraConfig = ''
     Defaults timestamp_timeout=300
-  '';  
+  '';
   users.users.decard = {
     isNormalUser = true;
     description = "Decard";
     extraGroups = [ "networkmanager" "wheel" "libvirtd" ];
     shell = pkgs.zsh;
     packages = with pkgs; [ ];
-  };  
+  };
+  services.logind = {
+    lidSwitch = "suspend";
+    lidSwitchDocked = "suspend";
+    lidSwitchExternalPower = "suspend";
+  };
 }

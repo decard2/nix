@@ -2,6 +2,8 @@
 {
   home.packages = with pkgs; [
     btop
+    pciutils    
+    neofetch
   ];
   programs.git = {
     enable = true;

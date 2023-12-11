@@ -3,7 +3,7 @@
   imports = [
     ./hardware.nix
     ./base.nix
-    ./desktop.nix    
+    ./desktop.nix
     ./virt.nix
   ];
   programs.zsh.enable = true;
