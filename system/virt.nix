@@ -1,10 +1,10 @@
 { config, pkgs, ... }:
 {
-  virtualisation.virtualbox.host.enable = true;
+ /*  virtualisation.virtualbox.host.enable = true;
   virtualisation.virtualbox.guest.enable = true;
   users.extraGroups.vboxusers.members = [ "decard" ];
-
- /*  environment.systemPackages = with pkgs; [
+ */
+  environment.systemPackages = with pkgs; [
     virt-manager
     virt-viewer
     spice
@@ -20,5 +20,5 @@
     spiceUSBRedirection.enable = true;
   };
   services.spice-vdagentd.enable = true;
-  users.users.decard.extraGroups = [ "libvirtd" ]; */
+  users.users.decard.extraGroups = [ "libvirtd" ];
 }
