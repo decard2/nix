@@ -1,2 +1,6 @@
 # Удаление всех генераций кроме Х-последних
-./nix/system/scripts/trimgens.sh 7 0 home-manager
+```zsh
+cd nix
+./system/scripts/trimgens.sh 7 0 home-manager
+sudo nixos-rebuild switch --flake .#lemerald
+```
