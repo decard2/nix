@@ -11,7 +11,7 @@
       wl-clipboard
     ];
 
-  home.file.".config/tofi/config".text = ''    
+  home.file.".config/tofi/config".text = ''
     font-size = 32
     outline-width = 0
     border-width = 0
@@ -75,9 +75,36 @@
     };
   };
 
-  /*   home.pointerCursor = {
-      size = 32;
-      package = pkgs.capitaine-cursors;
-      name = "capitaine-cursors";
-    }; */
+  home.pointerCursor = {
+    size = 16;
+    package = pkgs.capitaine-cursors;
+    name = "capitaine-cursors";
+  };
+
+  services.kanshi = {
+    enable = true;
+    systemdTarget = "hyprland-session.target";
+
+    profiles = {
+      undocked = {
+        outputs = [
+          {
+            criteria = "eDP-1";            
+            status = "enable";
+          }
+        ];
+      };
+
+      docked = {
+        outputs = [
+          {
+            criteria = "eDP-1";            
+          }
+          {
+            criteria = "DP-1";            
+          }
+        ];
+      };
+    };
+  };
 }

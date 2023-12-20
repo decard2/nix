@@ -7,6 +7,6 @@
   home.packages = with pkgs; [
     shadowsocks-rust
     telegram-desktop
-    chromium
+    chromium    
   ];
 }

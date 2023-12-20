@@ -32,4 +32,7 @@
     lidSwitchDocked = "suspend";
     lidSwitchExternalPower = "suspend";
   };
+  environment.variables = {
+    KUBECONFIG = "/home/decard/kubeconfig";
+  };
 }
