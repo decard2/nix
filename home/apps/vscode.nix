@@ -5,10 +5,8 @@
   programs.vscode = {
     enable = true;
     extensions = with pkgs.vscode-extensions; [
-      dracula-theme.theme-dracula
       davidanson.vscode-markdownlint
-      jnoortheen.nix-ide
-      chenglou92.rescript-vscode
+      jnoortheen.nix-ide      
     ];
     userSettings = {
       "window.titleBarStyle" = "custom";
@@ -19,6 +17,15 @@
       "git.enableSmartCommit" = true;
       "update.mode" = "manual";
       "workbench.startupEditor" = "none";
+      "workbench.colorTheme" = "Default Dark Modern";
+      "files.exclude" = {
+        "**/archive" = true;
+      };
+      "markdownlint.config" = {
+        "MD024" = {
+          "siblings_only" = true;
+        };
+      };
     };
   };
 }
