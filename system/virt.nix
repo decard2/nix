@@ -1,9 +1,9 @@
 { config, pkgs, ... }:
 {
- /*  virtualisation.virtualbox.host.enable = true;
-  virtualisation.virtualbox.guest.enable = true;
-  users.extraGroups.vboxusers.members = [ "decard" ];
- */
+  /*  virtualisation.virtualbox.host.enable = true;
+    virtualisation.virtualbox.guest.enable = true;
+    users.extraGroups.vboxusers.members = [ "decard" ];
+   */
   environment.systemPackages = with pkgs; [
     virt-manager
     virt-viewer
@@ -20,5 +20,14 @@
     spiceUSBRedirection.enable = true;
   };
   services.spice-vdagentd.enable = true;
-  users.users.decard.extraGroups = [ "libvirtd" ];
+  users.users.decard.extraGroups = [ "libvirtd" "docker" ];
+
+  virtualisation.docker.enable = true;
+  virtualisation.docker.rootless = {
+    enable = true;
+    setSocketVariable = true;
+  };
+  virtualisation.oci-containers = {
+    backend = "docker";
+  };
 }

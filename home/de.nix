@@ -9,6 +9,8 @@
       xdg-desktop-portal-hyprland
       cliphist
       wl-clipboard
+      remmina
+      transmission-gtk
     ];
 
   home.file.".config/tofi/config".text = ''
@@ -75,7 +77,7 @@
     };
   };
 
-  home.pointerCursor = {    
+  home.pointerCursor = {
     package = pkgs.capitaine-cursors;
     name = "capitaine-cursors";
   };
@@ -88,7 +90,7 @@
       undocked = {
         outputs = [
           {
-            criteria = "eDP-1";            
+            criteria = "eDP-1";
             status = "enable";
           }
         ];
@@ -97,10 +99,10 @@
       docked = {
         outputs = [
           {
-            criteria = "eDP-1";            
+            criteria = "eDP-1";
           }
           {
-            criteria = "DP-1";            
+            criteria = "DP-1";
           }
         ];
       };

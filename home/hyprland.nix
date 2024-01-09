@@ -12,11 +12,13 @@
             bind = $mod, M, exit,
             bind = $mod, Return, exec, $term      
             bind = CTRL, grave, togglespecialworkspace, terminal
+            bind = $mod, grave, togglespecialworkspace, btop
             bind = $mod, T, togglespecialworkspace, tg
             bind = $mod, D, exec, tofi-drun --drun-launch=true | xargs hyprctl dispatch exec --
             bind = $mod, Q, killactive,
             bind=,XF86MonBrightnessDown, exec, brightnessctl -q s 2%-
             bind=,XF86MonBrightnessUp, exec, brightnessctl -q s +2%
+            #bind = $mod, W, exec, remmina -c .local/share/remmina/group_rdp_win10_win-decard-rolder-app.remmina --disable-toolbar
             bind = $mod, W, exec, /home/decard/nix/home/scripts/runvm.sh
             bind = SUPER_SHIFT, W, exec, virsh --connect qemu:///system suspend win11
             bind = $mod, c, exec, thorium
@@ -24,8 +26,9 @@
 
             # Apps to start on login
             exec-once = ${pkgs.xdg-desktop-portal-hyprland}/libexec/xdg-desktop-portal-hyprland      
-            exec-once = ${pkgs.polkit-kde-agent}/bin/polkit-kde-authentication-agent-1            
+            exec-once = ${pkgs.polkit-kde-agent}/bin/polkit-kde-authentication-agent-1            $mod
             exec-once = [workspace special:terminal silent] $term
+            exec-once = [workspace special:btop silent] $term btop
             exec-once = [workspace special:tg silent] telegram-desktop
             exec-once = wl-paste --type text --watch cliphist store #Stores only text data
             exec-once = wl-paste --type image --watch cliphist store #Stores only image data

@@ -2,10 +2,12 @@
   description = "Lemerald";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    #nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/*.tar.gz";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     hyprland.url = "github:hyprwm/Hyprland";    
   };
+
   outputs = inputs@{ self, nixpkgs, home-manager, hyprland, ... }: {
     nixosConfigurations = {
       lemerald = nixpkgs.lib.nixosSystem {

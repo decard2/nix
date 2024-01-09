@@ -2,6 +2,7 @@
 {
   home.packages = with pkgs; [
     bun
-    nodejs_18    
-  ];  
+    nodejs_18
+    nodePackages.pnpm    
+  ];
 }

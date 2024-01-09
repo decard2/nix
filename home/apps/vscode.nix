@@ -6,7 +6,7 @@
     enable = true;
     extensions = with pkgs.vscode-extensions; [
       davidanson.vscode-markdownlint
-      jnoortheen.nix-ide
+      jnoortheen.nix-ide      
     ];
     userSettings = {
       "window.titleBarStyle" = "custom";
@@ -26,6 +26,14 @@
           "siblings_only" = true;
         };
       };
+      "rescript.settings.allowBuiltInFormatter" = true;
+      "cssVariables.lookupFiles" = [
+        "**/*.css"
+        "**/*.scss"
+        "**/*.sass"
+        "**/*.less"
+        "node_modules/@mantine/core/styles.css"
+      ];
     };
   };
 }
