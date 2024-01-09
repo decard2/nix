@@ -6,7 +6,7 @@
     enable = true;
     extensions = with pkgs.vscode-extensions; [
       davidanson.vscode-markdownlint
-      jnoortheen.nix-ide      
+      jnoortheen.nix-ide
     ];
     userSettings = {
       "window.titleBarStyle" = "custom";

@@ -75,8 +75,7 @@
     };
   };
 
-  home.pointerCursor = {
-    size = 16;
+  home.pointerCursor = {    
     package = pkgs.capitaine-cursors;
     name = "capitaine-cursors";
   };

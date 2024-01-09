@@ -18,8 +18,8 @@
             bind=,XF86MonBrightnessDown, exec, brightnessctl -q s 2%-
             bind=,XF86MonBrightnessUp, exec, brightnessctl -q s +2%
             bind = $mod, W, exec, /home/decard/nix/home/scripts/runvm.sh
-            bind = SUPER_SHIFT, W, exec, virsh --connect qemu:///system suspend win10
-            bind = $mod, c, exec, chromium-browser
+            bind = SUPER_SHIFT, W, exec, virsh --connect qemu:///system suspend win11
+            bind = $mod, c, exec, thorium
             bind = SUPER, V, exec, cliphist list | tofi  | cliphist decode | wl-copy
 
             # Apps to start on login
@@ -30,6 +30,9 @@
             exec-once = wl-paste --type text --watch cliphist store #Stores only text data
             exec-once = wl-paste --type image --watch cliphist store #Stores only image data
       
+            # rules
+            windowrulev2 = noborder, title:(Noodl)
+
             general {
               cursor_inactive_timeout = 3
               gaps_in = 2
@@ -104,7 +107,7 @@
             };
             # ENV
             env=NIXOS_OZONE_WL, 1      
-            env=XCURSOR_SIZE,48
+            env=XCURSOR_SIZE,32
             env=GDK_SCALE,2    
             env=QT_AUTO_SCREEN_SCALE_FACTOR,0
             env=QT_SCALE_FACTOR,1.5
