@@ -1,15 +1,15 @@
 #!/bin/sh
 start()
 {
-    virsh --connect qemu:///system start win11
+    virsh --connect qemu:///system start win2k22
 }
 resume()
 {
-    virsh --connect qemu:///system resume win11
+    virsh --connect qemu:///system resume win2k22
 }
 connect()
 {
-    virt-viewer -r -f -d -a -c qemu:///system win11
+    virt-viewer -r -f -d -a -c qemu:///system win2k22
 }
 
 set -e
