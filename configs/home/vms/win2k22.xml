@@ -120,12 +120,7 @@
     <controller type="virtio-serial" index="0">
     </controller>
     <controller type="usb" index="0" model="piix3-uhci">
-    </controller>
-    <filesystem type="mount" accessmode="passthrough">
-      <driver type="virtiofs"/>
-      <source dir="/home/decard"/>
-      <target dir="home"/>
-    </filesystem>
+    </controller>    
     <interface type="network">
       <mac address="52:54:00:a1:bd:f8"/>
       <source network="default"/>
