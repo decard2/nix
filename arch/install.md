@@ -38,6 +38,8 @@ wget https://raw.github.com/nwg-piotr/nwg-shell/main/install/arch.sh && chmod u+
   * `cp nix/configs/home/.config/kitty/kitty.conf .config/kitty`
 * Browser: `yay -S firefox thorium`
 * Telegram: `yay -S telegram-desktop`
-* VSCode (MS): `ysy -S visual-studio-code-bin`
+* VSCode (MS):
+  * `ysy -S visual-studio-code-bin`
+  * `code --install-extension yzhang.markdown-all-in-one`
 
 ### KVM
