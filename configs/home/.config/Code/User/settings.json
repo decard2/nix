@@ -3,5 +3,5 @@
     "window.titleBarStyle": "custom",
     "workbench.activityBar.location": "top",
     "workbench.startupEditor": "none",
-    "editor.codeActionsOnSave": {}
+    "git.autofetch": true
 }
