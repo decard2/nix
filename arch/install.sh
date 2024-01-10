@@ -93,10 +93,10 @@ else
 fi
 
 echo "###################################"
-yes_or_no "Install apps? (thunar foot telegram-desktop firefox thorium file-roller)"
+yes_or_no "Install apps? (thunar foot telegram-desktop firefox thorium file-roller shadowsocks)"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
-    yay -S --noconfirm thunar foot telegram-desktop firefox thorium-browser-bin file-roller
+    yay -S --noconfirm thunar foot telegram-desktop firefox thorium-browser-bin file-roller shadowsocks-rust
 else
     echo "skip..."
 fi
