@@ -1,5 +1,4 @@
 # Install Arch
-## System
 
 * [Download](https://archlinux.org/download/)
 * Flash USB - `dd bs=4M if=path/to/archlinux-version-x86_64.iso of=/dev/sda conv=fsync oflag=direct status=progress`
