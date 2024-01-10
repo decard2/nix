@@ -6,7 +6,7 @@
       <libosinfo:os id="http://microsoft.com/win/2k22"/>
     </libosinfo:libosinfo>
   </metadata>
-  <memory unit="KiB">8388608</memory>
+  <memory unit="KiB">4194304</memory>
   <currentMemory unit="KiB">1048576</currentMemory>
   <memoryBacking>
     <hugepages/>
@@ -28,7 +28,7 @@
   </features>
   <cpu mode="host-passthrough" check="none" migratable="on">
     <numa>
-      <cell memory='1048576' unit='KiB' memAccess='shared'/>
+      <cell memory='4194304' unit='KiB' memAccess='shared'/>
     </numa>
   </cpu>
   <clock offset="localtime">
