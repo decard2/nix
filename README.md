@@ -5,15 +5,6 @@
 * WiFi - `iwctl`:
   * `station wlan0 scan`
   * `station wlan0 connect {wifi name}`
-* Install Arch:
-  * Start arch install script: `archinstall`
-    * btrfs - defaults.
-    * Minimal profile.
-    * Sound - pipewire.
-    * Kernel - zen.
-    * Packages: `wget git base-devel`
-    * Network: copy ISO
-    * Set timezone
-    * No chroot.
+* Install Arch: `archinstall --conf https://raw.githubusercontent.com/dayreon/nix/main/arch/conf.json --creds https://raw.githubusercontent.com/dayreon/nix/main/arch/creds.json`  
 * Git repo: `git clone https://github.com/dayreon/nix.git`
 * Start script: `./nix/arch/scripts/install.sh`
