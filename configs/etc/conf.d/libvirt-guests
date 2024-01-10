@@ -1,0 +1,3 @@
+URIS=qemu:///system
+ON_BOOT=ignore
+ON_SHUTDOWN=suspend

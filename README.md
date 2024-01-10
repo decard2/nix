@@ -6,13 +6,14 @@
   * `station wlan0 scan`
   * `station wlan0 connect {wifi name}`
 * Install Arch:
-  * `archinstall`
-  * btrfs
-  * minimal profile
-  * pipewire
-  * zen kernel
-  * Packages: `wget git`
-  * Network: copy ISO
-  * Timezone
+  * Start arch install script: `archinstall`
+    * btrfs - defaults.
+    * Minimal profile.
+    * Sound - pipewire.
+    * Kernel - zen.
+    * Packages: `wget git base-devel`
+    * Network: copy ISO
+    * Set timezone
+    * No chroot.
 * Git repo: `git clone https://github.com/dayreon/nix.git`
-* Install script: `wget -qO- https://raw.githubusercontent.com/dayreon/nix/main/arch/scripts/install.sh | bash`
+* Start script: `./nix/arch/scripts/install.sh`
