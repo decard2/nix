@@ -112,7 +112,7 @@ fi
 
 # dev --------------------------------
 echo "###################################"
-yes_or_no "Install nvm and Node LTS?"
+yes_or_no "Install nvm, Node lts, pnpm?"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
     wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
@@ -120,6 +120,7 @@ if [ "$choice" == "Y" ]; then
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
     nvm install --lts
+    wget -qO- https://get.pnpm.io/install.sh | sh -
 else
     echo "skip..."
 fi
