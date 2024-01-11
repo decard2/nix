@@ -11,3 +11,15 @@ true
 0
 true
 #
+
+https://habr.com/
+https://habr.com/service-worker.js
+true
+{70cf39c9-8720-4d8c-ae31-eabf6ec28828}
+0
+1704930301483527
+1704930301484565
+1704930300436065
+0
+true
+#
