@@ -3,5 +3,6 @@
     "window.titleBarStyle": "custom",
     "workbench.activityBar.location": "top",
     "workbench.startupEditor": "none",
-    "git.autofetch": true
+    "git.autofetch": true,
+    "explorer.confirmDelete": false
 }

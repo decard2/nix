@@ -50,9 +50,13 @@ else
 fi
 
 # system packages ----------------------
-echo "###################################" "Install system packages"
+echo "Install system packages"
 echo "###################################"
-yay -S --noconfirm nano btop wget unzip zsh
+yay -S --noconfirm nano btop wget unzip zsh acpid
+sudo systemctl enable acpid
+sudo systemctl start acpid
+sudo chmod 666 /sys/power/state
+sudo cp ~/nix/configs/etc/sysctl.d/disable_watchdog.conf /etc/sysctl.d/
 
 echo "###################################"
 yes_or_no "Disable discrete GPU?"
@@ -112,7 +116,7 @@ fi
 
 # dev --------------------------------
 echo "###################################"
-yes_or_no "Install nvm, Node lts, pnpm?"
+yes_or_no "Install nvm, Node lts and pnpm?"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
     wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
@@ -126,9 +130,6 @@ else
 fi
 
 # VSCode
-
-# overload on first load
-
 echo "###################################"
 yes_or_no "Install VSCode?"
 echo "###################################"
@@ -136,6 +137,7 @@ if [ "$choice" == "Y" ]; then
     yay -S --noconfirm visual-studio-code-bin
     code --install-extension yzhang.markdown-all-in-one
     code --install-extension foxundermoon.shell-format
+    code --install-extension unifiedjs.vscode-mdx
     echo "Setup git"
     git config --global user.name "Decard"
     git config --global user.email "mail@dayreon.ru"
@@ -143,17 +145,28 @@ else
     echo "skip..."
 fi
 
-# Sucket supply
+# devops --------------------------------
+# kubernetes
 echo "###################################"
-yes_or_no "Install devel packages for socket supply?"
+yes_or_no "Install kubectl and helm?"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
-    yay -S --noconfirm webkit2gtk-4.1 clang libc++abi libpthread-stubs at-spi2-core gcc
+    yay -S --noconfirm kubectl helm   
 else
     echo "skip..."
 fi
 
-# virt --------------------------------
+# s3cmd
+echo "###################################"
+yes_or_no "Install s3cmd?"
+echo "###################################"
+if [ "$choice" == "Y" ]; then
+    yay -S --noconfirm s3cmd    
+else
+    echo "skip..."
+fi
+
+# virt ----------------------------------
 echo "###################################"
 yes_or_no "Install QEMU/KVM virtualization?"
 echo "###################################"
@@ -197,6 +210,7 @@ yes_or_no "Copy defaults from repo?"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
     rsync -Ph --recursive nix/configs/home/ .
+    sudo rsync -Ph --recursive nix/configs/etc/ /etc/
 else
     echo "skip..."
 fi
