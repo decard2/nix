@@ -9,4 +9,4 @@ suspend() {
 set -e
 
 detach || true
-suspend
+suspend || true
