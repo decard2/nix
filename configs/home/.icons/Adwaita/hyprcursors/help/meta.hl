@@ -1,0 +1,11 @@
+resize_algorithm = none
+hotspot_x = 0.50
+hotspot_y = 0.88
+
+define_size = 24, help_000.png, 50
+define_size = 32, help_001.png, 50
+define_size = 48, help_002.png, 50
+define_size = 64, help_003.png, 50
+define_size = 96, help_004.png, 50
+
+define_override = question_arrow

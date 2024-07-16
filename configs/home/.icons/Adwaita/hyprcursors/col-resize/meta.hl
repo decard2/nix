@@ -1,0 +1,10 @@
+resize_algorithm = none
+hotspot_x = 0.50
+hotspot_y = 0.50
+
+define_size = 24, col-resize_000.png, 50
+define_size = 32, col-resize_001.png, 50
+define_size = 48, col-resize_002.png, 50
+define_size = 64, col-resize_003.png, 50
+define_size = 96, col-resize_004.png, 50
+
