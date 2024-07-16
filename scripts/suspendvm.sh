@@ -1,9 +1,9 @@
 #!/bin/sh
 detach() {
-    virsh --connect qemu:///system detach-device win2k22 --file ~/vms/share.xml
+    virsh --connect qemu:///system detach-device win10 --file ~/vms/share.xml
 }
 suspend() {
-    virsh --connect qemu:///system managedsave win2k22
+    virsh --connect qemu:///system managedsave win10
 }
 
 set -e

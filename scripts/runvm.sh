@@ -1,15 +1,15 @@
 #!/bin/sh
 start() {
-    virsh --connect qemu:///system start win2k22
+    virsh --connect qemu:///system start win10
 }
 resume() {
-    virsh --connect qemu:///system resume win2k22
+    virsh --connect qemu:///system resume win10
 }
 attach() {
-    virsh --connect qemu:///system attach-device win2k22 --file ~/vms/share.xml    
+    virsh --connect qemu:///system attach-device win10 --file ~/vms/share.xml    
 }
 connect() {    
-    virt-viewer -r -f -d -a -c qemu:///system win2k22
+    virt-viewer -r -f -d -a -c qemu:///system win10
 }
 
 set -e
