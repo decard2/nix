@@ -92,7 +92,7 @@ echo "###################################"
 yes_or_no "Install Hyprland?"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
-    yay -S --noconfirm hyprland xdg-desktop-portal-wlr hyprcursor-dracula-kde-git dracula-icons-theme swaync wl-clipboard cliphist tofi brightnessctl polkit-gnome qt5-wayland qt6-wayland gnome-themes-extra gtk3 ttf-dejavu wlsunset
+    yay -S --noconfirm hyprland xdg-desktop-portal-gtk hyprcursor-dracula-kde-git dracula-icons-theme swaync wl-clipboard cliphist tofi brightnessctl polkit-gnome qt5-wayland qt6-wayland gnome-themes-extra gtk3 ttf-dejavu wlsunset
 else
     echo "skip..."
 fi
