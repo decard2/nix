@@ -52,7 +52,7 @@ fi
 # system packages ----------------------
 echo "Install system packages"
 echo "###################################"
-yay -S --noconfirm nano btop wget unzip zsh acpid
+yay -S --noconfirm nano btop wget unzip zsh acpid snapper btrfs-assistant
 sudo systemctl enable acpid
 sudo systemctl start acpid
 sudo chmod 666 /sys/power/state
@@ -73,6 +73,7 @@ yes_or_no "Install Oh my zsh?"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
     RUNZSH=no sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+    git clone --depth=1 https://github.com/ntnyq/omz-plugin-pnpm.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/pnpm
 else
     echo "skip..."
 fi
@@ -91,16 +92,16 @@ echo "###################################"
 yes_or_no "Install Hyprland?"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
-    yay -S --noconfirm hyprland swaync wl-clipboard cliphist tofi brightnessctl polkit-gnome qt5-wayland qt6-wayland gnome-themes-extra gtk3 ttf-dejavu wlsunset
+    yay -S --noconfirm hyprland xdg-desktop-portal-wlr hyprcursor-dracula-kde-git dracula-icons-theme swaync wl-clipboard cliphist tofi brightnessctl polkit-gnome qt5-wayland qt6-wayland gnome-themes-extra gtk3 ttf-dejavu wlsunset
 else
     echo "skip..."
 fi
 
 echo "###################################"
-yes_or_no "Install apps? (thunar kitty telegram-desktop firefox thorium file-roller)"
+yes_or_no "Install apps? (thunar foot telegram-desktop firefox thorium file-roller)"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
-    yay -S --noconfirm thunar kitty telegram-desktop firefox thorium-browser-bin file-roller
+    yay -S --noconfirm thunar foot telegram-desktop firefox thorium-browser-bin file-roller
 else
     echo "skip..."
 fi
@@ -109,7 +110,7 @@ echo "###################################"
 yes_or_no "Install shadowsocks?"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
-    yay -S --noconfirm shadowsocks-rust    
+    yay -S --noconfirm shadowsocks-rust
 else
     echo "skip..."
 fi
@@ -135,9 +136,8 @@ yes_or_no "Install VSCode?"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
     yay -S --noconfirm visual-studio-code-bin
-    code --install-extension yzhang.markdown-all-in-one
     code --install-extension foxundermoon.shell-format
-    code --install-extension unifiedjs.vscode-mdx
+    code --install-extension esbenp.prettier-vscode
     echo "Setup git"
     git config --global user.name "Decard"
     git config --global user.email "mail@dayreon.ru"
@@ -151,7 +151,7 @@ echo "###################################"
 yes_or_no "Install kubectl and helm?"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
-    yay -S --noconfirm kubectl helm    
+    yay -S --noconfirm kubectl helm
 else
     echo "skip..."
 fi
@@ -161,7 +161,7 @@ echo "###################################"
 yes_or_no "Install s3cmd?"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
-    yay -S --noconfirm s3cmd    
+    yay -S --noconfirm s3cmd
 else
     echo "skip..."
 fi
@@ -193,7 +193,7 @@ if [ "$choice" == "Y" ]; then
     echo "###################################"
     sudo systemctl enable libvirtd.socket
     sudo systemctl start libvirtd.socket
-    
+
     echo "###################################"
     echo "Copy vm config and import it to libvirt"
     echo "###################################"
@@ -209,7 +209,7 @@ if [ "$choice" == "Y" ]; then
     echo "###################################"
     echo "Configuring Virtio-FS to share files"
     echo "###################################"
-    sudo rsync -Ph ~/nix/configs/etc/sysctl.d/40-hugepage.conf /etc/sysctl.d/40-hugepage.conf    
+    sudo rsync -Ph ~/nix/configs/etc/sysctl.d/40-hugepage.conf /etc/sysctl.d/40-hugepage.conf
 else
     echo "skip..."
 fi
