@@ -91,16 +91,16 @@ echo "###################################"
 yes_or_no "Install Hyprland?"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
-    yay -S --noconfirm hyprland swaync wl-clipboard cliphist tofi brightnessctl polkit-gnome qt5-wayland qt6-wayland gnome-themes-extra gtk3 ttf-dejavu #wlsunset
+    yay -S --noconfirm hyprland swaync wl-clipboard cliphist tofi brightnessctl polkit-gnome qt5-wayland qt6-wayland gnome-themes-extra gtk3 ttf-dejavu wlsunset
 else
     echo "skip..."
 fi
 
 echo "###################################"
-yes_or_no "Install apps? (thunar foot telegram-desktop firefox thorium file-roller)"
+yes_or_no "Install apps? (thunar kitty telegram-desktop firefox thorium file-roller)"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
-    yay -S --noconfirm thunar foot telegram-desktop firefox thorium-browser-bin file-roller
+    yay -S --noconfirm thunar kitty telegram-desktop firefox thorium-browser-bin file-roller
 else
     echo "skip..."
 fi
@@ -151,7 +151,7 @@ echo "###################################"
 yes_or_no "Install kubectl and helm?"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
-    yay -S --noconfirm kubectl helm   
+    yay -S --noconfirm kubectl helm    
 else
     echo "skip..."
 fi
@@ -162,6 +162,16 @@ yes_or_no "Install s3cmd?"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
     yay -S --noconfirm s3cmd    
+else
+    echo "skip..."
+fi
+
+# yandex cli
+echo "###################################"
+yes_or_no "Install Ynadex CLI?"
+echo "###################################"
+if [ "$choice" == "Y" ]; then
+    curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
 else
     echo "skip..."
 fi
@@ -188,7 +198,7 @@ if [ "$choice" == "Y" ]; then
     echo "Copy vm config and import it to libvirt"
     echo "###################################"
     rsync -Ph --recursive nix/configs/home/vms/ ./vms/
-    sudo virsh --connect qemu:///system define ./vms/win2k22.xml
+    sudo virsh --connect qemu:///system define ./vms/win10.xml
 
     echo "###################################"
     echo "Start default NAT"
