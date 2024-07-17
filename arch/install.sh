@@ -181,7 +181,7 @@ echo "###################################"
 yes_or_no "Install QEMU/KVM virtualization?"
 echo "###################################"
 if [ "$choice" == "Y" ]; then
-    yay -S --noconfirm libvirt dnsmasq qemu-desktop virt-manager virt-viewer
+    yay -S --noconfirm libvirt dnsmasq qemu-desktop virt-manager virt-viewer virtiofsd
     echo "###################################"
     echo "Adding $USER to libvirt group, setup permissions"
     echo "###################################"
