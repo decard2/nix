@@ -28,12 +28,10 @@
   </features>
   <cpu mode="host-passthrough" check="none" migratable="on">
     <topology sockets="1" dies="1" cores="4" threads="2"/>
-  </cpu>
-  <clock offset="localtime">
-    <timer name="rtc" tickpolicy="catchup"/>
-    <timer name="pit" tickpolicy="delay"/>
-    <timer name="hpet" present="no"/>
-    <timer name="hypervclock" present="yes"/>
+  </cpu>  
+  <clock offset='localtime'>
+    <timer name='hpet' present='yes'/>
+    <timer name='hypervclock' present='yes'/>
   </clock>
   <on_poweroff>destroy</on_poweroff>
   <on_reboot>restart</on_reboot>
@@ -42,8 +40,8 @@
     <suspend-to-mem enabled="no"/>
     <suspend-to-disk enabled="no"/>
   </pm>
-  <devices>
-    <emulator>/run/libvirt/nix-emulators/qemu-system-x86_64</emulator>
+  <devices>    
+    <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type="file" device="disk">
       <driver name="qemu" type="qcow2" discard="unmap"/>
       <source file="/home/decard/vms/win10.qcow2"/>
@@ -138,8 +136,7 @@
       <address type="pci" domain="0x0000" bus="0x03" slot="0x00" function="0x0"/>
     </controller>
     <filesystem type="mount" accessmode="passthrough">
-      <driver type="virtiofs"/>
-      <binary path="/run/current-system/sw/bin/virtiofsd"/>
+      <driver type="virtiofs"/>      
       <source dir="/home/decard"/>
       <target dir="home"/>
       <address type="pci" domain="0x0000" bus="0x06" slot="0x00" function="0x0"/>
