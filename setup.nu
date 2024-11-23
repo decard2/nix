@@ -8,9 +8,9 @@ def cleanup [] {
     do --ignore-errors { ^umount -Rl /mnt }
 
     # Очистим /mnt
-    #if (/mnt | path exists) {
-    #    rm -rf /mnt/*
-    #}
+    if ('/mnt' | path exists) {
+        rm -rf /mnt/*
+    }
 
     echo $"(ansi green)✅ Cleanup done!(ansi reset)"
 }
@@ -188,7 +188,7 @@ def partition_disk [disk: string] {
     echo "Mounting partitions..."
     ^mount -o subvol=@,compress=zstd,noatime $"($disk)3" /mnt
 
-    ^mkdir -p /mnt/{home,nix,boot/efi,var/cache,var/log}
+    mkdir -p /mnt/{home,nix,boot/efi,var/cache,var/log}
 
     ^mount -o subvol=@home,compress=zstd,noatime $"($disk)3" /mnt/home
     ^mount -o subvol=@nix,compress=zstd,noatime $"($disk)3" /mnt/nix
