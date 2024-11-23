@@ -24,7 +24,7 @@
       htop
       neofetch
       bat
-      exa
+      eza
       ripgrep
       fd
       snapper

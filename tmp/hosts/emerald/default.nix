@@ -86,20 +86,20 @@
     # offload.enable = true;  # Рекомендую этот режим для ноута
     sync.enable = true;   # Раскомментируй, если хочешь всегда использовать NVIDIA
     };
+  };
 
-    # Переменные окружения для лучшей поддержки
-    environment.sessionVariables = {
-        LIBVA_DRIVER_NAME = "nvidia";
-        XDG_SESSION_TYPE = "wayland";
-        GBM_BACKEND = "nvidia-drm";
-        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-        WLR_NO_HARDWARE_CURSORS = "1";
+  # Переменные окружения для лучшей поддержки
+  environment.sessionVariables = {
+      LIBVA_DRIVER_NAME = "nvidia";
+      XDG_SESSION_TYPE = "wayland";
+      GBM_BACKEND = "nvidia-drm";
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      WLR_NO_HARDWARE_CURSORS = "1";
 
-        # Для запуска приложений на NVIDIA в режиме offload
-        __NV_PRIME_RENDER_OFFLOAD = "1";
-        __VK_LAYER_NV_optimus = "NVIDIA_only";
-        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-      };
+      # Для запуска приложений на NVIDIA в режиме offload
+      __NV_PRIME_RENDER_OFFLOAD = "1";
+      __VK_LAYER_NV_optimus = "NVIDIA_only";
+    };
 
   networking.hostName = hostname;
 

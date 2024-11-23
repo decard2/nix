@@ -1,54 +1,39 @@
-{
-  description = "Конфиг для твоего корабля, братишка!";
 
-  nixConfig = {
-      trusted-users = [ "root" "decard" ];
-      max-jobs = "auto";
-      cores = 0;
-    };
+{
+  description = "Твоя офигенная система, братан!";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.05";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, hyprland, ... }@inputs:
-    let
-      system = "x86_64-linux";
-      hostname = "emerald";
-
-      pkgs = nixpkgs.legacyPackages.${system};
-      unstable = import nixpkgs-unstable {
+  outputs = { self, nixpkgs, home-manager, hyprland, ... }@inputs:
+  let
+    system = "x86_64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
+  in
+  {
+    nixosConfigurations = {
+      emerald = nixpkgs.lib.nixosSystem {
         inherit system;
-        config.allowUnfree = true;
-      };
-
-    in {
-      nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = { inherit inputs unstable hostname; };
+        specialArgs = { inherit inputs; };
         modules = [
-          ./hosts/emerald
+          ./nixos/configuration.nix
           hyprland.nixosModules.default
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-
-            # Добавляем Cachix
-            nix.settings = {
-              substituters = ["https://hyprland.cachix.org"];
-              trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
-            };
+            home-manager.users.decard = import ./home/home.nix;
           }
         ];
       };
     };
+  };
 }
