@@ -1,6 +1,21 @@
 #!/usr/bin/env nu
 
+def cleanup [] {
+    print $"(ansi yellow)🧹 Cleaning up previous installation...(ansi reset)"
+
+    # Unmount everything in reverse order
+    ^swapoff -a # отключаем swap если он был
+    umount -Rl /mnt || true # -R рекурсивно, -l lazy unmount если что-то залипло
+
+    # На всякий очистим /mnt
+    rm -rf /mnt/* || true
+
+    print $"(ansi green)✅ Cleanup done!(ansi reset)"
+}
+
 def main [] {
+    cleanup
+
     print $"(ansi green_bold)🚀 Welcome! Let's install NixOS!(ansi reset)"
 
     # Check EFI mode
