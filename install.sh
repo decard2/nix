@@ -72,6 +72,7 @@ nix-shell -p git nushell --run "\
     echo '📦 Downloading config...' && \
     git clone https://github.com/decard2/nix /tmp/nixos-config && \
     cd /tmp/nixos-config && \
+    chmod +x setup.nu && \
     echo '⚙️  Setting up system...' && \
     ./setup.nu
 "
