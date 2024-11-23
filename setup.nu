@@ -16,7 +16,7 @@ def cleanup [] {
 }
 
 def main [] {
-    #cleanup
+    cleanup
 
     echo $"(ansi green_bold)🚀 Welcome! Let's install NixOS!(ansi reset)"
 
