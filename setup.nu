@@ -57,7 +57,7 @@ def main [] {
     ^mkdir -p /mnt/home/decard
 
     # First check if we have the repo
-    if not (path exists /tmp/nix) {
+    if not (path exists "/tmp/nix") {
         echo $"(ansi red)❌ Configuration not found in /tmp/nix!(ansi reset)"
         exit 1
     }
