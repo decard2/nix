@@ -55,8 +55,8 @@ def main [] {
     echo $"(ansi green)🔄 Setting up configuration...(ansi reset)"
 
     # Create necessary directories
-    mkdir -p /mnt/etc
-    mkdir -p /mnt/home/decard
+    ^mkdir -p /mnt/etc
+    ^mkdir -p /mnt/home/decard
 
     # Check if we have the repo
     if not (/tmp/nix | path exists) {
@@ -188,7 +188,7 @@ def partition_disk [disk: string] {
     echo "Mounting partitions..."
     ^mount -o subvol=@,compress=zstd,noatime $"($disk)3" /mnt
 
-    mkdir -p /mnt/{home,nix,boot/efi,var/cache,var/log}
+    ^mkdir -p /mnt/{home,nix,boot/efi,var/cache,var/log}
 
     ^mount -o subvol=@home,compress=zstd,noatime $"($disk)3" /mnt/home
     ^mount -o subvol=@nix,compress=zstd,noatime $"($disk)3" /mnt/nix
