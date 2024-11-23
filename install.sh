@@ -1,6 +1,10 @@
 #!/bin/sh
 set -e
 
+# Устанавливаем локаль
+export LANG=ru_RU.UTF-8
+export LC_ALL=ru_RU.UTF-8
+
 # Наша крутая ASCII-арт заставка
 cat << "EOF"
 
