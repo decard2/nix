@@ -70,9 +70,10 @@ fi
 echo "🔧 Installing required tools..."
 nix-shell -p git nushell --run "\
     cd /tmp && \
-    echo '⚙️  Setting up system...' && \
-    curl -fsSL -H 'Cache-Control: no-cache, no-store' -H 'Pragma: no-cache' \
-    'https://raw.githubusercontent.com/decard2/nix/main/setup.nu' > setup.nu && \
+    echo '⚙️  Клонируем конфиги...' && \
+    rm -rf ./nix && \
+    git clone https://github.com/decard2/nix.git && \
+    cd nix && \
     chmod +x setup.nu && \
     ./setup.nu
 "
