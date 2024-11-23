@@ -5,7 +5,7 @@ def cleanup [] {
 
     # Unmount everything in reverse order
     do --ignore-errors { ^swapoff -a }
-    do --ignore-errors { ^umount -Rl /mnt }
+    #do --ignore-errors { ^umount -Rl /mnt }
 
     # Очистим /mnt
     if ('/mnt' | path exists) {
