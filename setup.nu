@@ -59,8 +59,8 @@ def main [] {
     # Set root password
     print $"(ansi yellow)🔑 Let's set root password!(ansi reset)"
     while true {
-        let passwd = input --password "Enter root password: "
-        let passwd2 = input --password "Confirm password: "
+        let passwd = $nu.input-password "Enter root password: "
+        let passwd2 = $nu.input-password "Confirm password: "
         if $passwd == $passwd2 {
             $passwd | mkpasswd -m sha-512 | save -f /mnt/etc/shadow.root
             break
@@ -71,8 +71,8 @@ def main [] {
     # Set user password
     print $"(ansi yellow)🔑 Now set password for decard!(ansi reset)"
     while true {
-        let passwd = input --password "Enter password for decard: "
-        let passwd2 = input --password "Confirm password: "
+        let passwd = $nu.input-password "Enter password for decard: "
+        let passwd2 = $nu.input-password "Confirm password: "
         if $passwd == $passwd2 {
             $passwd | mkpasswd -m sha-512 | save -f /mnt/etc/shadow.user
             break
