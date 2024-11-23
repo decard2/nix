@@ -54,7 +54,15 @@ def main [] {
 
     # First clone to home directory
     ^mkdir -p /mnt/home/decard/nix
-    git clone https://github.com/decard2/nix.git /mnt/home/decard/nix
+    if (ls /mnt/home/decard/nix | length) > 0 {
+        # Если директория не пустая - удаляем и клонируем заново
+        print "🔄 Updating configuration..."
+        rm -rf /mnt/home/decard/nix
+        git clone https://github.com/decard2/nix.git /mnt/home/decard/nix
+    } else {
+        # Если пустая - просто клонируем
+        git clone https://github.com/decard2/nix.git /mnt/home/decard/nix
+    }
 
     # Then symlink to /etc/nixos
     ^mkdir -p /mnt/etc
