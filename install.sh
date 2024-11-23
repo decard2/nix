@@ -69,11 +69,10 @@ fi
 
 echo "🔧 Installing required tools..."
 nix-shell -p git nushell --run "\
-    echo '📦 Downloading config...' && \
-    git clone https://github.com/decard2/nix /tmp/nixos-config && \
-    cd /tmp/nixos-config && \
-    chmod +x setup.nu && \
+    cd /tmp && \
     echo '⚙️  Setting up system...' && \
+    curl -fsSL https://raw.githubusercontent.com/decard2/nix/main/setup.nu > setup.nu && \
+    chmod +x setup.nu && \
     ./setup.nu
 "
 
