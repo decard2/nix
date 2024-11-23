@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 # Устанавливаем русскую локаль в лайв-системе
+export NIXPKGS_ALLOW_UNFREE=1
 nix-shell -p glibcLocales --run "
-  export LOCALE_ARCHIVE=/nix/store/\$(ls -la /nix/store | grep glibc-locales | grep -v drwx | awk '{print \$9}')/lib/locale/locale-archive
+  locale-gen
   export LANG=ru_RU.UTF-8
   export LC_ALL=ru_RU.UTF-8
 "
