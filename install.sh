@@ -71,8 +71,8 @@ echo "🔧 Installing required tools..."
 nix-shell -p git nushell --run "\
     cd /tmp && \
     echo '⚙️  Setting up system...' && \
-    timestamp=\$(date +%s) && \
-    curl -fsSL 'https://raw.githubusercontent.com/decard2/nix/main/setup.nu?'\$timestamp > setup.nu && \
+    curl -fsSL -H 'Cache-Control: no-cache, no-store' -H 'Pragma: no-cache' \
+    'https://raw.githubusercontent.com/decard2/nix/main/setup.nu' > setup.nu && \
     chmod +x setup.nu && \
     ./setup.nu
 "

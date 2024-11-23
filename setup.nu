@@ -4,11 +4,11 @@ def cleanup [] {
     echo $"(ansi yellow)🧹 Cleaning up previous installation...(ansi reset)"
 
     # Unmount everything in reverse order
-    ^swapoff -a # отключаем swap если он был
-    umount -Rl /mnt or true # -R рекурсивно, -l lazy unmount если что-то залипло
+    do --ignore-errors { ^swapoff -a } # игнорим ошибки если свапа нет
+    do --ignore-errors { umount -Rl /mnt } # тоже самое с unmount
 
     # На всякий очистим /mnt
-    rm -rf /mnt/* or true
+    do --ignore-errors { rm -rf /mnt/* }
 
     echo $"(ansi green)✅ Cleanup done!(ansi reset)"
 }
