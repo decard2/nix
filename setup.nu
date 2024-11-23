@@ -74,10 +74,6 @@ def main [] {
     echo $"(ansi green)🔧 Generating hardware-configuration.nix...(ansi reset)"
     nixos-generate-config --root /mnt --no-filesystems
 
-    # Update systemd-boot configs
-    echo $"(ansi green)🔄 Updating systemd-boot configs...(ansi reset)"
-    nixos-generate-config --root /mnt
-
     # Copy to the correct location in repository
     cp /mnt/etc/nixos/hardware-configuration.nix /mnt/home/decard/nix/hosts/emerald/hardware.nix
 
