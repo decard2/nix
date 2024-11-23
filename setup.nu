@@ -66,6 +66,8 @@ def main [] {
 
     # Then symlink to /etc/nixos
     ^mkdir -p /mnt/etc
+    # Удаляем старый симлинк если есть
+    rm -f /mnt/etc/nixos
     ln -s /home/decard/nix /mnt/etc/nixos
 
     # Generate configs
