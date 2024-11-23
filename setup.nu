@@ -182,7 +182,7 @@ def partition_disk [disk: string] {
     ^btrfs subvolume create /mnt/@log
 
     # Unmount temporary mount point
-    ^umount /mnt
+    do --ignore-errors { ^umount -Rl /mnt }
 
     # Mount everything properly
     echo "Mounting partitions..."
