@@ -21,7 +21,7 @@ def main [] {
     echo $"(ansi green_bold)🚀 Welcome! Let's install NixOS!(ansi reset)"
 
     # Check EFI mode
-    if not (/sys/firmware/efi | path exists) {
+    if not ('/sys/firmware/efi' | path exists) {
         echo $"(ansi red)❌ System is not in EFI mode! Please reboot in EFI mode!(ansi reset)"
         exit 1
     }
@@ -59,7 +59,7 @@ def main [] {
     ^mkdir -p /mnt/home/decard
 
     # Check if we have the repo
-    if not (/tmp/nix | path exists) {
+    if not ('tmp/nix' | path exists) {
         echo $"(ansi red)❌ Configuration not found in /tmp/nix!(ansi reset)"
         exit 1
     }
