@@ -1,172 +1,170 @@
 #!/usr/bin/env nu
 
-let-env LANG = "ru_RU.UTF-8"
-
 def main [] {
-    print $"(ansi green_bold)🚀 Здорова, братиш! Погнали ставить NixOS!(ansi reset)"
+    print $"(ansi green_bold)🚀 Welcome! Let's install NixOS!(ansi reset)"
 
-    # Проверяем EFI режим
+    # Check EFI mode
     if not (test -d /sys/firmware/efi) {
-        print $"(ansi red)❌ Братиш, система не в EFI режиме! Перезагрузись в EFI!(ansi reset)"
+        print $"(ansi red)❌ System is not in EFI mode! Please reboot in EFI mode!(ansi reset)"
         exit 1
     }
 
-    # Проверяем есть ли mkpasswd, если нет - ставим
+    # Check mkpasswd
     if (which mkpasswd | is-empty) {
-        print "📦 Ставлю mkpasswd..."
+        print "📦 Installing mkpasswd..."
         nix-env -iA nixos.mkpasswd
     }
 
-    # Проверяем интернет
+    # Check internet
     if (do --ignore-errors { ping -c 1 google.com } | complete).exit_code != 0 {
         setup_wifi
     }
 
-    print $"(ansi yellow)📡 Сеть на месте, погнали дальше!(ansi reset)"
+    print $"(ansi yellow)📡 Network is ready, let's continue!(ansi reset)"
 
-    # Спрашиваем про диск
+    # Ask about disk
     let disk = select_disk
 
-    print $"(ansi yellow)💾 Будем разбивать диск: ($disk)(ansi reset)"
-    if (input "Точно его разбиваем? [y/N] ") != "y" {
-        print "Ну нет так нет, давай по новой!"
+    print $"(ansi yellow)💾 Selected disk for installation: ($disk)(ansi reset)"
+    if (input "Are you sure? This will erase all data! [y/N] ") != "y" {
+        print "Operation cancelled!"
         exit 1
     }
 
-    # Размечаем диски
+    # Partition disk
     partition_disk $disk
 
-    # Качаем конфиг
-    print $"(ansi green)🔄 Ща конфиг подтяну...(ansi reset)"
+    # Get config
+    print $"(ansi green)🔄 Downloading configuration...(ansi reset)"
 
-    # Сначала клоним в домашнюю директорию
+    # First clone to home directory
     ^mkdir -p /mnt/home/decard/nix
     git clone https://github.com/decard2/nix.git /mnt/home/decard/nix
 
-    # Потом делаем симлинк в /etc/nixos
+    # Then symlink to /etc/nixos
     ^mkdir -p /mnt/etc
     ln -s /home/decard/nix /mnt/etc/nixos
 
-    # Генерим конфиги
-    print $"(ansi green)🔧 Генерю hardware-configuration.nix...(ansi reset)"
+    # Generate configs
+    print $"(ansi green)🔧 Generating hardware-configuration.nix...(ansi reset)"
     nixos-generate-config --root /mnt --no-filesystems
 
-    # Обновляем конфиги для systemd-boot
-    print $"(ansi green)🔄 Обновляем конфиги для systemd-boot...(ansi reset)"
+    # Update systemd-boot configs
+    print $"(ansi green)🔄 Updating systemd-boot configs...(ansi reset)"
     nixos-generate-config --root /mnt
 
-    # Теперь копируем в правильное место в репозитории
+    # Copy to the correct location in repository
     cp /mnt/etc/nixos/hardware-configuration.nix /mnt/home/decard/nix/hosts/emerald/hardware.nix
 
-    # Задаём пароль рута
-    print $"(ansi yellow)🔑 Братиш, давай пароль рута зададим!(ansi reset)"
+    # Set root password
+    print $"(ansi yellow)🔑 Let's set root password!(ansi reset)"
     while true {
-        let passwd = input --password "Введи пароль для root: "
-        let passwd2 = input --password "И ещё разок для проверки: "
+        let passwd = input --password "Enter root password: "
+        let passwd2 = input --password "Confirm password: "
         if $passwd == $passwd2 {
             $passwd | mkpasswd -m sha-512 | save -f /mnt/etc/shadow.root
             break
         }
-        print $"(ansi red)❌ Пароли не совпадают, давай по новой!(ansi reset)"
+        print $"(ansi red)❌ Passwords don't match, try again!(ansi reset)"
     }
 
-    # И для твоего юзера
-    print $"(ansi yellow)🔑 Теперь пароль для decard!(ansi reset)"
+    # Set user password
+    print $"(ansi yellow)🔑 Now set password for decard!(ansi reset)"
     while true {
-        let passwd = input --password "Введи пароль для decard: "
-        let passwd2 = input --password "И ещё разок для проверки: "
+        let passwd = input --password "Enter password for decard: "
+        let passwd2 = input --password "Confirm password: "
         if $passwd == $passwd2 {
             $passwd | mkpasswd -m sha-512 | save -f /mnt/etc/shadow.user
             break
         }
-        print $"(ansi red)❌ Пароли не совпадают, давай по новой!(ansi reset)"
+        print $"(ansi red)❌ Passwords don't match, try again!(ansi reset)"
     }
 
-    # Погнали ставить!
-    print $"(ansi green_bold)🚀 Ну чё, погнали ставить эту красоту?(ansi reset)"
-    if (input "Начинаем установку? [y/N] ") == "y" {
+    # Start installation
+    print $"(ansi green_bold)🚀 Ready to start installation!(ansi reset)"
+    if (input "Begin installation? [y/N] ") == "y" {
         nixos-install --flake /mnt/etc/nixos#emerald --root-passwd-file /mnt/etc/shadow.root --passwd-file /mnt/etc/shadow.user
     }
 }
 
 def setup_wifi [] {
-    print $"(ansi yellow)😱 Вот жеж, инета нет! Щас порешаем...(ansi reset)"
+    print $"(ansi yellow)😱 No internet connection! Let's fix that...(ansi reset)"
 
-    # Запускаем iwctl в интерактивном режиме
-    print "Ща iwctl запущу, там сделай:"
+    # Launch iwctl in interactive mode
+    print "Launching iwctl, follow these steps:"
     print "1. station wlan0 scan"
     print "2. station wlan0 get-networks"
-    print "3. station wlan0 connect \"Имя_Сети\""
+    print "3. station wlan0 connect \"Network_Name\""
     print "4. exit"
 
     iwctl
 
     if (do --ignore-errors { ping -c 1 google.com } | complete).exit_code != 0 {
-        print $"(ansi red)❌ Не, братан, инет так и не появился...(ansi reset)"
+        print $"(ansi red)❌ Still no internet connection...(ansi reset)"
         exit 1
     }
 }
 
 def select_disk [] {
-    print $"(ansi yellow)💽 Доступные диски:(ansi reset)"
+    print $"(ansi yellow)💽 Available disks:(ansi reset)"
     let disks = (lsblk -dpno NAME,SIZE | lines | each { |it| $it | str trim })
 
     for disk in $disks {
         print $"  ($disk)"
     }
 
-    let selected = input "На какой диск ставим? (полный путь, типа /dev/sda): "
+    let selected = input "Select installation disk (full path, e.g. /dev/sda): "
     if ($selected | path exists) {
         $selected
     } else {
-        print $"(ansi red)❌ Не, такого диска нет!(ansi reset)"
+        print $"(ansi red)❌ Invalid disk path!(ansi reset)"
         exit 1
     }
 }
 
 def partition_disk [disk: string] {
-    print $"(ansi yellow)🔪 Размечаем диск: ($disk)(ansi reset)"
+    print $"(ansi yellow)🔪 Partitioning disk: ($disk)(ansi reset)"
 
-    # Парсим RAM для свопа
+    # Parse RAM for swap
     let ram = (free -g | lines | $in.1 | split row -r '\s+' | $in.1 | into int)
     let swap_size = ($ram * 2)
 
-    # Чистим диск на всякий
+    # Clean disk just in case
     wipefs -af $disk
 
-    # Размечаем
+    # Partition
     parted $disk -- mklabel gpt
     parted $disk -- mkpart ESP fat32 1MiB 1GiB
     parted $disk -- set 1 esp on
     parted $disk -- mkpart primary linux-swap 1GiB $"($swap_size + 1)GiB"
     parted $disk -- mkpart primary $"($swap_size + 1)GiB" 100%
 
-    # Форматируем разделы
-    print "Форматируем EFI раздел..."
+    # Format partitions
+    print "Formatting EFI partition..."
     mkfs.fat -F 32 -n "EFI" $"($disk)1"
 
-    print "Создаём SWAP..."
+    print "Creating SWAP..."
     mkswap -L "swap" $"($disk)2"
 
-    print "Форматируем BTRFS раздел..."
+    print "Formatting BTRFS partition..."
     mkfs.btrfs -L "nixos" $"($disk)3"
 
-    # Монтируем BTRFS и создаём сабволюмы
-    print "Создаём сабволюмы..."
+    # Mount BTRFS and create subvolumes
+    print "Creating subvolumes..."
     mount $"($disk)3" /mnt
 
-    # Создаём сабволюмы
+    # Create subvolumes
     btrfs subvolume create /mnt/@
     btrfs subvolume create /mnt/@home
     btrfs subvolume create /mnt/@nix
     btrfs subvolume create /mnt/@cache
     btrfs subvolume create /mnt/@log
 
-    # Отмонтируем временную точку
+    # Unmount temporary mount point
     umount /mnt
 
-    # Монтируем всё как надо
-    print "Монтируем разделы..."
+    # Mount everything properly
+    print "Mounting partitions..."
     mount -o subvol=@,compress=zstd,noatime $"($disk)3" /mnt
 
     ^mkdir -p /mnt/{home,nix,boot/efi,var/cache,var/log}
@@ -178,7 +176,7 @@ def partition_disk [disk: string] {
     mount $"($disk)1" /mnt/boot/efi
     swapon $"($disk)2"
 
-    print $"(ansi green)✅ Диск размечен и примонтирован!(ansi reset)"
+    print $"(ansi green)✅ Disk partitioned and mounted!(ansi reset)"
 }
 
 main
