@@ -50,25 +50,24 @@ def main [] {
     partition_disk $disk
 
     # Get config
-    echo $"(ansi green)🔄 Downloading configuration...(ansi reset)"
+    echo $"(ansi green)🔄 Setting up configuration...(ansi reset)"
 
-    # First clone to home directory
-    ^mkdir -p /mnt/home/decard/nix
-    if (ls /mnt/home/decard/nix | length) > 0 {
-        # Если директория не пустая - удаляем и клонируем заново
-        echo "🔄 Updating configuration..."
-        rm -rf /mnt/home/decard/nix
-        git clone https://github.com/decard2/nix.git /mnt/home/decard/nix
-    } else {
-        # Если пустая - просто клонируем
-        git clone https://github.com/decard2/nix.git /mnt/home/decard/nix
+    # Create necessary directories
+    ^mkdir -p /mnt/etc
+    ^mkdir -p /mnt/home/decard
+
+    # First check if we have the repo
+    if not (path exists /tmp/nix) {
+        echo $"(ansi red)❌ Configuration not found in /tmp/nix!(ansi reset)"
+        exit 1
     }
 
-    # Then symlink to /etc/nixos
-    ^mkdir -p /mnt/etc
-    # Удаляем старый симлинк если есть
-    rm -f /mnt/etc/nixos
-    ln -s /home/decard/nix /mnt/etc/nixos
+    # Move cloned repo to final location
+    mv /tmp/nix /mnt/etc/nixos
+
+    # Create symlink in home directory
+    cd /mnt/home/decard
+    ln -s ../../etc/nixos nix
 
     # Generate configs
     echo $"(ansi green)🔧 Generating hardware-configuration.nix...(ansi reset)"
