@@ -30,30 +30,12 @@
             └── zed.nix       # Редактор для крутых
 ```
 
-## Быстрый старт
+## 🚀 Быстрый старт
 
 ```bash
-# 1. Грузимся с NixOS minimal ISO
-
-# 2. Поднимаем вайфай (если нужно)
-sudo systemctl start wpa_supplicant
-# Смотрим доступные сети
-iwctl station wlan0 scan
-iwctl station wlan0 get-networks
-# Коннектимся (замени MY_WIFI и PASSWORD на свои)
-iwctl station wlan0 connect "MY_WIFI"
-# Вводим пароль когда спросит
-
-# Проверяем что поймали инет
-ping -c 3 google.com
-
-# 3. Ставим нужные тулзы
-nix-shell -p nushell git wget
-
-# 3. Качаем и запускаем скрипт установки
-wget https://raw.githubusercontent.com/decard2/nix/main/install.nu
-chmod +x install.nu
-./install.nu
+# Грузимся с NixOS minimal ISO
+```bash
+curl -f https://raw.githubusercontent.com/decard2/nix/main/install.sh | sudo sh
 ```
 
 ## Структура BTRFS
