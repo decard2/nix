@@ -75,7 +75,7 @@ nix-shell -p git nushell --run "\
     git clone --depth 1 https://github.com/decard2/nix.git && \
     cd nix && \
     chmod +x setup.nu && \
-    sudo ./setup.nu
+    nu ./setup.nu
 "
 
 echo "
