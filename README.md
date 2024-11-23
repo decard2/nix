@@ -49,7 +49,12 @@ ping -c 3 google.com
 
 # 3. Ставим нужные тулзы
 nix-shell -p nushell git wget
-...
+
+# 3. Качаем и запускаем скрипт установки
+wget https://raw.githubusercontent.com/decard2/nix/main/install.nu
+chmod +x install.nu
+./install.nu
+```
 
 ## Структура BTRFS
 

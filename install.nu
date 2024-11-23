@@ -1,5 +1,7 @@
 #!/usr/bin/env nu
 
+let-env LANG = "ru_RU.UTF-8"
+
 def main [] {
     print $"(ansi green_bold)🚀 Здорова, братиш! Погнали ставить NixOS!(ansi reset)"
 
@@ -38,11 +40,11 @@ def main [] {
     print $"(ansi green)🔄 Ща конфиг подтяну...(ansi reset)"
 
     # Сначала клоним в домашнюю директорию
-    mkdir -p /mnt/home/decard/nix
+    ^mkdir -p /mnt/home/decard/nix
     git clone https://github.com/decard2/nix.git /mnt/home/decard/nix
 
     # Потом делаем симлинк в /etc/nixos
-    mkdir -p /mnt/etc
+    ^mkdir -p /mnt/etc
     ln -s /home/decard/nix /mnt/etc/nixos
 
     # Генерим конфиги
@@ -167,7 +169,7 @@ def partition_disk [disk: string] {
     print "Монтируем разделы..."
     mount -o subvol=@,compress=zstd,noatime $"($disk)3" /mnt
 
-    mkdir -p /mnt/{home,nix,boot/efi,var/cache,var/log}
+    ^mkdir -p /mnt/{home,nix,boot/efi,var/cache,var/log}
 
     mount -o subvol=@home,compress=zstd,noatime $"($disk)3" /mnt/home
     mount -o subvol=@nix,compress=zstd,noatime $"($disk)3" /mnt/nix
