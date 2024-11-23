@@ -72,7 +72,7 @@ nix-shell -p git nushell --run "\
     cd /tmp && \
     echo '⚙️  Клонируем конфиги...' && \
     rm -rf ./nix && \
-    git clone https://github.com/decard2/nix.git && \
+    git clone --depth 1 https://github.com/decard2/nix.git && \
     cd nix && \
     chmod +x setup.nu && \
     ./setup.nu
