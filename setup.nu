@@ -8,9 +8,9 @@ def cleanup [] {
     do --ignore-errors { ^umount -Rl /mnt }
 
     # Очистим /mnt
-    if (/mnt | path exists) {
-        rm -rf /mnt/*
-    }
+    #if (/mnt | path exists) {
+    #    rm -rf /mnt/*
+    #}
 
     echo $"(ansi green)✅ Cleanup done!(ansi reset)"
 }
