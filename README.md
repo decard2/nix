@@ -22,16 +22,16 @@ cd nix
 
 2. Размечаем диск через disko:
 ```bash
-sudo nix --extra-experimental-features "nix-command flakes" run github:nix-community/disko -- --mode destroy,format,mount ./nixos/disko.nix
+sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko -- --mode disko ./nixos/disko.nix
 ```
 
 3. Генерим конфиг оборудования:
 ```bash
-sudo nixos-generate-config --root /mnt
-sudo cp /mnt/etc/nixos/hardware-configuration.nix ./nixos/
-sudo mkdir -p /mnt/home/decard/
-sudo cp -r ../nix /mnt/home/decard/
-sudo chown -R 1000:1000 /mnt/home/decard/nix
+sudo nixos-generate-config --no-filesystems --root /mnt
+#sudo cp /mnt/etc/nixos/hardware-configuration.nix ./nixos/
+#sudo mkdir -p /mnt/home/decard/
+#sudo cp -r ../nix /mnt/home/decard/
+#sudo chown -R 1000:1000 /mnt/home/decard/nix
 ```
 
 4. Устанавливаем систему:
