@@ -12,9 +12,10 @@ in
 
   programs.home-manager.enable = true;
 
+  fonts.fontconfig.enable = true;
+
   home.packages = with pkgs; [
-    btop
-    neofetch
+    # DE
     tofi
     #waybar
     #wl-clipboard
@@ -22,7 +23,18 @@ in
     #pamixer
     #grim
     #slurp
+
+    # Софт
     unstable.zed
+    btop
+    neofetch
+
+    # Шрифты
+      jetbrains-mono
+      noto-fonts
+      noto-fonts-cjk
+      noto-fonts-emoji
+      (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
 
   programs.kitty = {
@@ -75,17 +87,16 @@ in
     padding-top = 20
     result-spacing = 15
     num-results = 5
-    font = JetBrains Mono
+    font = Noto Sans
     font-size = 14
 
-    # Цвета (монохромная тема)
+    # Цвета (максимально простые)
     background-color = #000000A0
     text-color = #FFFFFF
     selection-color = #FFFFFFCC
-    prompt-color = #888888
 
     # Поведение
-    prompt-text = "run: "
+    prompt-text = "> "
     hide-cursor = true
     ascii-input = true
   '';
