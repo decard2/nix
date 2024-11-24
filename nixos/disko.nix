@@ -20,14 +20,6 @@
                 mountOptions = [ "umask=0077" ];
               };
             };
-            swap = {
-              name = "swap";
-              size = "32G";
-              content = {
-                type = "swap";
-                randomEncryption = true;
-              };
-            };
             root = {
               name = "root";
               size = "100%";
@@ -54,6 +46,14 @@
                   "/cache" = {
                     mountpoint = "/var/cache";
                     mountOptions = [ "compress=zstd" ];
+                  };
+                  "/swap" = {
+                    mountpoint = "/.swapvol";
+                    swap = {
+                      swapfile = {
+                        size = "32G";
+                      };
+                    };
                   };
                 };
               };
