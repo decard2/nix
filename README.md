@@ -1,6 +1,6 @@
 # Офигенная установка NixOS
 
-## Установка с ISO-образа
+## Установка с ISO
 
 ### Подготовка
 1. Скачай [NixOS minimal ISO](https://nixos.org/download#nixos-iso)
@@ -20,12 +20,17 @@ git clone https://github.com/decard2/nix.git
 cd nix
 ```
 
-2. Установи систему:
+2. Размечаем диск через disko:
+```bash
+sudo nix run github:nix-community/disko -- --mode disko ./nixos/disko.nix
+```
+
+3. Устанавливаем систему:
 ```bash
 sudo nixos-install --flake .#emerald
 ```
 
-3. После установки перезагружаемся:
+4. Перезагружаемся:
 ```bash
 reboot
 ```
