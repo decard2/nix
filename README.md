@@ -51,7 +51,9 @@ passwd
 git clone https://github.com/decard2/nix.git
 # Преключаем систему на наш репо, создав конфиг железа повторно
 sudo nixos-generate-config --no-filesystems --dir ./nix/nixos
-sudo nixos-rebuild switch --flake "./nix#emerald"
+cd nix
+git add nixos/hardware-configuration.nix
+sudo nixos-rebuild switch --flake ".#emerald"
 ```
 3. Все конфиги системы находятся в ~/nix
 4. Profit! 🎉

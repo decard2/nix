@@ -3,8 +3,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
-  outputs = { self, nixpkgs, disko, ... }:
+  outputs = { self, nixpkgs, disko,  home-manager, ... }:
      let
        system = "x86_64-linux";
        hostName = "emerald";
@@ -15,17 +17,12 @@
          modules = [
            ./nixos/configuration.nix
            disko.nixosModules.disko
-           ({ pkgs, ... }: {
-             boot.loader = {
-               systemd-boot.enable = true;
-               efi.canTouchEfiVariables = true;
-             };
-             networking = { inherit hostName; };
-             environment.systemPackages = with pkgs; [
-               git
-             ];
-             system.stateVersion = "24.05";
-           })
+           home-manager.nixosModules.home-manager
+            {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.users.decard = import ./home/home.nix;
+            }
          ];
        };
      };
