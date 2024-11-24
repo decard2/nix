@@ -33,6 +33,8 @@
   };
 
   virtualisation.libvirtd.enable = true;
+  services.qemuGuest.enable = true;  # Включает QEMU guest tools
+  services.spice-vdagentd.enable = true;  # Включает SPICE agent
 
   security.rtkit.enable = true;
   services.pipewire = {

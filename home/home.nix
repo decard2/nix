@@ -36,7 +36,9 @@
   wayland.windowManager.hyprland = {
     enable = true;  # использует системный Hyprland
     settings = {
-      monitor = "eDP-1,1920x1080@60,0x0,1";
+      monitor = [
+        ",preferred,auto,1"  # это значит "для всех мониторов используй оптимальное разрешение"
+      ];
 
       # env = [
       #   "WLR_RENDERER_ALLOW_SOFTWARE,1"
