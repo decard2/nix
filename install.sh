@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 echo '
-=================================
-   NixOS Installer by Zhora v1.0-0
+====================================
+   NixOS Installer by Zhora v1.0-1
    Let'"'"'s make it smooth, bro!
-================================='
+===================================='
 
 # Colors for output
 RED='\033[0;31m'
@@ -14,7 +14,7 @@ NC='\033[0m'
 echo -e "${GREEN}🚀 Yo, wassup! Let's get this party started!${NC}"
 
 # Check for UEFI
-if [ ! -d "/sys/firmware/efi" ]; then
+if [[ ! -d "/sys/firmware/efi" ]]; then
     echo -e "${RED}❌ Bruh, where's UEFI? Can't roll without it!${NC}"
     exit 1
 fi
