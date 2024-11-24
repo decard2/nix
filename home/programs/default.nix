@@ -5,5 +5,6 @@
     ./zed.nix
     ./hyprland.nix
     ./tofi.nix
+    ./nu.nix
   ];
 }

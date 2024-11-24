@@ -51,6 +51,7 @@
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "video" ];
     initialPassword = "changeme";
+    shell = pkgs.nushell;
   };
 
   environment.systemPackages = with pkgs; [
