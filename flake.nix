@@ -14,7 +14,6 @@
          inherit system;
          modules = [
            ./nixos/configuration.nix
-           ./nixos/hardware-configuration.nix
            disko.nixosModules.disko
            ({ pkgs, ... }: {
              boot.loader = {
