@@ -22,7 +22,7 @@ cd nix
 
 2. Размечаем диск через disko:
 ```bash
-sudo nix --extra-experimental-features "nix-command flakes" run github:nix-community/disko -- --mode disko ./nixos/disko.nix
+sudo nix --extra-experimental-features "nix-command flakes" run github:nix-community/disko -- --mode destroy,format,mount ./nixos/disko.nix
 ```
 
 3. Устанавливаем систему:

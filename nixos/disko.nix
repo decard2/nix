@@ -8,13 +8,16 @@
           type = "gpt";
           partitions = {
             boot = {
+              priority = 1;
               name = "boot";
-              size = "1G";
+              start = "1M";
+              end = "128M";
               type = "EF00";
               content = {
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
+                mountOptions = [ "umask=0077" ];
               };
             };
             swap = {
@@ -32,17 +35,25 @@
                 type = "btrfs";
                 extraArgs = [ "-f" ];
                 subvolumes = {
-                  "@" = {
+                  "/root" = {
                     mountpoint = "/";
+                    mountOptions = [ "compress=zstd" ];
                   };
-                  "@home" = {
+                  "/home" = {
                     mountpoint = "/home";
+                    mountOptions = [ "compress=zstd" ];
                   };
-                  "@log" = {
+                  "/nix" = {
+                    mountpoint = "/nix";
+                    mountOptions = [ "compress=zstd" "noatime" ];
+                  };
+                  "/log" = {
                     mountpoint = "/var/log";
+                    mountOptions = [ "compress=zstd" ];
                   };
-                  "@cache" = {
+                  "/cache" = {
                     mountpoint = "/var/cache";
+                    mountOptions = [ "compress=zstd" ];
                   };
                 };
               };
