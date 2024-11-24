@@ -6,5 +6,6 @@
     ./hyprland.nix
     ./tofi.nix
     ./nu.nix
+    ./firefox.nix
   ];
 }
