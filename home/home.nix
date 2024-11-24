@@ -9,26 +9,19 @@
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
-    # Базовые тулзы
     btop
     neofetch
-
-    # Для Wayland
     waybar
     wofi
     wl-clipboard
-
-    # Утилиты
     brightnessctl
     pamixer
-
-    # Для скриншотов
     grim
     slurp
   ];
 
   wayland.windowManager.hyprland = {
-    enable = true;
+    enable = true;  # использует системный Hyprland
     settings = {
       monitor = "eDP-1,1920x1080@60,0x0,1";
 

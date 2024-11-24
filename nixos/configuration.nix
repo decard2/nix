@@ -3,13 +3,11 @@
 {
   imports = [ ];
 
-  # Базовые настройки загрузчика
   boot = {
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    # Добавляем базовые модули для загрузки
     initrd.availableKernelModules = [
       "ata_piix"
       "uhci_hcd"
@@ -20,15 +18,19 @@
     ];
   };
 
-  # Остальная часть конфигурации без изменений
   networking.networkmanager.enable = true;
 
   time.timeZone = "Asia/Irkutsk";
   i18n.defaultLocale = "ru_RU.UTF-8";
 
-  services.xserver = {
+  services.greetd = {
     enable = true;
-    displayManager.gdm.enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+        user = "greeter";
+      };
+    };
   };
 
   security.rtkit.enable = true;
@@ -50,10 +52,7 @@
     kitty
   ];
 
-  programs.hyprland = {
-    enable = true;
-    xwayland.enable = true;
-  };
+  programs.hyprland.enable = true;  # теперь берём из nixpkgs
 
   security.polkit.enable = true;
 
