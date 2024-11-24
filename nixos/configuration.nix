@@ -35,6 +35,8 @@
   virtualisation.libvirtd.enable = true;
   services.qemuGuest.enable = true;  # Включает QEMU guest tools
   services.spice-vdagentd.enable = true;  # Включает SPICE agent
+  systemd.services.spice-vdagentd.enable = true;
+  systemd.services.qemu-guest-agent.enable = true;
 
   security.rtkit.enable = true;
   services.pipewire = {
@@ -55,6 +57,8 @@
     vulkan-tools
     vulkan-validation-layers
     mesa
+    spice-vdagent
+    spice-protocol
   ];
 
   programs.hyprland.enable = true;
