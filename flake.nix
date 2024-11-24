@@ -13,6 +13,7 @@
        nixosConfigurations.${hostName} = nixpkgs.lib.nixosSystem {
          inherit system;
          modules = [
+           ./nixos/hardware-configuration.nix
            ./nixos/disko.nix
            disko.nixosModules.disko
            ({ pkgs, ... }: {
