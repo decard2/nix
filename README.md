@@ -41,7 +41,7 @@ sudo nixos-generate-config --no-filesystems --root /mnt --dir /mnt/home/decard/n
 
 4. Устанавливаем систему:
 ```bash
-sudo nixos-install --root /mnt --flake '/mnt/home/decard/nix#emerald'
+sudo nixos-install --flake '/mnt/home/decard/nix#emerald'
 ```
 
 5. Перезагружаемся:

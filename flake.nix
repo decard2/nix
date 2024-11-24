@@ -4,13 +4,29 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
   };
-  outputs = inputs@{ self, nixpkgs, ... }: {
-    nixosConfigurations.emerald = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        ./nixos/configuration.nix
-        inputs.disko.nixosModules.disko
-      ];
-    };
-  };
+  outputs = { self, nixpkgs, disko, ... }:
+     let
+       system = "x86_64-linux";
+       hostName = "emerald";
+     in
+     {
+       nixosConfigurations.${hostName} = nixpkgs.lib.nixosSystem {
+         inherit system;
+         modules = [
+           ./nixos/disko.nix
+           disko.nixosModules.disko
+           ({ pkgs, ... }: {
+             boot.loader = {
+               systemd-boot.enable = true;
+               efi.canTouchEfiVariables = true;
+             };
+             networking = { inherit hostName; };
+             environment.systemPackages = with pkgs; [
+               git
+             ];
+             system.stateVersion = "24.05";
+           })
+         ];
+       };
+     };
 }
