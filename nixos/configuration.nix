@@ -1,29 +1,36 @@
 { config, pkgs, inputs, ... }:
 
 {
-  imports =
-    [
-
-    ];
+  imports = [ ];
 
   # Базовые настройки загрузчика
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    # Добавляем базовые модули для загрузки
+    initrd.availableKernelModules = [
+      "ata_piix"
+      "uhci_hcd"
+      "virtio_pci"
+      "virtio_scsi"
+      "sd_mod"
+      "sr_mod"
+    ];
+  };
 
-  # Сеть
+  # Остальная часть конфигурации без изменений
   networking.networkmanager.enable = true;
 
-  # Локаль и время
   time.timeZone = "Asia/Irkutsk";
   i18n.defaultLocale = "ru_RU.UTF-8";
 
-  # Иксы и вайланд
   services.xserver = {
     enable = true;
     displayManager.gdm.enable = true;
   };
 
-  # Звук
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -32,28 +39,23 @@
     pulse.enable = true;
   };
 
-  # Юзер
   users.users.decard = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "video" ];
     initialPassword = "changeme";
   };
 
-  # Базовые пакеты
   environment.systemPackages = with pkgs; [
     git
     kitty
   ];
 
-  # Включаем Hyprland
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
   };
 
-  # Нужно для Хайпрленда
   security.polkit.enable = true;
 
-  # Не забываем про это
   system.stateVersion = "24.05";
 }

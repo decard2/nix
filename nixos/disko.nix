@@ -14,6 +14,7 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
+                label = "boot";  # Добавили метку
               };
             };
             root = {
@@ -22,6 +23,7 @@
                 type = "filesystem";
                 format = "ext4";
                 mountpoint = "/";
+                label = "nixos";  # Добавили метку
               };
             };
           };
