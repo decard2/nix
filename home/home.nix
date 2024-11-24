@@ -15,8 +15,8 @@ in
   home.packages = with pkgs; [
     btop
     neofetch
+    tofi
     #waybar
-    #wofi
     #wl-clipboard
     #brightnessctl
     #pamixer
@@ -47,15 +47,12 @@ in
         ",preferred,auto,1"  # это значит "для всех мониторов используй оптимальное разрешение"
       ];
 
-      # env = [
-      #   "WLR_RENDERER_ALLOW_SOFTWARE,1"
-      # ];
-
       # exec-once = [
       #   "waybar"
       # ];
 
       bind = [
+        "SUPER, D, exec, tofi-drun --drun-launch=true"
         "SUPER, Return, exec, kitty"
         "SUPER, Q, killactive,"
         "SUPER, M, exit,"
@@ -67,6 +64,31 @@ in
       ];
     };
   };
+
+  home.file.".config/tofi/config".text = ''
+    # Основные настройки
+    width = 100%
+    height = 40
+    border-width = 0
+    outline-width = 0
+    padding-left = 35%
+    padding-top = 20
+    result-spacing = 15
+    num-results = 5
+    font = JetBrains Mono
+    font-size = 14
+
+    # Цвета (монохромная тема)
+    background-color = #000000A0
+    text-color = #FFFFFF
+    selection-color = #FFFFFFCC
+    prompt-color = #888888
+
+    # Поведение
+    prompt-text = "run: "
+    hide-cursor = true
+    ascii-input = true
+  '';
 
   home.stateVersion = "24.05";
 }
