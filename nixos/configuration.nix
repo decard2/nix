@@ -40,11 +40,11 @@
   #   pulse.enable = true;
   # };
 
-  # users.users.decard = {
-  #   isNormalUser = true;
-  #   extraGroups = [ "wheel" "networkmanager" "video" ];
-  #   initialPassword = "changeme";
-  # };
+  users.users.decard = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "networkmanager" "video" ];
+    initialPassword = "changeme";
+  };
 
   # environment.systemPackages = with pkgs; [
   #   git
