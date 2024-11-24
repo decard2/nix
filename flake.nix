@@ -1,4 +1,3 @@
-
 {
   description = "Твоя офигенная система, братан!";
 
@@ -11,9 +10,14 @@
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
+
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, hyprland, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, hyprland, disko, ... }@inputs:
   let
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
@@ -25,6 +29,8 @@
         specialArgs = { inherit inputs; };
         modules = [
           ./nixos/configuration.nix
+          ./nixos/disko.nix
+          disko.nixosModules.disko
           hyprland.nixosModules.default
           home-manager.nixosModules.home-manager
           {
