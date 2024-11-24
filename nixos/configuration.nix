@@ -12,6 +12,7 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
   };
+  boot.initrd.availableKernelModules = [ "virtio_gpu" "virtio_pci" ];
 
   networking = {
       hostName = "emerald";
@@ -31,6 +32,8 @@
   #   };
   # };
 
+  virtualisation.libvirtd.enable = true;
+
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -47,6 +50,9 @@
 
   environment.systemPackages = with pkgs; [
     git
+    vulkan-tools
+    vulkan-validation-layers
+    mesa
   ];
 
   programs.hyprland.enable = true;
