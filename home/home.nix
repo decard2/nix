@@ -25,7 +25,7 @@ in
     #slurp
 
     # Софт
-    unstable.zed
+    zed-editor
     btop
     neofetch
 
