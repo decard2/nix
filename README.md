@@ -16,9 +16,6 @@ nmtui  # или просто воткни ethernet
 1. Склонируй репозиторий:
 ```bash
 curl https://raw.githubusercontent.com/decard2/nix/main/nixos/disko.nix -o /tmp/disko.nix
-#sudo nix-env -iA nixos.git
-#git clone https://github.com/decard2/nix.git
-#cd nix
 ```
 
 2. Размечаем диск через disko:
@@ -28,10 +25,14 @@ sudo nix --experimental-features "nix-command flakes" run github:nix-community/d
 
 3. Генерим конфиг оборудования:
 ```bash
-sudo mkdir -p /mnt/home/decard/nixos
+sudo mkdir -p /mnt/home/decard/
+sudo chown -R 1000:1000 /mnt/home/decard
+cd /mnt/home/decard
+sudo nix-env -iA nixos.git
+git clone https://github.com/decard2/nix.git
 sudo nixos-generate-config --no-filesystems --root /mnt --dir /mnt/home/decard/nix/nixos
-cd /mnt/home/decard/nix
-sudo curl https://raw.githubusercontent.com/decard2/nix/main/flake.nix -o ./flake.nix
+
+#sudo curl https://raw.githubusercontent.com/decard2/nix/main/flake.nix -o ./flake.nix
 #sudo cp /mnt/etc/nixos/hardware-configuration.nix ./nixos/
 #sudo mkdir -p /mnt/home/decard/
 #sudo cp -r ../nix /mnt/home/decard/
@@ -40,7 +41,7 @@ sudo curl https://raw.githubusercontent.com/decard2/nix/main/flake.nix -o ./flak
 
 4. Устанавливаем систему:
 ```bash
-sudo nixos-install --root /mnt --flake '/mnt/etc/nixos#emerald'
+sudo nixos-install --root /mnt --flake '/mnt/home/decard/nix#emerald'
 ```
 
 5. Перезагружаемся:
