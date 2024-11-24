@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
 echo '
-╔═══════════════════════════════════════╗
-║     NixOS Installer by Zhora v1.0     ║
-║      Let's make it smooth, bro!       ║
-╚═══════════════════════════════════════╝
-'
+=================================
+   NixOS Installer by Zhora v1.0
+   Let'"'"'s make it smooth, bro!
+================================='
 
 # Colors for output
 RED='\033[0;31m'
