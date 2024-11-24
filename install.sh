@@ -2,7 +2,7 @@
 
 echo '
 ====================================
-   NixOS Installer by Zhora v1.0-2
+   NixOS Installer by Zhora v1.0-3
    Let'"'"'s make it smooth, bro!
 ===================================='
 
@@ -13,13 +13,11 @@ NC='\033[0m'
 
 echo -e "${GREEN}🚀 Yo, wassup! Let's get this party started!${NC}"
 
-# Дебаг инфа
-echo "Checking EFI status..."
-ls -la /sys/firmware/efi
-echo "EFI directory exists: $?"
-
 # Check for UEFI
-if [ ! -d "/sys/firmware/efi" ]; then
+test -d "/sys/firmware/efi"
+UEFI_CHECK=$?
+
+if [ $UEFI_CHECK -ne 0 ]; then
     echo -e "${RED}❌ Bruh, where's UEFI? Can't roll without it!${NC}"
     exit 1
 fi
