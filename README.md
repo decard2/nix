@@ -25,12 +25,21 @@ cd nix
 sudo nix --extra-experimental-features "nix-command flakes" run github:nix-community/disko -- --mode destroy,format,mount ./nixos/disko.nix
 ```
 
-3. Устанавливаем систему:
+3. Генерим конфиг оборудования:
+```bash
+sudo nixos-generate-config --root /mnt
+sudo cp /mnt/etc/nixos/hardware-configuration.nix ./nixos/
+sudo mkdir -p /mnt/home/decard/
+sudo cp -r ../nix /mnt/home/decard/
+sudo chown -R 1000:1000 /mnt/home/decard/nix
+```
+
+4. Устанавливаем систему:
 ```bash
 sudo nixos-install --flake .#emerald
 ```
 
-4. Перезагружаемся:
+5. Перезагружаемся:
 ```bash
 reboot
 ```
@@ -42,4 +51,5 @@ reboot
 ```bash
 passwd
 ```
-3. Profit! 🎉
+3. Все конфиги системы находятся в ~/nix
+4. Profit! 🎉

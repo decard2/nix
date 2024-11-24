@@ -1,7 +1,9 @@
 { config, pkgs, inputs, ... }:
 
 {
-  imports = [ ];
+  imports = [
+    ./hardware-configuration.nix
+  ];
 
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
@@ -19,6 +21,7 @@
       "virtio_scsi"
       "sd_mod"
       "sr_mod"
+      "btrfs"
     ];
   };
 
