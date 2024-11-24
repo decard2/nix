@@ -1,74 +1,66 @@
 #!/usr/bin/env bash
 
-# Устанавливаем русскую локаль в лайв-системе
-export NIXPKGS_ALLOW_UNFREE=1
-nix-shell -p glibcLocales --run "
-  locale-gen
-  export LANG=ru_RU.UTF-8
-  export LC_ALL=ru_RU.UTF-8
-"
-
 echo '
 ╔═══════════════════════════════════════╗
-║     Установщик NixOS от Жоры v1.0     ║
-║         Сейчас всё будет четко!       ║
+║     NixOS Installer by Zhora v1.0     ║
+║      Let's make it smooth, bro!       ║
 ╚═══════════════════════════════════════╝
 '
 
-# Цвета для вывода
+# Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-echo -e "${GREEN}🚀 Здорова, братан! Ща всё замутим по красоте!${NC}"
+echo -e "${GREEN}🚀 Yo, wassup! Let's get this party started!${NC}"
 
-# Проверяем UEFI
+# Check for UEFI
 if [ ! -d "/sys/firmware/efi" ]; then
-    echo -e "${RED}❌ Слышь, а где UEFI? Без него никак!${NC}"
+    echo -e "${RED}❌ Bruh, where's UEFI? Can't roll without it!${NC}"
     exit 1
 fi
 
-# Спрашиваем про диск
-echo -e "${GREEN}💽 Куда ставить будем? Гони название диска (типа /dev/nvme0n1 или /dev/sda)${NC}"
+# Ask for disk
+echo -e "${GREEN}💽 Which disk we're hitting? Drop the name (like /dev/nvme0n1 or /dev/sda)${NC}"
 read DISK
 
-# Проверяем существование диска
+# Check if disk exists
 if [ ! -b "$DISK" ]; then
-    echo -e "${RED}❌ Ты чё, братан? Нет такого диска!${NC}"
+    echo -e "${RED}❌ Nah fam, that disk doesn't exist!${NC}"
     exit 1
 fi
 
-echo -e "${GREEN}🔄 Щас порежем диск на разделы...${NC}"
+echo -e "${GREEN}🔄 Slicing up that disk real quick...${NC}"
 
-# Создаем разделы
+# Create partitions
 parted "$DISK" -- mklabel gpt
 parted "$DISK" -- mkpart ESP fat32 1MiB 512MiB
 parted "$DISK" -- set 1 esp on
 parted "$DISK" -- mkpart primary 512MiB 100%
 
-# Форматируем разделы
+# Format partitions
 mkfs.fat -F 32 -n boot "${DISK}1"
 mkfs.ext4 -L nixos "${DISK}2"
 
-# Монтируем разделы
+# Mount partitions
 mount "${DISK}2" /mnt
 mkdir -p /mnt/boot
 mount "${DISK}1" /mnt/boot
 
-echo -e "${GREEN}📦 Тяну конфиг с гитхаба...${NC}"
+echo -e "${GREEN}📦 Pulling config from GitHub...${NC}"
 
-# Клонируем репозиторий с конфигурацией
+# Clone configuration repository
 nix-shell -p git --run "git clone https://github.com/decard2/nix.git /mnt/etc/nixos"
 
-echo -e "${GREEN}⚙️ Генерю hardware-configuration.nix...${NC}"
+echo -e "${GREEN}⚙️ Generating hardware-configuration.nix...${NC}"
 
-# Генерируем hardware-configuration.nix
+# Generate hardware-configuration.nix
 nixos-generate-config --root /mnt
 
-echo -e "${GREEN}🔨 Погнали ставить систему...${NC}"
+echo -e "${GREEN}🔨 Time to install this bad boy...${NC}"
 
-# Устанавливаем систему
+# Install the system
 nixos-install --flake /mnt/etc/nixos#nixos
 
-echo -e "${GREEN}✅ Красота! Система встала! Не забудь сменить пароль после ребута (passwd decard)${NC}"
-echo -e "${GREEN}🔄 Можешь ребутаться и логиниться под юзером decard с паролем changeme${NC}"
+echo -e "${GREEN}✅ Sweet! All done! Don't forget to change your password after reboot (passwd decard)${NC}"
+echo -e "${GREEN}🔄 You can reboot now and login as decard with password 'changeme'${NC}"
