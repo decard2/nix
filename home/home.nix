@@ -1,5 +1,11 @@
 { config, pkgs, ... }:
 
+let
+  unstable = import nixpkgs-unstable {
+    system = "x86_64-linux";
+    config.allowUnfree = true;
+  };
+in
 {
   home.username = "decard";
   home.homeDirectory = "/home/decard";
@@ -16,6 +22,7 @@
     #pamixer
     #grim
     #slurp
+    unstable.zed
   ];
 
   programs.kitty = {
