@@ -21,15 +21,15 @@
   time.timeZone = "Asia/Irkutsk";
   i18n.defaultLocale = "ru_RU.UTF-8";
 
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
-        user = "greeter";
-      };
-    };
-  };
+  # services.greetd = {
+  #   enable = true;
+  #   settings = {
+  #     default_session = {
+  #       command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+  #       user = "greeter";
+  #     };
+  #   };
+  # };
 
   security.rtkit.enable = true;
   services.pipewire = {
