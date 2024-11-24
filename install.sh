@@ -2,7 +2,7 @@
 
 echo '
 =================================
-   NixOS Installer by Zhora v1.0
+   NixOS Installer by Zhora v1.0-0
    Let'"'"'s make it smooth, bro!
 ================================='
 
