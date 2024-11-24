@@ -2,6 +2,13 @@
 
 ## Установка с ISO
 
+sudo nix \
+    --experimental-features 'flakes nix-command' \
+    run github:nix-community/disko#disko-install -- \
+    --flake "github:decard2/nix#emerald" \
+    --write-efi-boot-entries \
+    --disk main "/dev/vda"
+
 ### Подготовка
 1. Скачай [NixOS minimal ISO](https://nixos.org/download#nixos-iso)
 2. Загрузись с флешки
