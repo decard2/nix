@@ -25,14 +25,19 @@ in
     #slurp
 
     # Софт
-    zed-editor
     btop
     neofetch
+
+    # Разрабные дела
+    zed-editor
+    rust-analyzer
+    nodePackages.typescript-language-server  # LSP для TS/JS
+    nodePackages.typescript
 
     # Шрифты
       jetbrains-mono
       noto-fonts
-      noto-fonts-cjk
+      noto-fonts-cjk-sans
       noto-fonts-emoji
       (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
   ];
@@ -103,6 +108,29 @@ in
     prompt-text = "> "
     hide-cursor = true
     ascii-input = true
+  '';
+
+  home.file.".config/zed/settings.json".text = ''
+  {
+    "theme": "One Dark",
+    "lsp": {
+      "rust-analyzer": {
+        "binary": {
+          "path": "/run/current-system/sw/bin/rust-analyzer"
+        }
+      },
+      "typescript-language-server": {
+        "binary": {
+          "path": "/run/current-system/sw/bin/typescript-language-server"
+        },
+        "initialization_options": {
+          "preferences": {
+            "importModuleSpecifierPreference": "relative"
+          }
+        }
+      }
+    }
+  }
   '';
 
   home.stateVersion = "24.05";
