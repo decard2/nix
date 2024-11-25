@@ -50,9 +50,12 @@
 
   # Разрешаем создание TUN/TAP интерфейсов
   security.wrappers = {
-    "tun" = {
+    tun = {
       source = "${pkgs.iproute2}/bin/ip";
       capabilities = "cap_net_admin+ep";
+      owner = "root";  # Добавляем владельца
+      group = "netdev";  # И группу
+      permissions = "u+rx,g+rx";  # Права доступа
     };
   };
 
