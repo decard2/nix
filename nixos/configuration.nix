@@ -18,6 +18,8 @@
   networking = {
       hostName = "emerald";
       networkmanager.enable = true;
+      # Отключаем стандартный фаерволл для WireGuard, иначе могут быть проблемы
+      firewall.checkReversePath = false;
   };
 
   time.timeZone = "Asia/Irkutsk";
@@ -61,6 +63,7 @@
     mesa
     spice-vdagent
     spice-protocol
+    wireguard-tools
   ];
 
   programs.hyprland.enable = true;

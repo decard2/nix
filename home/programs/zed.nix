@@ -1,6 +1,13 @@
 { config, pkgs, ... }:
 
 {
+  home.packages = with pkgs; [
+    zed-editor
+    rust-analyzer
+    nodePackages.typescript-language-server
+    nodePackages.typescript
+  ];
+
   home.file.".config/zed/settings.json".text = ''
   {
     "theme": "One Dark",

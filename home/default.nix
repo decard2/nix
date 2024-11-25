@@ -10,6 +10,7 @@ in
   imports = [
     ./programs
     ./packages.nix
+    ./fonts.nix
   ];
 
   home = {

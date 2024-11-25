@@ -1,6 +1,10 @@
 { config, pkgs, ... }:
 
 {
+  home.packages = with pkgs; [
+    tofi
+  ];
+
   home.file.".config/tofi/config".text = ''
     # Основные настройки
     width = 100%
