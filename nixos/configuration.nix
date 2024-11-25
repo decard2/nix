@@ -53,6 +53,13 @@
     wireguard.enable = true;
   };
 
+  services.resolved = {
+    enable = true;
+    dnssec = "false";
+    domains = [ "~." ];
+    fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
+  };
+
   time.timeZone = "Asia/Irkutsk";
 
   services.greetd = {
