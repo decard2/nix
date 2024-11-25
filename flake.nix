@@ -22,7 +22,7 @@
             {
                 home-manager.useGlobalPkgs = true;
                 home-manager.useUserPackages = true;
-                home-manager.users.decard = import ./home/home.nix;
+                home-manager.users.decard = import ./home;
                 home-manager.extraSpecialArgs = {
                   inherit nixpkgs-unstable;
                 };
