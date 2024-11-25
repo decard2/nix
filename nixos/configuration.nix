@@ -9,17 +9,45 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
 
-  boot.loader = {
-      systemd-boot.enable = true;
+  boot = {
+    kernelPackages = pkgs.linuxPackages_zen;
+
+    # Настраиваем загрузчик systemd-boot
+    loader = {
+      systemd-boot = {
+        enable = true;
+        consoleMode = "max";        # Максимальное разрешение в меню загрузки
+        editor = false;             # Отключаем возможность редактирования параметров (безопасность)
+      };
       efi.canTouchEfiVariables = true;
+      timeout = 2;                  # Тайм-аут в секундах
+    };
+
+    # Настраиваем Plymouth
+    plymouth = {
+      enable = true;
+      theme = "breeze";            # Можно выбрать другие темы
+    };
+
+    # Параметры ядра для тихой загрузки
+    kernelParams = [
+      "quiet"                      # Убираем большинство сообщений ядра
+      "splash"                     # Включаем сплэш
+      "rd.systemd.show_status=false"
+      "rd.udev.log_level=3"       # Уменьшаем уровень логирования
+      "udev.log_priority=3"
+    ];
+
+    # Убираем задержку при загрузке
+    initrd.verbose = false;
+    initrd.availableKernelModules = [ "virtio_gpu" "virtio_pci" ];
   };
-  boot.initrd.availableKernelModules = [ "virtio_gpu" "virtio_pci" ];
 
   networking = {
-      hostName = "emerald";
-      networkmanager.enable = true;
-      # Отключаем стандартный фаерволл для WireGuard, иначе могут быть проблемы
-      firewall.checkReversePath = false;
+    hostName = "emerald";
+    networkmanager.enable = true;
+    # Отключаем стандартный фаерволл для WireGuard, иначе могут быть проблемы
+    firewall.checkReversePath = false;
   };
 
   time.timeZone = "Asia/Irkutsk";
