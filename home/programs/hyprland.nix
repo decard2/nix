@@ -78,9 +78,9 @@
 
       # Запускаем два терминала при старте
       exec-once = [
-        "kitty --class terminal-scratch" # Обычный терминал
-        "kitty --class btop-scratch -e btop" # Терминал с btop
-        "telegram-desktop --class telegram-scratch"
+        "[workspace special:term silent] kitty --class terminal-scratch"
+        "[workspace special:btop silent] kitty --class btop-scratch -e btop"
+        "[workspace special:telegram silent] telegram-desktop --class telegram-scratch"
       ];
 
       windowrule = [
@@ -113,7 +113,7 @@
       general = {
         gaps_in = 0;
         gaps_out = 0;
-        border_size = 2;
+        border_size = 1;
         "col.active_border" = "rgba(33ccffee)";
         "col.inactive_border" = "rgba(595959aa)";
 
