@@ -46,12 +46,10 @@
   networking = {
     hostName = "emerald";
     networkmanager.enable = true;
-    # Отключаем стандартный фаерволл для WireGuard, иначе могут быть проблемы
     firewall.checkReversePath = false;
   };
 
   time.timeZone = "Asia/Irkutsk";
-  #i18n.defaultLocale = "ru_RU.UTF-8";
 
   services.greetd = {
     enable = true;
