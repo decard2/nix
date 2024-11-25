@@ -46,11 +46,11 @@
   networking = {
     hostName = "emerald";
     # networkmanager.enable = true;
-    firewall = {
-      checkReversePath = false;
-      allowedUDPPorts = [ 41849 ];
-    };
-    wireguard.enable = true;
+    # firewall = {
+    #   checkReversePath = false;
+    #   allowedUDPPorts = [ 41849 ];
+    # };
+    #wireguard.enable = true;
     wg-quick.interfaces = {
       wg0 = {
         configFile = "/home/decard/nix/home/programs/wireguard/vpn.conf";
@@ -58,12 +58,12 @@
     };
   };
 
-  services.resolved = {
-    enable = true;
-    dnssec = "false";
-    domains = [ "~." ];
-    fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
-  };
+  # services.resolved = {
+  #   enable = true;
+  #   dnssec = "false";
+  #   domains = [ "~." ];
+  #   fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
+  # };
 
   time.timeZone = "Asia/Irkutsk";
 
