@@ -123,7 +123,14 @@
       # Закругления и тени
       decoration = {
         rounding = 8;
-        drop_shadow = false;   # На хрен тени, только ресурсы жрут
+
+        blur = {
+          enabled = false;
+        };
+
+        shadow = {
+          enabled = false;
+        };
       };
 
       # Анимации
