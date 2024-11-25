@@ -1,5 +1,8 @@
 { config, pkgs, ... }:
 
+let
+  firefox-addons = pkgs.nur.repos.rycee.firefox-addons;
+in
 {
   programs.firefox = {
     enable = true;
@@ -25,7 +28,7 @@
       };
 
       # Ставим расширения
-      extensions = with pkgs.firefox-addons; [
+      extensions = with firefox-addons; [
         bitwarden
       ];
 
