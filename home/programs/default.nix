@@ -6,7 +6,6 @@
     ./tofi.nix
     ./nu.nix
     ./firefox.nix
-    #./network.nix
     ./telegram.nix
   ];
 }
