@@ -7,5 +7,6 @@
     ./nu.nix
     ./firefox.nix
     ./telegram.nix
+    ./nekoray.nix
   ];
 }
