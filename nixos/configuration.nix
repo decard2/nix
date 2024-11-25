@@ -48,16 +48,10 @@
     initrd.availableKernelModules = [ "virtio_gpu" "virtio_pci" ];
   };
 
-  # Разрешаем создание TUN/TAP интерфейсов
-  security.wrappers = {
-    tun = {
-      source = "${pkgs.iproute2}/bin/ip";
-      capabilities = "cap_net_admin+ep";
-      owner = "root";  # Добавляем владельца
-      group = "netdev";  # И группу
-      permissions = "u+rx,g+rx";  # Права доступа
-    };
-  };
+  # Настраиваем права для /dev/net/tun
+  services.udev.extraRules = ''
+    KERNEL=="tun", GROUP="netdev", MODE="0666", OPTIONS+="static_node=net/tun"
+  '';
 
   environment.shells = with pkgs; [ nushell ];
 
