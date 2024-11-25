@@ -1,7 +1,7 @@
 {
   imports = [
     ./kitty.nix
-    ./zed.nix
+    #./zed.nix
     ./hyprland.nix
     ./tofi.nix
     ./nu.nix
