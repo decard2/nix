@@ -8,23 +8,28 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = { self, nixpkgs, nur, disko,  home-manager, ... }:
-     let
-       system = "x86_64-linux";
-       hostName = "emerald";
-     in
-     {
-       nixosConfigurations.${hostName} = nixpkgs.lib.nixosSystem {
-         inherit system;
-         modules = [
-           ./nixos/configuration.nix
-           disko.nixosModules.disko
-           home-manager.nixosModules.home-manager
+    let
+      system = "x86_64-linux";
+      hostName = "emerald";
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        overlays = [ nur.overlay ];
+      };
+      in
+      {
+        nixosConfigurations.${hostName} = nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules = [
+            ./nixos/configuration.nix
+            disko.nixosModules.disko
+            home-manager.nixosModules.home-manager
             {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.users.decard = import ./home;
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.decard = import ./home { inherit pkgs; };
             }
-         ];
-       };
-     };
+          ];
+        };
+      };
 }
