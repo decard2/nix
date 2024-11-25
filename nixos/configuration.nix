@@ -101,6 +101,7 @@
     spice-vdagent
     spice-protocol
     wireguard-tools
+    dnsutils
   ];
 
   programs.hyprland.enable = true;
