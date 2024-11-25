@@ -87,7 +87,7 @@
     mesa
     spice-vdagent
     spice-protocol
-    wireguard-tools
+    nekoray
     dnsutils
   ];
 
