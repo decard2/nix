@@ -87,7 +87,6 @@
     mesa
     spice-vdagent
     spice-protocol
-    nekoray
     dnsutils
   ];
 
