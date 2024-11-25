@@ -4,7 +4,7 @@
   home.packages = with pkgs; [
     telegram-desktop
     hunspell
-    hunspell-dict-ru-ru    # Словарь для русского языка
+    hunspellDicts.ru_RU
   ];
 
   # Основные настройки
