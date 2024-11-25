@@ -11,6 +11,9 @@
 
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
+    kernelModules = [ "tun" ];
+
+
 
     # Настраиваем загрузчик systemd-boot
     loader = {
@@ -38,10 +41,22 @@
       "udev.log_priority=3"
     ];
 
+
+
     # Убираем задержку при загрузке
     initrd.verbose = false;
     initrd.availableKernelModules = [ "virtio_gpu" "virtio_pci" ];
   };
+
+  # Разрешаем создание TUN/TAP интерфейсов
+  security.wrappers = {
+    "tun" = {
+      source = "${pkgs.iproute2}/bin/ip";
+      capabilities = "cap_net_admin+ep";
+    };
+  };
+
+  environment.shells = with pkgs; [ nushell ];
 
   networking = {
     hostName = "emerald";
@@ -75,7 +90,7 @@
 
   users.users.decard = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "video" ];
+    extraGroups = [ "wheel" "networkmanager" "video" "netdev"];
     initialPassword = "changeme";
     shell = pkgs.nushell;
   };
