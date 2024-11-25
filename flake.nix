@@ -27,7 +27,8 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.decard = import ./home { inherit pkgs; };
+              home-manager.extraSpecialArgs = { inherit pkgs; };
+              home-manager.users.decard = import ./home;
             }
           ];
         };
