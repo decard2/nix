@@ -86,19 +86,19 @@
       windowrule = [
         # Правила для обычного терминала
         "float,^(terminal-scratch)$"
-        "size 80% 60%,^(terminal-scratch)$"
+        "size 95% 95%,^(terminal-scratch)$"
         "center,^(terminal-scratch)$"
         "workspace special:term,^(terminal-scratch)$"
 
         # Правила для btop
         "float,^(btop-scratch)$"
-        "size 80% 70%,^(btop-scratch)$"
+        "size 95% 95%,^(btop-scratch)$"
         "center,^(btop-scratch)$"
         "workspace special:btop,^(btop-scratch)$"
 
         # Правила для телеграма
         "float,^(telegram-scratch)$"
-        "size 80% 80%,^(telegram-scratch)$"
+        "size 95% 95%,^(telegram-scratch)$"
         "center,^(telegram-scratch)$"
         "workspace special:telegram,^(telegram-scratch)$"
       ];
