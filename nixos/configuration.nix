@@ -13,8 +13,6 @@
     kernelPackages = pkgs.linuxPackages_zen;
     kernelModules = [ "tun" ];
 
-
-
     # Настраиваем загрузчик systemd-boot
     loader = {
       systemd-boot = {
@@ -42,10 +40,8 @@
     ];
 
 
-
     # Убираем задержку при загрузке
     initrd.verbose = false;
-    initrd.availableKernelModules = [ "virtio_gpu" "virtio_pci" ];
   };
 
   # Настраиваем права для /dev/net/tun
@@ -71,12 +67,6 @@
     };
   };
 
-  virtualisation.libvirtd.enable = true;
-  services.qemuGuest.enable = true;  # Включает QEMU guest tools
-  services.spice-vdagentd.enable = true;  # Включает SPICE agent
-  systemd.services.spice-vdagentd.enable = true;
-  systemd.services.qemu-guest-agent.enable = true;
-
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -94,12 +84,6 @@
 
   environment.systemPackages = with pkgs; [
     git
-    vulkan-tools
-    vulkan-validation-layers
-    mesa
-    spice-vdagent
-    spice-protocol
-    dnsutils
   ];
 
   programs.hyprland.enable = true;
