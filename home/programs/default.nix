@@ -1,12 +1,12 @@
 {
   imports = [
-    ./kitty.nix
+    #./kitty.nix
     #./zed.nix
-    ./hyprland.nix
-    ./tofi.nix
+    #./hyprland.nix
+    #./tofi.nix
     ./nu.nix
-    ./firefox.nix
-    ./telegram.nix
-    ./nekoray.nix
+    #./firefox.nix
+    #./telegram.nix
+    #./nekoray.nix
   ];
 }
