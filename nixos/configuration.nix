@@ -46,7 +46,11 @@
   networking = {
     hostName = "emerald";
     networkmanager.enable = true;
-    firewall.checkReversePath = false;
+    firewall = {
+      checkReversePath = false;
+      allowedUDPPorts = [ 41849 ];
+    };
+    wireguard.enable = true;
   };
 
   time.timeZone = "Asia/Irkutsk";
