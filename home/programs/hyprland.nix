@@ -17,8 +17,8 @@
         "SUPER, V, togglefloating,"
         "SUPER, P, pseudo,"
         "SUPER, S, togglesplit,"
-        "SUPER_SHIFT, W, exec, nmcli connection up work-wireguard"    # Включить VPN
-        "SUPER_SHIFT, E, exec, nmcli connection down work-wireguard"  # Выключить VPN
+        "SUPER_SHIFT, W, exec, nmcli connection up vpn"    # Включить VPN
+        "SUPER_SHIFT, E, exec, nmcli connection down vpn"  # Выключить VPN
         # Бинды для скрэтчпадов
         "CTRL, grave, togglespecialworkspace, term"     # CTRL + ~ для обычного терминала
         "SUPER, grave, togglespecialworkspace, btop"    # SUPER + ~ для btop
