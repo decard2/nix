@@ -1,6 +1,4 @@
-{ config, pkgs, ... }:
-
-{
+{pkgs, ...}: {
   home.packages = with pkgs; [
     telegram-desktop
     hunspell
@@ -26,7 +24,9 @@
         },
         "chat": {
           "send_by_ctrl_enter": true
-        }
+        },
+        "chat_theme": "night",
+        "window_theme": "night"
       }
     }
   '';
