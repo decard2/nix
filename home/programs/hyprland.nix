@@ -4,6 +4,8 @@
     wireplumber
     brightnessctl
     wlsunset
+    hyprshot
+    wl-clipboard
   ];
 
   wayland.windowManager.hyprland = {
@@ -151,6 +153,7 @@
         "SUPER, tab, workspace, previous"
         "SUPER, F, fullscreen, 0"
         "SUPER_SHIFT, F, fullscreen, 1"
+        ", Print, exec, hyprshot -m region --clipboard-only"
 
         # Медиа клавиши
         ", XF86AudioPlay, exec, playerctl play-pause"
