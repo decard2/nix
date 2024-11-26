@@ -1,28 +1,17 @@
 {pkgs, ...}: {
-  home.packages = with pkgs; [
-    # Яндекс для обычного серфинга
-    yandex-browser
-
-    # Чистый Chromium для разработки
-    chromium
-  ];
-
-  # Настройки для Chromium (минималистичные, для разработки)
   programs.chromium = {
     enable = true;
     commandLineArgs = [
-      "--force-dark-mode" # Тёмная тема
-      "--enable-features=VaapiVideoDecoder" # Поддержка VAAPI для видео
+      "--enable-features=VaapiVideoDecodeLinuxGL"
+      "--enable-zero-copy"
+      "--force-dark-mode"
     ];
+    package = pkgs.chromium.override {
+      enableWideVine = true; # Для поддержки DRM контента
+    };
   };
 
-  # Добавляем Bitwarden в Яндекс
-  xdg.configFile."yandex-browser/Default/Extensions/bitwarden.json".text = ''
-    {
-      "environment": "self-hosted",
-      "server": "https://vault.decard.rolder.app",
-      "pinLock": true,
-      "pinLockOption": 0
-    }
-  '';
+  home.packages = with pkgs; [
+    firefox
+  ];
 }
