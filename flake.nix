@@ -1,6 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-24.11";
@@ -8,6 +9,7 @@
   };
   outputs = {
     nixpkgs,
+    nixpkgs-unstable,
     disko,
     home-manager,
     ...
@@ -15,6 +17,10 @@
     system = "x86_64-linux";
     hostName = "emerald";
     pkgs = import nixpkgs {
+      inherit system;
+      config.allowUnfree = true;
+    };
+    pkgs-unstable = import nixpkgs-unstable {
       inherit system;
       config.allowUnfree = true;
     };
@@ -28,10 +34,11 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = {inherit pkgs;};
+          home-manager.extraSpecialArgs = {inherit pkgs pkgs-unstable;};
           home-manager.users.decard = import ./home;
         }
       ];
+      specialArgs = {inherit pkgs-unstable;};
     };
   };
 }
