@@ -59,7 +59,7 @@
         pseudotile = true;
         preserve_split = true;
         split_width_multiplier = 1.0;
-        force_split = 1;
+        force_split = 2;
         special_scale_factor = 0.95;
       };
 
@@ -81,6 +81,7 @@
         "[workspace special:telegram silent] telegram-desktop"
         "udiskie &"
         "wlsunset -l 52.3 -L 104.3 -t 4500 -T 6500"
+        "sudo awg-quick up ~/nix/config/vpn.conf"
       ];
 
       # 7. Бинды клавиш и мыши
@@ -95,14 +96,13 @@
         "SUPER, Return, exec, kitty"
         "SUPER, Q, killactive,"
         "SUPER, M, exit,"
-        "SUPER, E, exec, dolphin"
         "SUPER, V, togglefloating,"
         "SUPER, P, pseudo,"
         "SUPER, S, togglesplit,"
 
         # VPN
-        "SUPER_SHIFT, W, exec, nmcli connection up vpn"
-        "SUPER_SHIFT, E, exec, nmcli connection down vpn"
+        "SUPER, W, exec, sudo awg-quick up ~/nix/config/vpn.conf"
+        "SUPER, E, exec, sudo awg-quick down ~/nix/config/vpn.conf"
 
         # Скретчпады
         "CTRL, grave, togglespecialworkspace, term"

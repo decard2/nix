@@ -20,7 +20,6 @@
     {
       "theme": "One Dark",
       "vim_mode": false,
-      "proxy": "socks5://127.0.0.1:10808",
       "auto_install_extensions": {
         "nix": true,
         "biome": true

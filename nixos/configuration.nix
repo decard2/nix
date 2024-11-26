@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  pkgs-unstable,
+  ...
+}: {
   imports = [
     ./hardware-configuration.nix
     ./disko.nix
@@ -11,8 +15,9 @@
   # Настройки загрузки
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
-    kernelModules = ["tun"];
-
+    extraModulePackages = [
+      pkgs.linuxPackages_zen.amneziawg
+    ];
     loader = {
       systemd-boot = {
         enable = true;
@@ -30,7 +35,6 @@
 
     kernelParams = [
       "quiet"
-      "splash"
       "rd.systemd.show_status=false"
       "rd.udev.log_level=3"
       "udev.log_priority=3"
@@ -58,6 +62,17 @@
       extraConfig = ''
         Defaults timestamp_timeout=1440
       '';
+      extraRules = [
+        {
+          users = ["decard"];
+          commands = [
+            {
+              command = "/run/current-system/sw/bin/awg-quick";
+              options = ["NOPASSWD"];
+            }
+          ];
+        }
+      ];
     };
   };
 
@@ -82,6 +97,12 @@
       alsa.support32Bit = true;
       pulse.enable = true;
     };
+    resolved = {
+      enable = true;
+      dnssec = "true";
+      domains = ["~."];
+      fallbackDns = ["1.1.1.1" "8.8.8.8"];
+    };
   };
 
   # Пользователи и окружение
@@ -100,6 +121,7 @@
       pamixer
       pavucontrol
       home-manager
+      pkgs-unstable.amneziawg-tools
     ];
   };
 
