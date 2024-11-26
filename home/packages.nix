@@ -4,6 +4,5 @@
     btop
     neofetch
     vim
-    firefox
   ];
 }

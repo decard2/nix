@@ -1,7 +1,6 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
-    nur.url = "github:nix-community/NUR";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-24.11";
@@ -9,7 +8,6 @@
   };
   outputs = {
     nixpkgs,
-    nur,
     disko,
     home-manager,
     ...
@@ -19,7 +17,6 @@
     pkgs = import nixpkgs {
       inherit system;
       config.allowUnfree = true;
-      overlays = [nur.overlay];
     };
   in {
     nixosConfigurations.${hostName} = nixpkgs.lib.nixosSystem {
@@ -27,14 +24,14 @@
       modules = [
         ./nixos/configuration.nix
         disko.nixosModules.disko
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.extraSpecialArgs = {inherit pkgs;};
+          home-manager.users.decard = import ./home;
+        }
       ];
-    };
-
-    homeConfigurations.decard = home-manager.lib.homeManagerConfiguration {
-      inherit pkgs;
-      modules = [./home];
-      # Если нужны какие-то специальные параметры из NUR или других источников
-      extraSpecialArgs = {inherit pkgs;};
     };
   };
 }

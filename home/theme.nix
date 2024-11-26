@@ -28,8 +28,6 @@
 
   home.sessionVariables = {
     QT_QPA_PLATFORMTHEME = "qt5ct";
-    # Для Qt6 приложений
-    QT_STYLE_OVERRIDE = "kvantum";
     XCURSOR_THEME = "Adwaita";
   };
 }
