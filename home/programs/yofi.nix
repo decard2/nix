@@ -11,7 +11,7 @@
     term = "kitty"
 
     corner_radius = "16"
-    font = "JetBrains Mono Nerd Font"
+    font = "FiraCode Nerd Font"
     font_size = 24
 
     bg_color = 0x1E1E2Eee
