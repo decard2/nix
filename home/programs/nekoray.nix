@@ -1,6 +1,4 @@
-{ config, pkgs, ... }:
-
-{
+{pkgs, ...}: {
   # Просто устанавливаем nekoray
   home.packages = with pkgs; [
     nekoray

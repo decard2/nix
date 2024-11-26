@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{...}: {
   imports = [
     ./programs
     ./packages.nix
