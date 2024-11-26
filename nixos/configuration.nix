@@ -43,6 +43,12 @@
     initrd.verbose = false;
   };
 
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
+
   # Сеть
   networking = {
     hostName = "emerald";
