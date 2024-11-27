@@ -130,6 +130,11 @@
       home-manager
       pkgs-unstable.amneziawg-tools
       nvd
+      intel-media-driver
+      libvdpau
+      vulkan-loader
+      vulkan-validation-layers
+      vulkan-tools
     ];
   };
 
