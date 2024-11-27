@@ -52,7 +52,7 @@
         },
         "biome": {
           "binary": {
-            "path": "/home/decard/.nix-profile/bin/biome",
+            "path": "/etc/profiles/per-user/decard/bin/biome",
             "arguments": ["lsp-proxy"]
           }
         },
