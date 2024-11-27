@@ -104,6 +104,10 @@
         "SUPER, W, exec, sudo awg-quick up ~/nix/config/vpn.conf"
         "SUPER, E, exec, sudo awg-quick down ~/nix/config/vpn.conf"
 
+        # Вирткулка
+        "SUPER_SHIFT, W, exec, virsh -c qemu:///system start win11; virt-viewer --connect qemu:///system win11"
+        "SUPER_SHIFT, E, exec, virsh -c qemu:///system shutdown win11"
+
         # Скретчпады
         "CTRL, grave, togglespecialworkspace, term"
         "SUPER, grave, togglespecialworkspace, btop"
