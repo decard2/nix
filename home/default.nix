@@ -3,7 +3,7 @@
     ./programs
     ./packages.nix
     ./fonts.nix
-    #./environment.nix
+    ./environment.nix
     ./theme.nix
   ];
 
