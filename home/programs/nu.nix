@@ -59,6 +59,7 @@
 
       nrb = "sudo nixos-rebuild switch --flake .#emerald";
       nup = "nix flake update";
+      nd = "nvd diff /run/booted-system/ /run/current-system/";
       g = "gitui";
 
       # Bun алиасы

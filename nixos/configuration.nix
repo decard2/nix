@@ -6,6 +6,7 @@
   imports = [
     ./hardware-configuration.nix
     ./disko.nix
+    ./virtualization.nix
   ];
 
   # Основные настройки системы
@@ -128,6 +129,7 @@
       pavucontrol
       home-manager
       pkgs-unstable.amneziawg-tools
+      nvd
     ];
   };
 

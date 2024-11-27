@@ -8,5 +8,6 @@
     ./browsers.nix
     ./telegram.nix
     ./yazi.nix
+    ./virt-manager.nix
   ];
 }
