@@ -7,17 +7,13 @@
     wl-clipboard
     hyprcursor
     hyprsunset
+    hyprpolkitagent
   ];
 
   wayland.windowManager.hyprland = {
     systemd.enable = false;
     enable = true;
     settings = {
-      env = [
-        "XCURSOR_SIZE,20"
-        "XCURSOR_THEME,Bibata-Modern-Classic"
-      ];
-
       # 1. Мониторы и воркспейсы
       monitor = [
         "DP-1,1920x1080@60.0,1500x0,1.0"

@@ -4,5 +4,9 @@
     btop
     neofetch
     vim
+    udiskie
+    pamixer
+    pavucontrol
+    nvd
   ];
 }
