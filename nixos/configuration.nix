@@ -8,7 +8,7 @@
   imports = [
     ./hardware-configuration.nix # Конфигурация железа
     ./disko.nix # Настройки разделов диска
-    ./virtualization.nix # Настройки виртуализации
+    ./virtualization # Настройки виртуализации
   ];
 
   nix.settings.experimental-features = ["nix-command" "flakes"]; # Включаем флейки
@@ -138,16 +138,10 @@
   };
 
   environment = {
-    shells = with pkgs; [nushell];
     systemPackages = with pkgs; [
       # Основные утилиты
-      git
-      udiskie
-      pamixer
-      pavucontrol
       home-manager
       pkgs-unstable.amneziawg-tools
-      nvd
 
       # Графические драйверы и утилиты
       intel-media-driver
@@ -155,9 +149,6 @@
       vulkan-loader
       vulkan-validation-layers
       vulkan-tools
-
-      # Системные утилиты
-      hyprpolkitagent
     ];
   };
 

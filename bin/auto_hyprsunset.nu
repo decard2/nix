@@ -2,27 +2,39 @@
 
 let LAT = 52.3
 let LON = 104.3
+let TEMP_FILE = "/tmp/hyprsunset_temp"
 
-def kill_previous_hyprsunset [] {
-    let pids = (^pgrep hyprsunset | split row "\n" | where { |line| $line != "" })
-    if not ($pids | is-empty) {
-        $pids | each { |pid|
-            ^kill -9 $pid
-        }
+def get_current_temperature [] {
+    if ($TEMP_FILE | path exists) {
+        open $TEMP_FILE | into int
+    } else {
+        5500  # дефолтная температура
     }
+}
+
+def save_temperature [temp: int] {
+    $temp | save -f $TEMP_FILE
 }
 
 def apply_temperature [time_now: datetime, sun_times: record] {
-    kill_previous_hyprsunset
-
-    if $time_now > $sun_times.sunset or $time_now < $sun_times.sunrise {
-        ^bash -c "hyprsunset -t 3500 >/dev/null 2>&1 &"
+    let current_temp = (get_current_temperature)
+    let target_temp = if $time_now > $sun_times.sunset or $time_now < $sun_times.sunrise {
+        3500
     } else {
-        ^bash -c "hyprsunset -t 5500 >/dev/null 2>&1 &"
+        5500
     }
 
-    sleep 2sec
+    # Меняем температуру только если она отличается
+    if $current_temp != $target_temp {
+        kill_previous_hyprsunset
+        ^bash -c $"hyprsunset -t ($target_temp) >/dev/null 2>&1 &"
+        save_temperature $target_temp
+        sleep 2sec
+    }
 }
+
+# Остальной код без изменений...
+
 
 def calculate_sun_times [] {
     let response = (
