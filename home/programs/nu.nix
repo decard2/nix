@@ -47,6 +47,21 @@
       | default $carapace_completer completer)
 
       $env.config = $current
+
+      # Автозапуск Hyprland в TTY1
+      let display = ($env | get -i DISPLAY | default "")
+      let wayland_display = ($env | get -i WAYLAND_DISPLAY | default "")
+
+      if ($display == "") and ($wayland_display == "") {
+          try {
+              if (uwsm check may-start | complete).exit_code == 0 {
+                  exec uwsm start hyprland-uwsm.desktop
+                  exit
+              }
+          } catch {
+              null
+          }
+      }
     '';
 
     # Алиасы для удобства

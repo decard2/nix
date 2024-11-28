@@ -3,37 +3,44 @@
   pkgs-unstable,
   ...
 }: {
+  # 1. БАЗОВЫЕ НАСТРОЙКИ СИСТЕМЫ
+  # ============================
   imports = [
-    ./hardware-configuration.nix
-    ./disko.nix
-    ./virtualization.nix
+    ./hardware-configuration.nix # Конфигурация железа
+    ./disko.nix # Настройки разделов диска
+    ./virtualization.nix # Настройки виртуализации
   ];
 
-  # Основные настройки системы
-  nix.settings.experimental-features = ["nix-command" "flakes"];
-  system.stateVersion = "24.11";
+  nix.settings.experimental-features = ["nix-command" "flakes"]; # Включаем флейки
+  system.stateVersion = "24.11"; # Версия системы
 
-  # Настройки загрузки
+  # 2. НАСТРОЙКИ ЗАГРУЗЧИКА И ЯДРА
+  # =============================
   boot = {
-    kernelPackages = pkgs.linuxPackages_zen;
+    # Ядро и модули
+    kernelPackages = pkgs.linuxPackages_zen; # Используем zen-ядро
     extraModulePackages = [
-      pkgs.linuxPackages_zen.amneziawg
+      pkgs.linuxPackages_zen.amneziawg # Модуль для VPN
     ];
+
+    # Загрузчик systemd-boot
     loader = {
       systemd-boot = {
         enable = true;
         consoleMode = "max";
-        editor = false;
+        editor = false; # Отключаем редактор параметров для безопасности
       };
       efi.canTouchEfiVariables = true;
-      timeout = 2;
+      timeout = 2; # Тайм-аут меню загрузки
     };
 
+    # Plymouth (загрузочный экран)
     plymouth = {
       enable = true;
       theme = "breeze";
     };
 
+    # Параметры тихой загрузки
     kernelParams = [
       "quiet"
       "rd.systemd.show_status=false"
@@ -44,26 +51,30 @@
     initrd.verbose = false;
   };
 
+  # 3. УПРАВЛЕНИЕ СИСТЕМОЙ
+  # ====================
   nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
+    automatic = true; # Автоматическая очистка
+    dates = "weekly"; # Периодичность
+    options = "--delete-older-than 30d"; # Удалять старше 30 дней
   };
 
-  # Сеть
+  # 4. СЕТЕВЫЕ НАСТРОЙКИ
+  # ===================
   networking = {
-    hostName = "emerald";
+    hostName = "emerald"; # Имя компьютера
     networkmanager = {
       enable = true;
-      wifi.backend = "iwd";
+      wifi.backend = "iwd"; # Используем iwd для WiFi
     };
-    dhcpcd.enable = false;
+    dhcpcd.enable = false; # Отключаем dhcpcd в пользу NetworkManager
   };
 
-  # Безопасность и права доступа
+  # 5. БЕЗОПАСНОСТЬ
+  # ==============
   security = {
-    rtkit.enable = true;
-    polkit.enable = true;
+    rtkit.enable = true; # Планировщик реального времени
+    polkit.enable = true; # Система привилегий
     sudo = {
       enable = true;
       extraConfig = ''
@@ -83,27 +94,32 @@
     };
   };
 
-  # Сервисы
+  # 6. СИСТЕМНЫЕ СЕРВИСЫ
+  # ===================
   services = {
+    # Правила udev
     udev.extraRules = ''
       KERNEL=="tun", GROUP="netdev", MODE="0666", OPTIONS+="static_node=net/tun"
     '';
+
+    # Управление дисками
     udisks2.enable = true;
-    greetd = {
+
+    # D-Bus
+    dbus = {
       enable = true;
-      settings = {
-        default_session = {
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
-          user = "greeter";
-        };
-      };
+      packages = [pkgs.dconf];
     };
+
+    # Аудиосистема
     pipewire = {
       enable = true;
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
     };
+
+    # DNS резолвер
     resolved = {
       enable = true;
       dnssec = "true";
@@ -112,7 +128,8 @@
     };
   };
 
-  # Пользователи и окружение
+  # 7. ПОЛЬЗОВАТЕЛИ И ОКРУЖЕНИЕ
+  # =========================
   users.users.decard = {
     isNormalUser = true;
     extraGroups = ["wheel" "networkmanager" "video" "netdev" "storage"];
@@ -123,6 +140,7 @@
   environment = {
     shells = with pkgs; [nushell];
     systemPackages = with pkgs; [
+      # Основные утилиты
       git
       udiskie
       pamixer
@@ -130,17 +148,76 @@
       home-manager
       pkgs-unstable.amneziawg-tools
       nvd
+
+      # Графические драйверы и утилиты
       intel-media-driver
       libvdpau
       vulkan-loader
       vulkan-validation-layers
       vulkan-tools
+
+      # Системные утилиты
+      hyprpolkitagent
     ];
   };
 
-  # Время
+  # 8. ЛОКАЛИЗАЦИЯ И ВРЕМЯ
+  # ====================
   time.timeZone = "Asia/Irkutsk";
 
-  # Оконный менеджер
-  programs.hyprland.enable = true;
+  # Настройки консоли
+  console = {
+    font = "ter-v32n";
+    packages = with pkgs; [terminus_font];
+    useXkbConfig = true;
+  };
+
+  # Локализация
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    supportedLocales = [
+      "en_US.UTF-8/UTF-8"
+      "ru_RU.UTF-8/UTF-8"
+    ];
+    extraLocaleSettings = {
+      LC_ADDRESS = "ru_RU.UTF-8";
+      LC_IDENTIFICATION = "ru_RU.UTF-8";
+      LC_MEASUREMENT = "ru_RU.UTF-8";
+      LC_MONETARY = "ru_RU.UTF-8";
+      LC_NAME = "ru_RU.UTF-8";
+      LC_NUMERIC = "ru_RU.UTF-8";
+      LC_PAPER = "ru_RU.UTF-8";
+      LC_TELEPHONE = "ru_RU.UTF-8";
+      LC_TIME = "ru_RU.UTF-8";
+    };
+  };
+
+  # 9. ГРАФИЧЕСКОЕ ОКРУЖЕНИЕ
+  # ======================
+  programs = {
+    hyprland = {
+      enable = true;
+      withUWSM = true; # Поддержка Wayland Session Manager
+    };
+    dconf.enable = true; # Для некоторых GNOME-приложений
+  };
+
+  # 10. СИСТЕМНЫЕ СЛУЖБЫ
+  # ==================
+  systemd = {
+    user.services.hyprpolkitagent = {
+      enable = true;
+      description = "Hyprland Polkit Agent";
+      wantedBy = ["graphical-session.target"];
+      wants = ["graphical-session.target"];
+      after = ["graphical-session.target"];
+      serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.hyprpolkitagent}/bin/hyprpolkitagent";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
+    };
+  };
 }

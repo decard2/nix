@@ -1,12 +1,16 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    adwaita-qt
-    adwaita-qt6
-    libsForQt5.qt5ct
     qt6ct
-    libsForQt5.qtstyleplugins
-    libsForQt5.qtstyleplugin-kvantum
+    bibata-cursors
   ];
+
+  home.pointerCursor = {
+    gtk.enable = true;
+    x11.enable = true;
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Modern-Classic";
+    size = 20;
+  };
 
   gtk = {
     enable = true;
@@ -27,7 +31,10 @@
   };
 
   home.sessionVariables = {
-    QT_QPA_PLATFORMTHEME = "qt5ct";
-    XCURSOR_THEME = "Adwaita";
+    QT_QPA_PLATFORMTHEME = "qt6ct";
+    XCURSOR_THEME = "Bibata-Modern-Classic";
+    XCURSOR_SIZE = "20";
+    MOZ_USE_XINPUT2 = "1";
+    GTK_USE_PORTAL = "1";
   };
 }
