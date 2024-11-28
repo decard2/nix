@@ -4,6 +4,10 @@ let LAT = 52.3
 let LON = 104.3
 let TEMP_FILE = "/tmp/hyprsunset_temp"
 
+# Чистим старую температуру при запуске
+rm -f $TEMP_FILE
+5500 | save -f $TEMP_FILE  # Стартуем с дефолтной температуры
+
 def get_current_temperature [] {
     if ($TEMP_FILE | path exists) {
         open $TEMP_FILE | into int
@@ -24,8 +28,8 @@ def apply_temperature [time_now: datetime, sun_times: record] {
         5500
     }
 
-    # Меняем температуру только если она отличается
     if $current_temp != $target_temp {
+
         kill_previous_hyprsunset
         ^bash -c $"hyprsunset -t ($target_temp) >/dev/null 2>&1 &"
         save_temperature $target_temp
@@ -33,8 +37,15 @@ def apply_temperature [time_now: datetime, sun_times: record] {
     }
 }
 
-# Остальной код без изменений...
-
+def kill_previous_hyprsunset [] {
+    # Ищем процессы hyprsunset и убиваем их
+    let processes = (ps | where name =~ 'hyprsunset')
+    if not ($processes | is-empty) {
+        $processes | each { |proc|
+            kill -f $proc.pid
+        }
+    }
+}
 
 def calculate_sun_times [] {
     let response = (
