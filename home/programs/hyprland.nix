@@ -3,14 +3,21 @@
     playerctl
     wireplumber
     brightnessctl
-    wlsunset
     hyprshot
     wl-clipboard
+    hyprcursor
+    hyprsunset
   ];
 
   wayland.windowManager.hyprland = {
+    systemd.enable = false;
     enable = true;
     settings = {
+      env = [
+        "XCURSOR_SIZE,20"
+        "XCURSOR_THEME,Bibata-Modern-Classic"
+      ];
+
       # 1. Мониторы и воркспейсы
       monitor = [
         "DP-1,1920x1080@60.0,1500x0,1.0"
@@ -36,6 +43,7 @@
         "col.active_border" = "rgba(33ccffee)";
         "col.inactive_border" = "rgba(595959aa)";
         layout = "dwindle";
+        no_focus_fallback = false;
       };
 
       decoration = {
@@ -76,12 +84,13 @@
 
       # 6. Автозапуск
       exec-once = [
-        "[workspace special:term silent] kitty --class btop-scratch"
-        "[workspace special:btop silent] kitty -e btop"
-        "[workspace special:telegram silent] telegram-desktop"
-        "udiskie &"
-        "wlsunset -l 52.3 -L 104.3 -t 4500 -T 6500"
-        "sudo awg-quick up ~/nix/config/vpn.conf"
+        "uwsm app -- hyprcursor"
+        "[workspace special:term silent] uwsm app -- kitty --class btop-scratch"
+        "[workspace special:btop silent] uwsm app -- kitty -e btop"
+        "[workspace special:telegram silent] uwsm app -- telegram-desktop"
+        "uwsm app -- udiskie"
+        "uwsm app -- ~/nix/bin/auto_hyprsunset.nu"
+        "uwsm app -- sudo awg-quick up ~/nix/config/vpn.conf"
       ];
 
       # 7. Бинды клавиш и мыши
@@ -92,8 +101,8 @@
 
       bind = [
         # Основные команды
-        "SUPER, D, exec, yofi"
-        "SUPER, Return, exec, kitty"
+        "SUPER, D, exec, uwsm app -- yofi"
+        "SUPER, Return, exec, uwsm app -- kitty"
         "SUPER, Q, killactive,"
         "SUPER, M, exit,"
         "SUPER, V, togglefloating,"
@@ -101,12 +110,12 @@
         "SUPER, S, togglesplit,"
 
         # VPN
-        "SUPER, W, exec, sudo awg-quick up ~/nix/config/vpn.conf"
-        "SUPER, E, exec, sudo awg-quick down ~/nix/config/vpn.conf"
+        "SUPER, W, exec, uwsm app -- sudo awg-quick up ~/nix/config/vpn.conf"
+        "SUPER, E, exec, uwsm app -- sudo awg-quick down ~/nix/config/vpn.conf"
 
-        # Вирткулка
-        "SUPER_SHIFT, W, exec, virsh -c qemu:///system start win11; virt-viewer --connect qemu:///system win11"
-        "SUPER_SHIFT, E, exec, virsh -c qemu:///system shutdown win11"
+        # Виртуалка
+        "SUPER_SHIFT, W, exec, uwsm app -- virsh -c qemu:///system start win11; uwsm app -- virt-viewer --connect qemu:///system win11"
+        "SUPER_SHIFT, E, exec, uwsm app -- virsh -c qemu:///system shutdown win11"
 
         # Скретчпады
         "CTRL, grave, togglespecialworkspace, term"
@@ -157,23 +166,23 @@
         "SUPER, tab, workspace, previous"
         "SUPER, F, fullscreen, 0"
         "SUPER_SHIFT, F, fullscreen, 1"
-        ", Print, exec, hyprshot -m region --clipboard-only"
+        ", Print, exec, uwsm app -- hyprshot -m region --clipboard-only"
 
         # Медиа клавиши
-        ", XF86AudioPlay, exec, playerctl play-pause"
-        ", XF86AudioNext, exec, playerctl next"
-        ", XF86AudioPrev, exec, playerctl previous"
-        ", XF86AudioStop, exec, playerctl stop"
+        ", XF86AudioPlay, exec, uwsm app -- playerctl play-pause"
+        ", XF86AudioNext, exec, uwsm app -- playerctl next"
+        ", XF86AudioPrev, exec, uwsm app -- playerctl previous"
+        ", XF86AudioStop, exec, uwsm app -- playerctl stop"
 
         # Звук
-        ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
-        ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-        ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-        ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+        ", XF86AudioRaiseVolume, exec, uwsm app -- wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+        ", XF86AudioLowerVolume, exec, uwsm app -- wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+        ", XF86AudioMute, exec, uwsm app -- wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+        ", XF86AudioMicMute, exec, uwsm app -- wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
 
         # Яркость
-        ", XF86MonBrightnessUp, exec, brightnessctl set 1%+"
-        ", XF86MonBrightnessDown, exec, brightnessctl set 1%-"
+        ", XF86MonBrightnessUp, exec, uwsm app -- brightnessctl set 1%+"
+        ", XF86MonBrightnessDown, exec, uwsm app -- brightnessctl set 1%-"
       ];
     };
   };
