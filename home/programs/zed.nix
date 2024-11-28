@@ -21,48 +21,51 @@
       "theme": "One Dark",
       "vim_mode": false,
       "auto_install_extensions": {
-        "nix": true,
-        "biome": true
+      	"nix": true,
+      	"biome": true
+      },
+      "assistant": {
+      	"default_model": {
+      		"provider": "zed.dev",
+      		"model": "claude-3-5-sonnet-latest"
+      	},
+      	"version": "2"
       },
       "features": {
-        "inline_completion_provider": "none"
-       },
-      "assistant": {
-        "default_model": {
-          "provider": "zed.dev",
-          "model": "claude-3-5-sonnet-latest"
-        },
-        "version": "2"
+      	"inline_completion_provider": "none"
+      },
+      "code_actions_on_format": {
+      	"source.fixAll.biome": true,
+      	"source.organizeImports.biome": true
       },
       "lsp": {
-        "rust-analyzer": {
-          "binary": {
-            "path_lookup": true
-          }
-        },
-        "nil": {
-          "binary": {
-            "path_lookup": true
-          },
-          "settings": {
-            "formatting": {
-              "command": ["alejandra"]
-            }
-          }
-        },
-        "biome": {
-          "binary": {
-            "path": "/etc/profiles/per-user/decard/bin/biome",
-            "arguments": ["lsp-proxy"]
-          }
-        },
+      	"rust-analyzer": {
+      		"binary": {
+      			"path_lookup": true
+      		}
+      	},
+      	"nil": {
+      		"binary": {
+      			"path_lookup": true
+      		},
+      		"settings": {
+      			"formatting": {
+      				"command": ["alejandra"]
+      			}
+      		}
+      	},
+      	"biome": {
+      		"binary": {
+      			"path": "/etc/profiles/per-user/decard/bin/biome",
+      			"arguments": ["lsp-proxy"]
+      		}
+      	}
       },
       "formatter": {
-    		"language_server": {
-    			"name": "biome"
-    		}
-    	},
-      "language_servers": [ "!package-version-server", "..." ]
+      	"language_server": {
+      		"name": "biome"
+      	}
+      },
     }
   '';
 }
