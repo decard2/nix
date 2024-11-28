@@ -61,6 +61,7 @@
       nup = "nix flake update";
       nd = "nvd diff /run/booted-system/ /run/current-system/";
       g = "gitui";
+      bch = "biome check --write .";
 
       # Bun алиасы
       bun = "bun";
