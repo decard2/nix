@@ -9,5 +9,6 @@
     ./telegram.nix
     ./yazi.nix
     ./virt-manager.nix
+    ./devops
   ];
 }

@@ -8,5 +8,6 @@
     pamixer
     pavucontrol
     nvd
+    zettlr
   ];
 }
