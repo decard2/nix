@@ -126,6 +126,19 @@
       domains = ["~."];
       fallbackDns = ["1.1.1.1" "8.8.8.8"];
     };
+
+    # Управление питанием
+    logind = {
+      lidSwitch = "suspend";
+      lidSwitchExternalPower = "suspend";
+      lidSwitchDocked = "suspend";
+    };
+
+    # Менеджер питания
+    power-profiles-daemon.enable = true;
+
+    # Служба управления питанием
+    acpid.enable = true;
   };
 
   # 7. ПОЛЬЗОВАТЕЛИ И ОКРУЖЕНИЕ
