@@ -35,6 +35,18 @@
       features = {
         inline_completion_provider = "none";
       };
+      terminal = {
+        env = {
+          TERM = "xterm-256color";
+          STARSHIP_SHELL = "nu";
+        };
+        font_family = "FiraCode Nerd Font";
+        font_size = 12;
+      };
+      editor = {
+        font_family = "FiraCode Nerd Font";
+        font_size = 12;
+      };
       code_actions_on_format = {
         "source.fixAll.biome" = true;
         "source.organizeImports.biome" = true;
