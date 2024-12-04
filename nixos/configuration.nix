@@ -68,6 +68,11 @@
       wifi.backend = "iwd"; # Используем iwd для WiFi
     };
     dhcpcd.enable = false; # Отключаем dhcpcd в пользу NetworkManager
+
+    extraHosts = ''
+      34.234.106.80 kobalte.dev
+      100.28.201.155 kobalte.dev
+    '';
   };
 
   # 5. БЕЗОПАСНОСТЬ
