@@ -10,5 +10,7 @@
     ./yazi.nix
     ./virt-manager.nix
     ./devops
+    ./bash.nix
+    ./voice-assistant
   ];
 }
