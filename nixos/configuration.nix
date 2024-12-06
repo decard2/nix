@@ -1,6 +1,7 @@
 {
   pkgs,
   pkgs-unstable,
+  config,
   ...
 }: {
   # 1. БАЗОВЫЕ НАСТРОЙКИ СИСТЕМЫ
@@ -11,8 +12,34 @@
     ./virtualization # Настройки виртуализации
   ];
 
-  nix.settings.experimental-features = ["nix-command" "flakes"]; # Включаем флейки
   system.stateVersion = "24.11"; # Версия системы
+  nixpkgs.config.allowUnfree = true;
+
+  nix.settings = {
+    experimental-features = ["nix-command" "flakes"]; # Включаем флейки
+
+    # Включаем доверенные кеши
+    trusted-substituters = [
+      "https://cache.nixos.org"
+      "https://nix-community.cachix.org"
+      "https://hyprland.cachix.org"
+      "https://cuda-maintainers.cachix.org"
+    ];
+
+    # Публичные ключи для проверки
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+      "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+    ];
+
+    # Автоматическая оптимизация хранилища
+    auto-optimise-store = true;
+
+    # Число параллельных задач при сборке
+    max-jobs = "auto";
+  };
 
   # 2. НАСТРОЙКИ ЗАГРУЗЧИКА И ЯДРА
   # =============================
@@ -102,6 +129,7 @@
   # 6. СИСТЕМНЫЕ СЕРВИСЫ
   # ===================
   services = {
+    xserver.videoDrivers = ["nvidia"];
     # Правила udev
     udev.extraRules = ''
       KERNEL=="tun", GROUP="netdev", MODE="0666", OPTIONS+="static_node=net/tun"
@@ -161,6 +189,14 @@
       vulkan-loader
       vulkan-validation-layers
       vulkan-tools
+      vaapiIntel
+      vaapiVdpau
+      libvdpau-va-gl
+      nvidia-vaapi-driver
+
+      # Добавляем CUDA пакеты
+      cudatoolkit
+      cudaPackages.cuda_cudart
     ];
   };
 
@@ -221,6 +257,27 @@
         RestartSec = 1;
         TimeoutStopSec = 10;
       };
+    };
+  };
+
+  hardware = {
+    nvidia = {
+      modesetting.enable = true;
+      powerManagement.enable = false;
+      powerManagement.finegrained = false;
+      open = false;
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      prime = {
+        intelBusId = "PCI:0:2:0"; # Для твоей Intel
+        nvidiaBusId = "PCI:1:0:0"; # Для твоей NVIDIA
+        # Выбери один из режимов:
+        # offload = true;  # Для режима по требованию
+        sync.enable = true; # Для постоянной работы
+      };
+    };
+    graphics = {
+      enable = true;
     };
   };
 }

@@ -62,6 +62,11 @@
               null
           }
       }
+
+      # Правильный запуск bash
+      def --env bash [] {
+        ^/run/current-system/sw/bin/bash --rcfile /etc/profile
+      }
     '';
 
     # Алиасы для удобства

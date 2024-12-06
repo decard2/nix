@@ -87,6 +87,7 @@
         "uwsm app -- udiskie"
         "uwsm app -- ~/nix/bin/auto_hyprsunset.nu"
         "uwsm app -- sudo awg-quick up ~/nix/config/vpn.conf"
+        #"voice-assistant"
       ];
 
       # 7. Бинды клавиш и мыши
