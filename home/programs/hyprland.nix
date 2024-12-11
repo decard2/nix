@@ -86,7 +86,7 @@
         "[workspace special:telegram silent] uwsm app -- telegram-desktop"
         "uwsm app -- udiskie"
         "uwsm app -- ~/nix/bin/auto_hyprsunset.nu"
-        "uwsm app -- sudo awg-quick up ~/nix/config/vpn.conf"
+        # "uwsm app -- sudo awg-quick up ~/nix/config/vpn.conf"
         #"voice-assistant"
       ];
 
