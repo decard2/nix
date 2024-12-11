@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  pkgs-unstable,
+  ...
+}: {
   home.packages = with pkgs; [
     biome
     nil
@@ -25,13 +29,18 @@
     userEmail = "mail@decard.space";
   };
 
-  programs.zed-editor = {
+  programs.zed-editor = let
+    zed = pkgs-unstable.zed-editor;
+  in {
     enable = true;
+    package = zed;
     extensions = ["nu"];
     userSettings = {
       hour_format = "hour24";
       auto_update = false;
       theme = "One Dark";
+      proxy = "http://127.0.0.1:7890";
+
       assistant = {
         enabled = true;
         version = "2";
