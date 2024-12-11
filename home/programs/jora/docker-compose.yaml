@@ -1,0 +1,34 @@
+services:
+  faster-whisper-server-cuda:
+    image: fedirz/faster-whisper-server:latest-cuda
+    environment:
+      - WHISPER__MODEL=Systran/faster-whisper-small
+      - WHISPER__COMPUTE_TYPE=float32
+      - ENABLE_UI=false
+      - MIN_DURATION=0.2
+      - MAX_NO_DATA_SECONDS=0.5
+      - DEFAULT_LANGUAGE=ru
+    build:
+      dockerfile: Dockerfile.cuda
+      context: .
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+    volumes:
+      - hugging_face_cache:/root/.cache/huggingface
+    develop:
+      watch:
+        - path: faster_whisper_server
+          action: rebuild
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+              driver: cdi
+              device_ids: ["nvidia.com/gpu=all"]
+volumes:
+  hugging_face_cache:

@@ -1,12 +1,22 @@
 {pkgs, ...}: {
   home.packages = with pkgs; [
-    rust-analyzer
     biome
     nil
     nixd
     alejandra
     bun
     gitui
+
+    # Rust
+    rustc
+    cargo
+    cargo-edit
+    rust-analyzer # для IDE
+    rustfmt # для форматирования
+    clippy # линтер
+
+    gcc
+    pkg-config
   ];
 
   programs.git = {
@@ -54,7 +64,12 @@
       lsp = {
         rust-analyzer = {
           binary = {
-            path_lookup = true;
+            path = "/etc/profiles/per-user/decard/bin/rust-analyzer";
+            settings = {
+              check = {
+                command = "clippy";
+              };
+            };
           };
         };
         nix = {
@@ -114,6 +129,15 @@
             external = {
               command = "biome";
               arguments = ["format" "--stdin-file-path" "{buffer_path}"];
+            };
+          };
+        };
+        "Rust" = {
+          format_on_save = "on";
+          formatter = {
+            external = {
+              command = "rustfmt";
+              arguments = ["--edition" "2021"];
             };
           };
         };

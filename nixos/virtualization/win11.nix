@@ -18,6 +18,10 @@
           </metadata>
           <memory unit='KiB'>8388608</memory>
           <currentMemory unit='KiB'>8388608</currentMemory>
+          <memoryBacking>
+            <source type="memfd"/>
+            <access mode="shared"/>
+          </memoryBacking>
           <vcpu placement='static'>6</vcpu>
           <os>
             <type arch='x86_64' machine='pc-q35-9.1'>hvm</type>
@@ -193,6 +197,13 @@
             <memballoon model='virtio'>
               <address type='pci' domain='0x0000' bus='0x04' slot='0x00' function='0x0'/>
             </memballoon>
+            <filesystem type="mount" accessmode="passthrough">
+              <driver type="virtiofs"/>
+              <source dir="/home/decard"/>
+              <target dir="home"/>
+              <binary path="/run/current-system/sw/bin/virtiofsd"/>
+              <address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0"/>
+            </filesystem>
           </devices>
         </domain>
       ''}

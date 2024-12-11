@@ -11,6 +11,6 @@
     ./virt-manager.nix
     ./devops
     ./bash.nix
-    ./voice-assistant
+    #./jora
   ];
 }
