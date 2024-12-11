@@ -6,7 +6,26 @@
   # Основные настройки виртуализации
   boot.kernelModules = ["kvm-intel"];
 
+  environment.systemPackages = with pkgs; [
+    virtiofsd
+    docker
+    docker-compose
+    lazydocker
+  ];
+
   virtualisation = {
+    # Настройки Docker
+    docker = {
+      enable = true;
+      enableOnBoot = true;
+      autoPrune = {
+        enable = true;
+        dates = "weekly";
+      };
+      storageDriver = "btrfs"; # Используем btrfs как драйвер хранилища
+    };
+
+    # Настройки libvirt
     libvirtd = {
       enable = true;
       qemu = {
@@ -16,6 +35,9 @@
           packages = [pkgs.OVMFFull.fd];
         };
         swtpm.enable = true;
+        verbatimConfig = ''
+          virtiofsd="${pkgs.qemu}/libexec/virtiofsd"
+        '';
       };
       onBoot = "ignore";
       onShutdown = "shutdown";
@@ -56,5 +78,5 @@
   };
 
   # Права доступа
-  users.users.decard.extraGroups = ["libvirtd" "kvm"];
+  users.users.decard.extraGroups = ["libvirtd" "kvm" "docker"];
 }

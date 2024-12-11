@@ -6,6 +6,7 @@
     extraConfig = ''
       $env.EDITOR = 'zeditor'
       $env.VISUAL = 'zeditor'
+      $env.TERM = 'xterm-color'
 
       # Wayland specific
       $env.XDG_SESSION_TYPE = 'wayland'
@@ -66,6 +67,22 @@
       # Правильный запуск bash
       def --env bash [] {
         ^/run/current-system/sw/bin/bash --rcfile /etc/profile
+      }
+
+      # Интеграция direnv через хуки
+      $env.config = {
+        hooks: {
+          pre_prompt: [{ ||
+            if (which direnv | is-empty) {
+              return
+            }
+
+            direnv export json | from json | default {} | load-env
+            if 'ENV_CONVERSIONS' in $env and 'PATH' in $env.ENV_CONVERSIONS {
+              $env.PATH = do $env.ENV_CONVERSIONS.PATH.from_string $env.PATH
+            }
+          }]
+        }
       }
     '';
 
@@ -200,6 +217,36 @@
       kns = "kubectl config set-context --current --namespace";
       kctx = "kubectl config use-context";
       kgctx = "kubectl config get-contexts";
+
+      # Docker алиасы
+      d = "docker";
+      dc = "docker-compose";
+      dps = "docker ps";
+      dpsa = "docker ps -a";
+      di = "docker images";
+      dex = "docker exec -it";
+      dl = "docker logs";
+      dlf = "docker logs -f";
+      dst = "docker stats";
+      dip = "docker inspect";
+      drm = "docker rm";
+      drmi = "docker rmi";
+      dpr = "docker prune";
+      dstp = "docker stop";
+      drs = "docker restart";
+
+      # Docker Compose алиасы
+      dcu = "docker-compose up";
+      dcud = "docker-compose up -d";
+      dcd = "docker-compose down";
+      dcr = "docker-compose restart";
+      dcl = "docker-compose logs";
+      dclf = "docker-compose logs -f";
+      dcps = "docker-compose ps";
+      dcpull = "docker-compose pull";
+
+      # Lazydocker алиас
+      lzd = "lazydocker";
     };
   };
 
@@ -375,6 +422,26 @@
       vimcmd_replace_symbol = '[](bold fg:color_purple)'
       vimcmd_visual_symbol = '[](bold fg:color_yellow)'
     '';
+  };
+
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+    config = {
+      whitelist = {
+        prefix = [
+          "$HOME/projects"
+          "$HOME/nix"
+        ];
+      };
+      warn_timeout = "1m"; # Предупреждение, если загрузка занимает больше минуты
+      # Расширенный лог для отладки
+      stdlib = ''
+        : ''${XDG_CACHE_HOME:=$HOME/.cache}
+        declare -A direnv_layout_dirs
+        log_status "Loading direnv configuration..."
+      '';
+    };
   };
 
   home.packages = with pkgs; [

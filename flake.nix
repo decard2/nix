@@ -40,5 +40,9 @@
       ];
       specialArgs = {inherit pkgs-unstable;};
     };
+
+    devShells.${system}.default =
+      pkgs.mkShell {
+      };
   };
 }
