@@ -300,4 +300,25 @@ proxy-groups:
       - "DIRECT"
 
 rules:
+  # Исключения для локальных адресов
+  - DOMAIN,127.0.0.1,DIRECT
+  - DOMAIN,localhost,DIRECT
+  - DOMAIN,internal.domain,DIRECT
+
+  # Исключения для сервисов разработки
+  - DOMAIN-SUFFIX,github.com,DIRECT
+  - DOMAIN-SUFFIX,githubusercontent.com,DIRECT
+  - DOMAIN-SUFFIX,raw.githubusercontent.com,DIRECT
+  - DOMAIN-SUFFIX,nixos.org,DIRECT
+  - DOMAIN-SUFFIX,cache.nixos.org,DIRECT
+
+  # Исключения для Reddit
+  - DOMAIN-SUFFIX,reddit.com,DIRECT
+  - DOMAIN-SUFFIX,reddit.map.fastly.net,DIRECT
+
+  # Исключения для Yandex Cloud
+  - DOMAIN-SUFFIX,stt.api.cloud.yandex.net,DIRECT
+  - DOMAIN-SUFFIX,iam.api.cloud.yandex.net,DIRECT
+
+  # Дефолтное правило в конце
   - MATCH,SELECTOR
