@@ -121,14 +121,14 @@ class StreamRecognizer:
         finally:
             self.cleanup()
 
-    def recognize_stream(self) -> None:  # Теперь не возвращаем строку
+    def recognize_stream(self) -> None:
         self.should_stop = False
         cred = grpc.ssl_channel_credentials()
         channel = grpc.secure_channel('stt.api.cloud.yandex.net:443', cred)
         stub = stt_service_pb2_grpc.RecognizerStub(channel)
 
         responses = stub.RecognizeStreaming(
-            self.audio_generator(),  # Убрали параметр duration
+            self.audio_generator(),
             metadata=[('authorization', f'Api-Key {self.api_key}')]
         )
 
@@ -150,24 +150,39 @@ class StreamRecognizer:
                 elif event_type == 'final_refinement':
                     if len(response.final_refinement.normalized_text.alternatives) > 0:
                         text = response.final_refinement.normalized_text.alternatives[0].text
+
+                        # Проверяем на точную команду завершения
+                        if text.strip().lower() == "завершить запись.":
+                            print("\n✅ Команда завершения получена!")
+                            # Корректно останавливаем поток перед выходом
+                            self.stop()
+                            return  # Выходим чисто
+
+                        # Если это не команда завершения, обрабатываем текст
                         if text and text != current_text:
                             print("\r" + " " * (len(partial_text) + 60), end='\r')
                             self.emulate_typing(text)
                             current_text = text
                             print(f"\r📝 {text}")
 
-                            # Проверяем на команду завершения
-                            if "завершить запись" in text.lower():
-                                self.should_stop = True
-                                break
-
         except Exception as e:
             print(f"\n⚠️ Ошибка: {str(e)}")
+        finally:
+            self.cleanup()
+            self.is_first_phrase = True
 
     def stop(self):
-        """Метод для явной остановки потока"""
-        self.should_stop = True
-        self.is_first_phrase = True
+        """Метод для корректной остановки"""
+        if self.stream:
+            try:
+                self.should_stop = True
+                # Даём небольшую паузу перед остановкой
+                import time
+                time.sleep(0.1)
+                self.cleanup()
+                self.is_first_phrase = True
+            except Exception as e:
+                print(f"⚠️ Ошибка при остановке: {e}")
 
     def cleanup(self):
         """Очистка ресурсов потока"""
