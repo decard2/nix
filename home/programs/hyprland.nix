@@ -81,13 +81,13 @@
       # 6. Автозапуск
       exec-once = [
         "uwsm app -- hyprcursor"
-        "[workspace special:term silent] uwsm app -- kitty --class btop-scratch"
+        "[workspace special:term silent] uwsm app -- kitty"
         "[workspace special:btop silent] uwsm app -- kitty -e btop"
         "[workspace special:telegram silent] uwsm app -- telegram-desktop"
         "uwsm app -- udiskie"
         "uwsm app -- ~/nix/bin/auto_hyprsunset.nu"
         # "uwsm app -- sudo awg-quick up ~/nix/config/vpn.conf"
-        #"voice-assistant"
+        "[workspace special:jora silent] uwsm app -- kitty -e jora"
       ];
 
       # 7. Бинды клавиш и мыши
@@ -105,6 +105,7 @@
         "SUPER, V, togglefloating,"
         "SUPER, P, pseudo,"
         "SUPER, S, togglesplit,"
+        "SUPER, Z, togglespecialworkspace, jora"
 
         # VPN
         "SUPER, W, exec, uwsm app -- sudo awg-quick up ~/nix/config/vpn.conf"

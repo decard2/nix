@@ -169,6 +169,7 @@ class StreamRecognizer:
             print(f"\n⚠️ Ошибка: {str(e)}")
         finally:
             self.cleanup()
+            channel.close()
             self.is_first_phrase = True
 
     def stop(self):
@@ -190,10 +191,13 @@ class StreamRecognizer:
             try:
                 self.stream.stop_stream()
                 self.stream.close()
+                self.stream = None
+                # Даем небольшую паузу перед завершением
+                import time
+                time.sleep(0.1)
             except Exception as e:
                 print(f"⚠️ Ошибка при очистке потока: {e}")
             finally:
-                self.stream = None
                 self.is_initialized = False
 
     def __del__(self):
