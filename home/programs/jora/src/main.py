@@ -7,7 +7,7 @@ from stream_recognizer import StreamRecognizer
 from commands import CommandProcessor
 
 # Настройки
-VOICE_SENSITIVITY = 0.7  # Чувствительность детектора речи (0.0 - 1.0)
+VOICE_SENSITIVITY = 0.5  # Чувствительность детектора речи (0.0 - 1.0)
 DICTATION_MODE = False  # Флаг режима диктовки
 
 def check_env():
