@@ -320,5 +320,8 @@ rules:
   - DOMAIN-SUFFIX,stt.api.cloud.yandex.net,DIRECT
   - DOMAIN-SUFFIX,iam.api.cloud.yandex.net,DIRECT
 
+  # Исключения для Rolder
+  - DOMAIN-SUFFIX,rolder.app,DIRECT
+
   # Дефолтное правило в конце
   - MATCH,SELECTOR
