@@ -12,14 +12,17 @@ in
       opusTools
       stdenv.cc.cc.lib
       wtype
+      sox # Добавляем sox для воспроизведения
     ];
 
     shellHook = ''
       echo "🎤 Жора на связи!"
       echo "🚀 Погнали шуметь!"
 
+      # Включаем/выключаем дебаг режим (0 или 1)
+      export JORA_DEBUG="0"
+
       # API ключи Яндекса
-      # Получаем ключи из заметок Bitwarden
       echo "🔐 Загружаю ключи из Bitwarden..."
 
       export YANDEX_FOLDER_ID="$(${pkgs.rbw}/bin/rbw get yandex-speech-keys --full | ${pkgs.gnugrep}/bin/grep 'folder_id:' | cut -d' ' -f2-)"
@@ -63,6 +66,9 @@ in
         deactivate
         cd ..
       fi
+
+      # Создаём директорию для дебаг записей
+      mkdir -p debug_records
     '';
 
     PORTAUDIO_PATH = "${pkgs.portaudio}";

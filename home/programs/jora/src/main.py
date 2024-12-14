@@ -1,14 +1,27 @@
 import os
 import signal
 import sys
+import argparse
 from detector import VoiceDetector
 from recognizer import SpeechRecognizer
 from stream_recognizer import StreamRecognizer
 from commands import CommandProcessor
 
-# Настройки
+# Настройки по умолчанию
 VOICE_SENSITIVITY = 0.5  # Чувствительность детектора речи (0.0 - 1.0)
 DICTATION_MODE = False  # Флаг режима диктовки
+
+def parse_args():
+    """Парсинг аргументов командной строки"""
+    parser = argparse.ArgumentParser(description='Жора - голосовой помощник')
+    parser.add_argument('--debug', '-d',
+                       action='store_true',
+                       help='Включить режим отладки с записью и воспроизведением аудио')
+    parser.add_argument('--sensitivity', '-s',
+                       type=float,
+                       default=VOICE_SENSITIVITY,
+                       help='Чувствительность детектора речи (0.0 - 1.0)')
+    return parser.parse_args()
 
 def check_env():
     """Проверяем наличие необходимых переменных окружения"""
@@ -39,6 +52,19 @@ def start_dictation():
             print(f"📝 {text}")
 
 def main():
+    # Парсим аргументы
+    args = parse_args()
+
+    # Устанавливаем переменную окружения для режима отладки
+    if args.debug:
+        os.environ["JORA_DEBUG"] = "1"
+        print("🐛 Режим отладки включен!")
+
+        # Создаём директорию для дебаг записей если её нет
+        os.makedirs("debug_records", exist_ok=True)
+    else:
+        os.environ["JORA_DEBUG"] = "0"
+
     # Проверяем окружение
     check_env()
 
@@ -46,7 +72,7 @@ def main():
     signal.signal(signal.SIGINT, signal_handler)
 
     # Инициализируем компоненты
-    detector = VoiceDetector(sensitivity=VOICE_SENSITIVITY)
+    detector = VoiceDetector(sensitivity=args.sensitivity)
     recognizer = SpeechRecognizer()
     stream_recognizer = StreamRecognizer()
     command_processor = CommandProcessor()
@@ -63,13 +89,11 @@ def main():
                 if text:
                     print(f"👉 Ты сказал: {text}")
                     if command_processor.process(text):
-                        # Если была распознана команда "записывай",
-                        # сразу переходим к следующей итерации уже в режиме диктовки
                         continue
             else:
                 # Режим диктовки
-                stream_recognizer.recognize_stream()  # Теперь работает непрерывно
-                if command_processor.is_dictating:  # Проверяем флаг после завершения
+                stream_recognizer.recognize_stream()
+                if command_processor.is_dictating:
                     command_processor.is_dictating = False
                     print("\n✅ Диктовка завершена!")
 

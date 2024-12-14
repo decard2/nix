@@ -1,4 +1,4 @@
-import pyaudio # type: ignore
+import pyaudio  # type: ignore
 import wave
 import urllib.request
 import json
@@ -26,8 +26,30 @@ class SpeechRecognizer:
         self.iam_token = None
         self.token_expires = None
 
+        # Дебаг режим
+        self.debug = os.getenv("JORA_DEBUG") == "1"
+
         # Сразу получаем IAM токен
         self._update_iam_token()
+
+    def _debug_play_audio(self, filename: str):
+        """Воспроизводит аудио в режиме отладки"""
+        if self.debug:
+            try:
+                # Копируем файл в debug_records с временной меткой
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                debug_file = f"debug_records/record_{timestamp}.wav"
+                subprocess.run(['cp', filename, debug_file], check=True)
+                print(f"🔍 Сохранил запись: {debug_file}")
+
+                # Воспроизводим через play (из пакета sox)
+                subprocess.run(['play', '-q', filename], check=True)
+
+                # Удаляем дебаг запись после воспроизведения
+                os.unlink(debug_file)
+
+            except Exception as e:
+                print(f"⚠️ Ошибка воспроизведения: {e}")
 
     def _update_iam_token(self):
         """Обновляет IAM токен если нужно"""
@@ -107,6 +129,10 @@ class SpeechRecognizer:
                 wf.setframerate(self.RATE)
                 wf.writeframes(b''.join(frames))
 
+            # В режиме отладки воспроизводим WAV
+            if self.debug:
+                self._debug_play_audio(temp_wav.name)
+
             # Конвертируем в OGG
             subprocess.run([
                 'opusenc',
@@ -145,7 +171,8 @@ class SpeechRecognizer:
 
         finally:
             # Удаляем временные файлы
-            os.unlink(temp_wav.name)
+            if not self.debug:  # В режиме отладки сохраняем файлы
+                os.unlink(temp_wav.name)
             os.unlink(temp_ogg.name)
 
     def __del__(self):
