@@ -2,6 +2,9 @@ import pyaudio  # type: ignore
 import grpc  # type: ignore
 import os
 import subprocess
+import wave
+import tempfile
+from datetime import datetime
 from typing import Generator
 from yandex.cloud.ai.stt.v3 import stt_pb2  # type: ignore
 from yandex.cloud.ai.stt.v3 import stt_service_pb2_grpc  # type: ignore
@@ -19,10 +22,38 @@ class StreamRecognizer:
         self.previous_text = ""
         self.should_stop = False
         self.is_first_phrase = True
+        self.debug = os.getenv("JORA_DEBUG") == "1"
 
         # Буфер для накопления начальных чанков
         self.initial_buffer = []
         self.BUFFER_SIZE = 5  # Сколько чанков буферизируем перед отправкой
+
+    def _debug_save_and_play(self, audio_data: bytes):
+        """Сохраняет и воспроизводит аудио в режиме отладки"""
+        try:
+            # Создаём временный WAV файл
+            temp_wav = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
+            with wave.open(temp_wav.name, 'wb') as wf:
+                wf.setnchannels(self.CHANNELS)
+                wf.setsampwidth(self.audio.get_sample_size(self.FORMAT))
+                wf.setframerate(self.RATE)
+                wf.writeframes(audio_data)
+
+            # Копируем в debug_records
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            debug_file = f"debug_records/stream_{timestamp}.wav"
+            subprocess.run(['cp', temp_wav.name, debug_file], check=True)
+            print(f"🔍 Сохранил стрим: {debug_file}")
+
+            # Воспроизводим
+            subprocess.run(['play', '-q', temp_wav.name], check=True)
+
+            # Удаляем временные файлы и дебаг запись
+            os.unlink(temp_wav.name)
+            os.unlink(debug_file)
+
+        except Exception as e:
+            print(f"⚠️ Ошибка отладки: {e}")
 
     def get_streaming_options(self) -> stt_pb2.StreamingOptions:
         """Возвращает настройки для стримингового распознавания"""
@@ -48,7 +79,7 @@ class StreamRecognizer:
             ),
             eou_classifier=stt_pb2.EouClassifierOptions(
                 default_classifier=stt_pb2.DefaultEouClassifier(
-                    type=stt_pb2.DefaultEouClassifier.HIGH,  # Используем enum из DefaultEouClassifier
+                    type=stt_pb2.DefaultEouClassifier.HIGH,
                     max_pause_between_words_hint_ms=1000
                 )
             )
@@ -78,8 +109,7 @@ class StreamRecognizer:
     def emulate_typing(self, text: str):
         """Эмулирует печать текста через wtype"""
         try:
-            # Если это не первая фраза, добавляем пробел перед текстом
-            if hasattr(self, 'is_first_phrase') and not self.is_first_phrase:
+            if not self.is_first_phrase:
                 subprocess.run(['wtype', ' ' + text], check=True)
             else:
                 subprocess.run(['wtype', text], check=True)
@@ -100,20 +130,36 @@ class StreamRecognizer:
             # Сначала накапливаем буфер
             print("🎙️ Накапливаю буфер...")
             self.initial_buffer = []
+            all_data = bytes()  # Для дебаг режима
+
             for _ in range(self.BUFFER_SIZE):
                 if self.stream:
                     data = self.stream.read(self.CHUNK, exception_on_overflow=False)
                     self.initial_buffer.append(data)
+                    if self.debug:
+                        all_data += data
+
+            # В режиме отладки воспроизводим накопленный буфер
+            if self.debug and all_data:
+                self._debug_save_and_play(all_data)
 
             # Отправляем накопленный буфер
             for data in self.initial_buffer:
                 yield stt_pb2.StreamingRequest(chunk=stt_pb2.AudioChunk(data=data))
 
-            # Теперь стримим в реальном времени бесконечно
+            # Теперь стримим в реальном времени
             print("🎙️ Слушаю тебя, братишка...")
-            while not self.should_stop:  # Продолжаем пока не получим сигнал остановки
+            debug_buffer = bytes()  # Буфер для дебаг режима
+
+            while not self.should_stop:
                 if self.stream:
                     data = self.stream.read(self.CHUNK, exception_on_overflow=False)
+                    if self.debug:
+                        debug_buffer += data
+                        # Каждые 2 секунды воспроизводим в дебаг режиме
+                        if len(debug_buffer) >= self.RATE * 2:
+                            self._debug_save_and_play(debug_buffer)
+                            debug_buffer = bytes()
                     yield stt_pb2.StreamingRequest(chunk=stt_pb2.AudioChunk(data=data))
 
         except Exception as e:
@@ -151,14 +197,11 @@ class StreamRecognizer:
                     if len(response.final_refinement.normalized_text.alternatives) > 0:
                         text = response.final_refinement.normalized_text.alternatives[0].text
 
-                        # Проверяем на точную команду завершения
                         if text.strip().lower() == "завершить запись.":
                             print("\n✅ Команда завершения получена!")
-                            # Корректно останавливаем поток перед выходом
                             self.stop()
-                            return  # Выходим чисто
+                            return
 
-                        # Если это не команда завершения, обрабатываем текст
                         if text and text != current_text:
                             print("\r" + " " * (len(partial_text) + 60), end='\r')
                             self.emulate_typing(text)
@@ -177,7 +220,6 @@ class StreamRecognizer:
         if self.stream:
             try:
                 self.should_stop = True
-                # Даём небольшую паузу перед остановкой
                 import time
                 time.sleep(0.1)
                 self.cleanup()
@@ -192,7 +234,6 @@ class StreamRecognizer:
                 self.stream.stop_stream()
                 self.stream.close()
                 self.stream = None
-                # Даем небольшую паузу перед завершением
                 import time
                 time.sleep(0.1)
             except Exception as e:
