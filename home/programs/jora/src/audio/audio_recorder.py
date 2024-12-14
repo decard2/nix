@@ -3,7 +3,7 @@ import os
 from typing import Optional, List
 import numpy as np # type: ignore
 import soundfile as sf # type: ignore
-from src.utils.logger import debug, error, success
+from src.utils.logger import error
 from src.utils.config import config
 from src.audio.audio_stream import RecorderStream
 
@@ -26,12 +26,10 @@ class AudioRecorder:
     def start_recording(self, initial_audio: Optional[np.ndarray] = None) -> bool:
         """Начинает запись во временный файл"""
         try:
-            # Создаём временный файл с расширением .ogg
             temp = tempfile.NamedTemporaryFile(suffix='.ogg', delete=False)
             self.temp_file = temp.name
             temp.close()
 
-            # Открываем файл для записи
             self.writer = sf.SoundFile(
                 self.temp_file,
                 mode='w',
@@ -41,18 +39,14 @@ class AudioRecorder:
                 subtype=config.recorder.RECORD_SUBTYPE
             )
 
-            # Инициализируем поток для записи
             self.stream = RecorderStream()
             self.is_recording = True
             self.buffer = []
 
-            # Записываем начальный буфер если есть
             if initial_audio is not None:
-                debug(f"Записываем начальный буфер: {len(initial_audio)} сэмплов")
                 converted_audio = self._convert_format(initial_audio)
                 self.buffer.append(converted_audio)
 
-            debug(f"Начата запись в {self.temp_file}")
             return True
 
         except Exception as e:
@@ -66,12 +60,10 @@ class AudioRecorder:
             return False
 
         try:
-            # Читаем данные из потока
             audio, overflow = self.stream.read()
             if overflow:
                 return False
 
-            # Конвертируем формат если нужно
             converted_audio = self._convert_format(audio)
             self.buffer.append(converted_audio)
             return True
@@ -80,19 +72,13 @@ class AudioRecorder:
             error(f"Ошибка записи аудио: {e}")
             return False
 
-    def stop_recording(self) -> Optional[str]:
-        """
-        Останавливает запись и возвращает путь к файлу.
-        Файл нужно удалить после использования.
-        """
+    def stop_recording(self):
+        """Останавливает запись и возвращает путь к файлу"""
         if not self.writer or not self.is_recording:
-            debug("❌ Попытка остановить неактивную запись")
             return None
 
         try:
-            # Записываем весь буфер
             if self.buffer:
-                debug(f"Сохраняем буфер размером {len(self.buffer)}")
                 audio_data = np.concatenate(self.buffer)
                 self.writer.write(audio_data)
 
@@ -100,17 +86,16 @@ class AudioRecorder:
             self.writer = None
             self.is_recording = False
 
-            success("Запись успешно завершена")
+            if self.stream:
+                self.stream.cleanup()
+                self.stream = None
+            self.buffer = []
+
             return self.temp_file
 
         except Exception as e:
             error(f"Ошибка остановки записи: {e}")
             return None
-        finally:
-            if self.stream:
-                self.stream.cleanup()
-                self.stream = None
-            self.buffer = []
 
     def cleanup(self):
         """Очищает ресурсы и удаляет временный файл"""
@@ -130,25 +115,18 @@ class AudioRecorder:
         if self.temp_file and os.path.exists(self.temp_file):
             try:
                 os.unlink(self.temp_file)
-                debug(f"Удален временный файл {self.temp_file}")
             except Exception as e:
-                error(f"Ошибка удаления временного файла: {e}")
+                error(f"Ошибка удаления файла: {e}")
             self.temp_file = None
 
         self.buffer = []
-        self.start_sample = None
-        self.end_sample = None
-        self.current_sample = 0
 
     def __del__(self):
-        """Деструктор"""
         self.cleanup()
 
     def __enter__(self):
-        """Контекстный менеджер - вход"""
         self.start_recording()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        """Контекстный менеджер - выход"""
         self.cleanup()

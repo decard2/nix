@@ -1,7 +1,7 @@
 import sounddevice as sd # type: ignore
 import numpy as np # type: ignore
 from typing import Optional, Tuple
-from src.utils.logger import debug, error, success
+from src.utils.logger import error
 from src.utils.config import config
 
 class BaseAudioStream:
@@ -26,7 +26,6 @@ class BaseAudioStream:
     def initialize_stream(self) -> bool:
         """Инициализация потока"""
         try:
-            debug(f"Инициализация аудио потока (rate={self.rate}, chunk={self.chunk})")
             self._stream = sd.InputStream(
                 channels=self.channels,
                 samplerate=self.rate,
@@ -35,7 +34,6 @@ class BaseAudioStream:
             )
             if self._stream is not None:
                 self._stream.start()
-                debug(f"Аудио поток {self.rate}Hz инициализирован")
                 return True
             return False
 
@@ -67,7 +65,6 @@ class BaseAudioStream:
                 self._stream.stop()
                 self._stream.close()
                 self._stream = None
-                debug("Аудио поток очищен")
             except Exception as e:
                 error(f"Ошибка при очистке потока: {e}")
 

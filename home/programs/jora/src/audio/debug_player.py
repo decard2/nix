@@ -1,6 +1,6 @@
 import subprocess
 import shutil
-from src.utils.logger import error, debug
+from src.utils.logger import error
 
 class DebugPlayer:
     """Класс для отладочного воспроизведения аудио"""
@@ -15,7 +15,6 @@ class DebugPlayer:
             return False
 
         try:
-            debug(f"Воспроизвожу {file_path}")
             subprocess.run(['play', '-q', file_path], check=True)
             return True
 

@@ -3,12 +3,14 @@ import argparse
 import signal
 import sys
 from typing import Optional
+from src.recognition.recognizer import CommandRecognizer
 import numpy as np # type: ignore
+import time
 
 from src.recognition.detector import VoiceDetector
 from src.audio.audio_recorder import AudioRecorder
 from src.audio.debug_player import DebugPlayer
-from src.utils.logger import info, debug, set_debug, error
+from src.utils.logger import info, debug, set_debug, error, log_timing
 from src.utils.config import config
 
 # Глобальная переменная для хранения ссылки на помощника
@@ -21,16 +23,9 @@ class Jora:
         """Инициализация помощника"""
         self.args = args
         self.should_stop = False
-
-        # Детектор речи
-        self.detector = VoiceDetector(
-            sensitivity=args.sensitivity,
-            min_silence_ms=args.min_silence,
-            speech_pad_ms=args.speech_pad
-        )
-
-        # Recorder создается при начале записи
+        self.detector = VoiceDetector()
         self.recorder: Optional[AudioRecorder] = None
+        self.recognizer = CommandRecognizer()
 
     def start_recording(self, initial_audio: Optional[np.ndarray] = None):
         """Начинает запись речи"""
@@ -39,51 +34,54 @@ class Jora:
             if not self.recorder.start_recording(initial_audio):
                 error("Не удалось начать запись")
                 self.recorder = None
-            else:
-                info("🎤 Начало речи")
 
     def stop_recording(self):
         """Останавливает запись речи"""
         if self.recorder:
             if audio_file := self.recorder.stop_recording():
-                debug("Запись остановлена")
-                info("🔇 Конец речи")
+                try:
+                    # Замеряем только распознавание
+                    start_time = time.time() if config.DEBUG else None
 
-                # В режиме отладки воспроизводим
-                if config.DEBUG:
-                    DebugPlayer.play_file(audio_file)
+                    # Распознаем команду
+                    if text := self.recognizer.recognize_command(audio_file):
+                        info(f"🗣️ Распознано: {text}")
+                    else:
+                        info("❌ Команда не распознана")
 
-                # TODO: Отправляем на распознавание
+                    # Логируем время распознавания
+                    if config.DEBUG and start_time:
+                        elapsed = (time.time() - start_time) * 1000
+                        debug(f"Время распознавания: {elapsed:.1f}ms")
 
-            self.recorder.cleanup()
-            self.recorder = None
+                    # Отдельно воспроизводим в режиме дебага
+                    if config.DEBUG:
+                        DebugPlayer.play_file(audio_file)
+
+                finally:
+                    try:
+                        os.unlink(audio_file)
+                    except Exception as e:
+                        error(f"Ошибка удаления файла: {e}")
+
+                    self.recorder.cleanup()
+                    self.recorder = None
 
     def process_audio(self):
         """Обработка аудио потока"""
-        # Получаем текущее состояние речи
         state = self.detector.process_audio()
 
-        # Добавляем логирование состояния
         if state:
-            debug(f"Получено состояние: {state['type']}")
-
-            # Начало речи
             if state['type'] == 'start':
-                debug("🎤 Начинаем запись")
                 self.start_recording(state.get('audio'))
-
-            # Конец речи
             elif state['type'] == 'end':
-                debug("🔇 Завершаем запись")
                 self.stop_recording()
 
-        # Записываем если есть активная запись
         if self.recorder:
             self.recorder.process()
 
     def run(self):
         """Основной цикл работы"""
-        info("Погнали, братан! Слушаю...")
 
         while not self.should_stop:
             self.process_audio()
@@ -92,7 +90,7 @@ class Jora:
         """Остановка помощника"""
         self.should_stop = True
         if self.recorder:
-            self.stop_recording()  # Убрал параметр current_sample
+            self.stop_recording()
         self.detector.cleanup()
 
     def __del__(self):
@@ -100,31 +98,14 @@ class Jora:
         self.stop()
 
 def parse_args() -> argparse.Namespace:
-    """Парсинг аргументов командной строки"""
     parser = argparse.ArgumentParser(description='Жора - голосовой помощник')
-    parser.add_argument(
-        '--debug', '-d',
-        action='store_true',
-        help='Включить режим отладки'
-    )
-    parser.add_argument(
-        '--sensitivity', '-s',
-        type=float,
-        default=0.5,
-        help='Чувствительность детектора речи (0.0 - 1.0)'
-    )
-    parser.add_argument(
-        '--min-silence', '-m',
-        type=int,
-        default=100,
-        help='Минимальная длительность тишины (мс)'
-    )
-    parser.add_argument(
-        '--speech-pad', '-p',
-        type=int,
-        default=30,
-        help='Padding речи (мс)'
-    )
+    parser.add_argument('--debug', '-d', action='store_true', help='Режим отладки')
+    parser.add_argument('--sensitivity', '-s', type=float, default=config.vad.SENSITIVITY,
+                      help='Чувствительность детектора речи (0.0 - 1.0)')
+    parser.add_argument('--min-silence', '-m', type=int, default=config.vad.MIN_SILENCE_MS,
+                      help='Минимальная длительность тишины (мс)')
+    parser.add_argument('--speech-pad', '-p', type=int, default=config.vad.SPEECH_PAD_MS,
+                      help='Padding речи (мс)')
     return parser.parse_args()
 
 def signal_handler(sig, frame):
@@ -137,12 +118,7 @@ def signal_handler(sig, frame):
 
 def check_environment() -> bool:
     """Проверка окружения"""
-    required_envs = [
-        'YANDEX_FOLDER_ID',
-        'YANDEX_OAUTH_TOKEN',
-        'YANDEX_API_KEY'
-    ]
-
+    required_envs = ['YANDEX_FOLDER_ID', 'YANDEX_OAUTH_TOKEN', 'YANDEX_API_KEY']
     missing = [env for env in required_envs if not os.getenv(env)]
 
     if missing:
@@ -150,32 +126,29 @@ def check_environment() -> bool:
         error("Проверь shell.nix!")
         return False
 
-    debug("✅ Все переменные окружения на месте")
     return True
 
 def main():
-    # Парсим аргументы
     args = parse_args()
 
-    # Включаем режим отладки если нужно
     if args.debug:
         config.enable_debug()
         set_debug(True)
-        debug("Режим отладки включен!")
+        debug("🔧 Режим отладки включен")
 
-    # Проверяем окружение
     if not check_environment():
         sys.exit(1)
 
-    # Создаем помощника
+    info("🎤 Запускаю Жору...")
+
     global jora
     jora = Jora(args)
-
-    # Устанавливаем обработчик Ctrl+C
     signal.signal(signal.SIGINT, signal_handler)
 
+    log_timing("Инициализация завершена")
+
     try:
-        # Запускаем
+        info("👂 Слушаю команды...")
         jora.run()
     except Exception as e:
         error(f"Критическая ошибка: {e}")
