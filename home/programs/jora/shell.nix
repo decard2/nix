@@ -13,6 +13,7 @@ in
       stdenv.cc.cc.lib
       wtype
       sox # Добавляем sox для воспроизведения
+      zlib
     ];
 
     shellHook = ''
@@ -37,7 +38,7 @@ in
       if [ ! -d ".venv" ]; then
         ${pythonEnv}/bin/python -m venv .venv
         source .venv/bin/activate
-        pip install -q torch torchaudio sounddevice pyaudio numpy grpcio-tools
+        pip install -q torch torchaudio sounddevice pyaudio numpy grpcio-tools silero_vad soundfile
         deactivate
       fi
 
@@ -45,7 +46,7 @@ in
       export PYTHONPATH="$PWD/.venv/lib/python3.*/site-packages:$PWD/cloudapi/output:$PYTHONPATH"
 
       # Путь к библиотекам C++
-      export LD_LIBRARY_PATH="${pkgs.stdenv.cc.cc.lib}/lib:${pkgs.portaudio}/lib:$LD_LIBRARY_PATH"
+      export LD_LIBRARY_PATH="${pkgs.stdenv.cc.cc.lib}/lib:${pkgs.portaudio}/lib:${pkgs.zlib}/lib:$LD_LIBRARY_PATH"
 
       if [ ! -d "cloudapi" ]; then
         git clone https://github.com/yandex-cloud/cloudapi
