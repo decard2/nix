@@ -19,9 +19,17 @@ in
       echo "🚀 Погнали шуметь!"
 
       # API ключи Яндекса
-      export YANDEX_FOLDER_ID="b1ggljum7u5ge5bhgln4"
-      export YANDEX_OAUTH_TOKEN="y0_AgAEA7qjY3NNAATuwQAAAADXoSRJ6z-GHvhuTkuOlRzvfXT1AfA6pTU"
-      export YANDEX_API_KEY="AQVN1jZVU0a9cde0jxfkK__MUPkkqBB40axPKLTD"
+      # Получаем ключи из заметок Bitwarden
+      echo "🔐 Загружаю ключи из Bitwarden..."
+
+      export YANDEX_FOLDER_ID="$(${pkgs.rbw}/bin/rbw get yandex-speech-keys --full | ${pkgs.gnugrep}/bin/grep 'folder_id:' | cut -d' ' -f2-)"
+      export YANDEX_OAUTH_TOKEN="$(${pkgs.rbw}/bin/rbw get yandex-speech-keys --full | ${pkgs.gnugrep}/bin/grep 'oauth_token:' | cut -d' ' -f2-)"
+      export YANDEX_API_KEY="$(${pkgs.rbw}/bin/rbw get yandex-speech-keys --full | ${pkgs.gnugrep}/bin/grep 'api_key:' | cut -d' ' -f2-)"
+
+      if [ -z "$YANDEX_FOLDER_ID" ] || [ -z "$YANDEX_OAUTH_TOKEN" ] || [ -z "$YANDEX_API_KEY" ]; then
+        echo "❌ Не удалось получить ключи из Bitwarden! Проверь, что rbw настроен и залогинен."
+        exit 1
+      fi
 
       if [ ! -d ".venv" ]; then
         ${pythonEnv}/bin/python -m venv .venv
