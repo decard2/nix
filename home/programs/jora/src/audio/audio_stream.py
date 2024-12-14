@@ -62,11 +62,13 @@ class BaseAudioStream:
         """Очистка ресурсов"""
         if self._stream is not None:
             try:
-                self._stream.stop()
+                if self.is_active:
+                    self._stream.stop()
                 self._stream.close()
-                self._stream = None
             except Exception as e:
                 error(f"Ошибка при очистке потока: {e}")
+            finally:
+                self._stream = None
 
     def __del__(self) -> None:
         """Деструктор"""
