@@ -1,37 +1,60 @@
 import logging
+from typing import Optional
+import time
 
-# Настраиваем форматирование
-formatter = logging.Formatter('%(message)s')
+class JoraLogger:
+    def __init__(self):
+        self.formatter = logging.Formatter('%(message)s')
+        self.console_handler = logging.StreamHandler()
+        self.console_handler.setFormatter(self.formatter)
 
-# Создаем handler для консоли
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(formatter)
+        self.logger = logging.getLogger('jora')
+        self.logger.addHandler(self.console_handler)
+        self.logger.setLevel(logging.INFO)
 
-# Создаем логгер
-logger = logging.getLogger('jora')
-logger.addHandler(console_handler)
-logger.setLevel(logging.INFO)  # По умолчанию INFO
+        self._start_time: Optional[float] = None
+        self._last_time: Optional[float] = None
 
-def debug(msg: str):
-    """Отладочное сообщение"""
-    logger.debug(f"🔍 {msg}")
+    def start_timer(self):
+        """Запуск таймера"""
+        self._start_time = time.time()
+        self._last_time = self._start_time
 
-def info(msg: str):
-    """Информационное сообщение"""
-    logger.info(f"ℹ️ {msg}")
+    def log_timing(self, msg: str):
+        """Логирование времени с начала запуска"""
+        if not self._start_time or not self._last_time:
+            return
 
-def success(msg: str):
-    """Успешное действие"""
-    logger.info(f"✅ {msg}")
+        current = time.time()
+        delta = (current - self._last_time) * 1000
+        self._last_time = current
 
-def error(msg: str):
-    """Ошибка"""
-    logger.error(f"❌ {msg}")
+        self.logger.debug(f"⏱️ {msg}: {delta:.1f}ms")
 
-def warning(msg: str):
-    """Предупреждение"""
-    logger.warning(f"⚠️ {msg}")
+    def debug(self, msg: str):
+        """Отладочное сообщение"""
+        self.logger.debug(f"🔍 {msg}")
 
-def set_debug(enabled: bool):
-    """Установка режима отладки"""
-    logger.setLevel(logging.DEBUG if enabled else logging.INFO)
+    def info(self, msg: str):
+        """Пользовательское сообщение"""
+        self.logger.info(msg)
+
+    def error(self, msg: str):
+        """Ошибка"""
+        self.logger.error(f"❌ {msg}")
+
+    def set_debug(self, enabled: bool):
+        """Установка режима отладки"""
+        self.logger.setLevel(logging.DEBUG if enabled else logging.INFO)
+        if enabled:
+            self.start_timer()
+
+# Глобальный логгер
+logger = JoraLogger()
+
+# Экспортируем методы для совместимости
+debug = logger.debug
+info = logger.info
+error = logger.error
+set_debug = logger.set_debug
+log_timing = logger.log_timing

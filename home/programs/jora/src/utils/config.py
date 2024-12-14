@@ -7,6 +7,9 @@ class VADConfig:
     RATE: int = 16000
     CHUNK: int = 512
     FORMAT: str = 'float32'
+    SENSITIVITY: float = 0.5      # Чувствительность
+    MIN_SILENCE_MS: int = 100     # Минимальная тишина
+    SPEECH_PAD_MS: int = 100      # Паддинг речи
 
 @dataclass
 class RecorderConfig:

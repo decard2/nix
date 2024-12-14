@@ -1,4 +1,3 @@
-import time
 import numpy as np# type: ignore
 from typing import Optional, Dict, Any, List
 from silero_vad import load_silero_vad, VADIterator  # type: ignore
@@ -8,14 +7,11 @@ from src.utils.config import config
 from src.audio.audio_stream import VADStream
 
 class VoiceDetector:
-    """Детектор голосовой активности на базе Silero VAD"""
-
     def __init__(self,
-                 sensitivity: float = 0.5,
-                 min_silence_ms: int = 100,
-                 speech_pad_ms: int = 30):
+            sensitivity: float = config.vad.SENSITIVITY,
+            min_silence_ms: int = config.vad.MIN_SILENCE_MS,
+            speech_pad_ms: int = config.vad.SPEECH_PAD_MS):
         """Инициализация детектора"""
-        start_time = time.time()
 
         self.sensitivity = sensitivity
         self.min_silence_ms = min_silence_ms
@@ -32,10 +28,12 @@ class VoiceDetector:
         self.stream = VADStream()
 
         # Загружаем VAD модель
-        debug("Загрузка Silero VAD модели...")
-        model_start = time.time()
         self.model = load_silero_vad(onnx=True)
-        debug(f"⏱️ Загрузка VAD модели: {(time.time() - model_start)*1000:.1f}ms")
+
+        debug("Параметры детектора:")
+        debug(f"  Чувствительность: {sensitivity}")
+        debug(f"  Мин. тишина: {min_silence_ms}ms")
+        debug(f"  Padding речи: {speech_pad_ms}ms")
 
         # Создаем VAD итератор
         self.vad_iterator = VADIterator(
@@ -46,21 +44,10 @@ class VoiceDetector:
             speech_pad_ms=speech_pad_ms
         )
 
-        # Логируем параметры
-        debug("🛠️ Параметры детектора:")
-        debug(f"   📊 Чувствительность: {sensitivity}")
-        debug(f"   🔇 Мин. тишина: {min_silence_ms}ms")
-        debug(f"   📏 Padding речи: {speech_pad_ms}ms")
-        debug(f"   🎵 Частота дискретизации: {config.vad.RATE} Hz")
-        debug(f"   📦 Размер чанка: {config.vad.CHUNK} samples")
-        debug(f"   ⏱️ Длина чанка: {config.vad.CHUNK/config.vad.RATE*1000:.1f} ms")
-        debug(f"   💾 Размер буфера: {self.buffer_size} samples ({self.buffer_size/config.vad.RATE*1000:.1f} ms)")
-
-        debug(f"⏱️ Общее время инициализации: {(time.time() - start_time)*1000:.1f}ms")
-
     def process_audio(self) -> Optional[Dict[str, Any]]:
         """Обрабатывает аудио и возвращает состояние с аудио данными"""
         try:
+            # Читаем новый чанк
             audio, overflow = self.stream.read()
             if overflow:
                 return None
@@ -68,30 +55,44 @@ class VoiceDetector:
             # Добавляем в буфер
             self.audio_buffer.append(audio)
 
-            # Поддерживаем размер буфера
-            while len(self.audio_buffer) * len(audio) > self.buffer_size:
-                self.audio_buffer.pop(0)
-
             # Получаем результат VAD
             speech_dict = self.vad_iterator(audio)
 
             if speech_dict is not None:
-                debug(f"VAD вернул: {speech_dict}")
 
                 if 'start' in speech_dict and not self.is_speech_active:
                     self.is_speech_active = True
-                    debug("⭐ Детектировано начало речи")
-                    return {
-                        'type': 'start',
-                        'audio': np.concatenate(self.audio_buffer)
-                    }
+
+                    # Вычисляем сколько нам нужно предыдущих чанков для паддинга
+                    chunks_needed = int(config.vad.SPEECH_PAD_MS * config.vad.RATE / (1000 * len(audio)))
+                    start_idx = max(0, len(self.audio_buffer) - chunks_needed)
+
+                    # Берём нужное количество предыдущих чанков
+                    padding_buffer = self.audio_buffer[start_idx:]
+
+                    if padding_buffer:
+                        return {
+                            'type': 'start',
+                            'audio': np.concatenate(padding_buffer)
+                        }
+                    else:
+                        return {
+                            'type': 'start',
+                            'audio': audio
+                        }
+
                 elif 'end' in speech_dict and self.is_speech_active:
                     self.is_speech_active = False
-                    debug("⭐ Детектирован конец речи")
+                    self.audio_buffer.clear()
+                    self.vad_iterator.reset_states()
                     return {
-                        'type': 'end',
-                        'audio': audio  # Последний чанк
+                        'type': 'end'
                     }
+
+            # Ограничиваем размер буфера
+            max_chunks = int(config.vad.SPEECH_PAD_MS * config.vad.RATE / (1000 * len(audio))) + 1
+            while len(self.audio_buffer) > max_chunks:
+                self.audio_buffer.pop(0)
 
             return None
 
