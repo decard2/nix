@@ -5,13 +5,14 @@ import sys
 from typing import Optional
 from src.recognition.recognizer import CommandRecognizer
 import numpy as np # type: ignore
-import time
 
 from src.recognition.detector import VoiceDetector
 from src.audio.audio_recorder import AudioRecorder
 from src.audio.debug_player import DebugPlayer
 from src.utils.logger import info, debug, set_debug, error, log_timing
 from src.utils.config import config
+from src.recognition.streamer import StreamRecognizer
+from src.commands.processor import CommandProcessor
 
 # Глобальная переменная для хранения ссылки на помощника
 jora = None
@@ -26,35 +27,49 @@ class Jora:
         self.detector = VoiceDetector()
         self.recorder: Optional[AudioRecorder] = None
         self.recognizer = CommandRecognizer()
+        self.stream_recognizer = StreamRecognizer()
+        self.command_processor = CommandProcessor()
+        self.command_processor.set_stream_recognizer(self.stream_recognizer)
 
     def start_recording(self, initial_audio: Optional[np.ndarray] = None):
-        """Начинает запись речи"""
-        if not self.recorder:
-            self.recorder = AudioRecorder()
-            if not self.recorder.start_recording(initial_audio):
-                error("Не удалось начать запись")
-                self.recorder = None
+            """Начинает запись речи"""
+            if not self.recorder:
+                self.recorder = AudioRecorder()
+                if not self.recorder.start_recording(initial_audio):
+                    error("Не удалось начать запись")
+                    self.recorder = None
+
+    def process_audio(self):
+        """Обработка аудио потока"""
+        if self.command_processor.is_dictating:
+            # Запускаем диктовку
+            self.stream_recognizer.recognize_stream()
+            self.command_processor.is_dictating = False
+            info("\n✅ Диктовка завершена!")
+            return
+
+        state = self.detector.process_audio()
+        if state:
+            if state['type'] == 'start':
+                self.start_recording(state.get('audio'))
+            elif state['type'] == 'end':
+                self.stop_recording()
+
+        if self.recorder:
+            self.recorder.process()
 
     def stop_recording(self):
         """Останавливает запись речи"""
         if self.recorder:
             if audio_file := self.recorder.stop_recording():
                 try:
-                    # Замеряем только распознавание
-                    start_time = time.time() if config.DEBUG else None
-
-                    # Распознаем команду
                     if text := self.recognizer.recognize_command(audio_file):
                         info(f"🗣️ Распознано: {text}")
+                        # Передаем текст в обработчик команд
+                        self.command_processor.process(text)
                     else:
                         info("❌ Команда не распознана")
 
-                    # Логируем время распознавания
-                    if config.DEBUG and start_time:
-                        elapsed = (time.time() - start_time) * 1000
-                        debug(f"Время распознавания: {elapsed:.1f}ms")
-
-                    # Отдельно воспроизводим в режиме дебага
                     if config.DEBUG:
                         DebugPlayer.play_file(audio_file)
 
@@ -66,19 +81,6 @@ class Jora:
 
                     self.recorder.cleanup()
                     self.recorder = None
-
-    def process_audio(self):
-        """Обработка аудио потока"""
-        state = self.detector.process_audio()
-
-        if state:
-            if state['type'] == 'start':
-                self.start_recording(state.get('audio'))
-            elif state['type'] == 'end':
-                self.stop_recording()
-
-        if self.recorder:
-            self.recorder.process()
 
     def run(self):
         """Основной цикл работы"""
