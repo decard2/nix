@@ -35,7 +35,7 @@ class BaseAudioStream:
             )
             if self._stream is not None:
                 self._stream.start()
-                success(f"Аудио поток {self.rate}Hz инициализирован")
+                debug(f"Аудио поток {self.rate}Hz инициализирован")
                 return True
             return False
 
