@@ -84,6 +84,20 @@
           }]
         }
       }
+
+      # Добавляем команды rbw
+      def bwf [query: string] {
+        rbw list | lines | where $it =~ $query
+      }
+
+      def bwp [name: string] {
+        rbw get $name | wl-copy
+        echo "Пароль в буфере, братишка! Через 15 сек сам очистится 👊"
+      }
+
+      def bwu [name: string] {
+        rbw get --full $name | from json | get username
+      }
     '';
 
     # Алиасы для удобства

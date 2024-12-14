@@ -12,5 +12,6 @@
     ./devops
     ./bash.nix
     ./jora
+    ./bitwarden.nix
   ];
 }
