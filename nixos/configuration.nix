@@ -10,6 +10,7 @@
     ./disko.nix
     ./virtualization
     ./network
+    ./services/transmission.nix
   ];
 
   system.stateVersion = "24.11";
