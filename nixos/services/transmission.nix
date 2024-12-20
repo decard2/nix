@@ -15,12 +15,9 @@
       rpc-password = "";
 
       # Оптимизации
-      speed-limit-up = 1000;
-      speed-limit-down = 2000;
       ratio-limit = 2.0;
-      ratio-limit-enabled = true;
+      ratio-limit-enabled = false;
 
-      encryption = 1;
       incomplete-dir = "/home/decard/torrents/downloads/.incomplete";
       incomplete-dir-enabled = true;
       peer-port = 51413;
@@ -37,7 +34,7 @@
 
   # Добавляем нужные пакеты в систему
   environment.systemPackages = with pkgs; [
-    transmission
+    transmission_4
     stig
     tremc
   ];

@@ -5,6 +5,7 @@
     ./fonts.nix
     ./environment.nix
     ./theme.nix
+    ./nixpkgs.nix
   ];
 
   home = {
