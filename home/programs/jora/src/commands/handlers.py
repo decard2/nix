@@ -29,10 +29,18 @@ class CommandHandlers:
             return False
 
     @staticmethod
+    def safe_launch(command: str) -> str:
+        """Безопасный запуск приложений с отвязкой от терминала"""
+        return f"nohup {command} >/dev/null 2>&1 &"
+
+    @staticmethod
     def handle_system_command(command: str):
         """Выполняет системную команду"""
         try:
-            os.system(command)
+            if any(app in command for app in ['firefox', 'zeditor', 'telegram-desktop']):
+                os.system(CommandHandlers.safe_launch(command))
+            else:
+                os.system(command)
             info(f"✅ Команда выполнена: {command}")
         except Exception as e:
             info(f"❌ Ошибка выполнения команды: {e}")
@@ -45,6 +53,10 @@ class CommandHandlers:
         if workspace_num:
             info(f"🚀 Перехожу на рабочий стол {workspace_num}")
             os.system(f"hyprctl dispatch workspace {workspace_num}")
+
+        # Проверяем, нужно ли запустить приложение
+        if app_name == "telegram":
+            os.system(f"pgrep telegram-desktop || {cls.safe_launch('telegram-desktop')}")
 
         info(f"🚀 Открываю {app_name} в scratchpad")
         os.system(f"hyprctl dispatch togglespecialworkspace {app_name}")
@@ -60,7 +72,7 @@ class CommandHandlers:
 
         if not cls._check_workspace_exists(int(workspace_num)):
             info(f"🚀 Запускаю {app_name}")
-            os.system(f"{launch_command} &")
+            os.system(cls.safe_launch(launch_command))
         else:
             info(f"✨ {app_name} уже запущен")
 
