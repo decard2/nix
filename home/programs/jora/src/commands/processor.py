@@ -60,7 +60,7 @@ class CommandProcessor:
 
         self.add_command(
             "reboot",
-            ["перезагрузи", "ребут", "перезагрузка", "рестарт"],
+            ["перезагрузить систему", "перезагрузка системы"],
             CommandHandlers.handle_reboot,
             "Перезагрузка системы"
         )

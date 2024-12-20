@@ -56,7 +56,7 @@ class CommandHandlers:
 
         # Проверяем, нужно ли запустить приложение
         if app_name == "telegram":
-            os.system(f"pgrep telegram-desktop || {cls.safe_launch('telegram-desktop')}")
+            os.system(f"pgrep -f telegram-desktop || {cls.safe_launch('telegram-desktop')}")
 
         info(f"🚀 Открываю {app_name} в scratchpad")
         os.system(f"hyprctl dispatch togglespecialworkspace {app_name}")
@@ -79,11 +79,8 @@ class CommandHandlers:
     @classmethod
     def handle_reboot(cls, text: str):
         """Обработчик команды перезагрузки"""
-        if "подтверждаю" in text.lower():
-            info("🔄 Перезагружаю систему...")
-            cls.handle_system_command("systemctl reboot")
-        else:
-            info("⚠️ Для перезагрузки системы скажи 'перезагрузи подтверждаю'")
+        info("🔄 Перезагружаю систему...")
+        cls.handle_system_command("systemctl reboot")
 
     @staticmethod
     def handle_workspace(text: str):
