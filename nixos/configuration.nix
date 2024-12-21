@@ -169,6 +169,7 @@
       libvdpau-va-gl
       nvidia-vaapi-driver
 
+      xfce.thunar
       ntfs3g
       go-mtpfs
     ];
