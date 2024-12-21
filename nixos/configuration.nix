@@ -117,6 +117,8 @@
 
     udev.extraRules = ''
       KERNEL=="tun", GROUP="netdev", MODE="0666", OPTIONS+="static_node=net/tun"
+      SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="*", ATTR{idProduct}=="*", TAG+="uaccess", TAG+="udev-acl"
+      SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", MODE="0666"
     '';
 
     udisks2.enable = true;
@@ -144,7 +146,7 @@
   # =========================
   users.users.decard = {
     isNormalUser = true;
-    extraGroups = ["wheel" "networkmanager" "video" "netdev" "storage"];
+    extraGroups = ["wheel" "networkmanager" "video" "netdev" "storage" "plugdev"];
     initialPassword = "changeme";
     shell = pkgs.nushell;
   };
@@ -166,6 +168,9 @@
       vaapiVdpau
       libvdpau-va-gl
       nvidia-vaapi-driver
+
+      ntfs3g
+      go-mtpfs
     ];
   };
 
