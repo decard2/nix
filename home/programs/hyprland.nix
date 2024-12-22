@@ -110,6 +110,9 @@
         # VPN
         # "SUPER, W, exec, uwsm app -- sudo awg-quick up ~/nix/config/vpn.conf"
         # "SUPER, E, exec, uwsm app -- sudo awg-quick down ~/nix/config/vpn.conf"
+        # Tailscale exit node
+        "SUPER, W, exec, uwsm app -- sudo tailscale up --login-server=https://net.rolder.app --exit-node=finland"
+        "SUPER, E, exec, uwsm app -- sudo tailscale up --login-server=https://net.rolder.app --exit-node="
 
         # Виртуалка
         "SUPER_SHIFT, W, exec, uwsm app -- virsh -c qemu:///system start win11; uwsm app -- virt-viewer --connect qemu:///system win11"
