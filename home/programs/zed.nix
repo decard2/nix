@@ -39,7 +39,7 @@
       hour_format = "hour24";
       auto_update = false;
       theme = "One Dark";
-      proxy = "http://127.0.0.1:7890";
+      # proxy = "http://127.0.0.1:7890";
 
       assistant = {
         enabled = true;
