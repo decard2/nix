@@ -107,6 +107,17 @@
       #     ];
       #   }
       # ];
+      extraRules = [
+        {
+          users = ["decard"];
+          commands = [
+            {
+              command = "/run/current-system/sw/bin/tailscale";
+              options = ["NOPASSWD"];
+            }
+          ];
+        }
+      ];
     };
   };
 
