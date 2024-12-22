@@ -4,14 +4,30 @@ mixed-port: 7892
 allow-lan: true
 mode: rule
 log-level: info
+# external-controller: 127.0.0.1:9090
+
+# tun:
+#   enable: true
+#   device-id: "dev://utun1989"
+# routes:
+#   - 0.0.0.0/1
+#   - 128.0.0.0/1
+#   - 198.18.0.0/16
 
 dns:
   enable: true
-  listen: "127.0.0.1:53"
+  listen: 127.0.0.1:53553
+
+  default-nameserver:
+    - 114.114.114.114
+    - 8.8.8.8
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.2/16
   nameserver:
-    - "1.1.1.1"
-    - "192.168.0.1"
-    - "8.8.8.8"
+    - 114.114.114.114
+    - 1.1.1.1
+    - tls://1.1.1.1:853
+    - https://1.1.1.1/dns-query
 
 proxies:
   - name: "Moldova"
@@ -300,6 +316,10 @@ proxy-groups:
       - "DIRECT"
 
 rules:
+  - DST-PORT,53,SELECTOR
+  - DOMAIN-SUFFIX,dns.google,SELECTOR
+  - DOMAIN-SUFFIX,cloudflare-dns.com,SELECTOR
+
   # Исключения для локальных адресов
   - DOMAIN,127.0.0.1,DIRECT
   - DOMAIN,localhost,DIRECT
@@ -324,4 +344,4 @@ rules:
   - DOMAIN-SUFFIX,rolder.app,DIRECT
 
   # Дефолтное правило в конце
-  - MATCH,SELECTOR
+  - MATCH,AUTO-SPEED
