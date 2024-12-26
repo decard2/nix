@@ -75,6 +75,11 @@
       "nvidia-drm.modeset=1"
     ];
 
+    kernel.sysctl = {
+      "net.ipv4.tcp_congestion_control" = "bbr3";
+      "net.core.default_qdisc" = "fq";
+    };
+
     initrd.verbose = false;
   };
 
