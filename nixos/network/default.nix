@@ -1,6 +1,4 @@
-{pkgs, ...}: let
-  clashConfigFile = pkgs.writeText "clash-config.yaml" (builtins.readFile ./clash-config.yaml);
-in {
+{pkgs, ...}: {
   networking = {
     hostName = "emerald";
 
@@ -22,11 +20,6 @@ in {
         level = "info";
       };
       dns = {
-        fakeip = {
-          enabled = true;
-          inet4_range = "198.18.0.0/15";
-          inet6_range = "fc00::/18";
-        };
         servers = [
           {
             tag = "dns-remote";
@@ -37,10 +30,6 @@ in {
             tag = "dns-direct";
             address = "local";
             detour = "direct";
-          }
-          {
-            address = "fakeip";
-            tag = "dns-fake";
           }
           {
             address = "rcode://success";
@@ -55,10 +44,6 @@ in {
           {
             domain_suffix = [".lan"];
             server = "dns-block";
-          }
-          {
-            inbound = "tun-in";
-            server = "dns-fake";
           }
         ];
       };
