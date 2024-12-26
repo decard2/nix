@@ -87,7 +87,8 @@
         "uwsm app -- udiskie"
         "uwsm app -- ~/nix/bin/auto_hyprsunset.nu"
         # "uwsm app -- sudo awg-quick up ~/nix/config/vpn.conf"
-        "[workspace special:jora silent] uwsm app -- kitty -e jora"
+        # "[workspace special:jora silent] uwsm app -- kitty -e jora"
+        "[workspace special:jora silent] uwsm app -- kitty"
       ];
 
       # 7. Бинды клавиш и мыши
@@ -111,8 +112,8 @@
         # "SUPER, W, exec, uwsm app -- sudo awg-quick up ~/nix/config/vpn.conf"
         # "SUPER, E, exec, uwsm app -- sudo awg-quick down ~/nix/config/vpn.conf"
         # Tailscale exit node
-        "SUPER, W, exec, uwsm app -- sudo tailscale up --login-server=https://net.rolder.app --exit-node=finland"
-        "SUPER, E, exec, uwsm app -- sudo tailscale up --login-server=https://net.rolder.app --exit-node="
+        "SUPER, W, exec, uwsm app -- sudo tailscale up --login-server=https://hs.rolder.net --exit-node=moscow"
+        "SUPER, E, exec, uwsm app -- sudo tailscale up --login-server=https://hs.rolder.net --exit-node="
 
         # Виртуалка
         "SUPER_SHIFT, W, exec, uwsm app -- virsh -c qemu:///system start win11; uwsm app -- virt-viewer --connect qemu:///system win11"

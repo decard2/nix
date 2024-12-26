@@ -2,6 +2,7 @@
   home.packages = with pkgs; [
     kubectl
     kubernetes-helm
+    k0sctl
     k9s # Крутой TUI клиент для kubectl
   ];
 
