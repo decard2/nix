@@ -23,8 +23,7 @@
         servers = [
           {
             tag = "dns-remote";
-            address = "1.1.1.1";
-            detour = "proxy";
+            address = "tls://[2606:4700:4700::1111]";
           }
           {
             tag = "dns-direct";
@@ -46,6 +45,7 @@
             server = "dns-block";
           }
         ];
+        strategy = "prefer_ipv6";
       };
 
       inbounds = [
@@ -71,11 +71,11 @@
           server = "95.164.8.24";
           server_port = 3567;
           uuid = "84466b63-d52c-414c-852f-6c5856028248";
-          flow = "";
+          flow = "xtls-rprx-vision";
           network = "tcp";
           tls = {
             enabled = true;
-            server_name = "ipinfo.io";
+            server_name = "google.ca";
             utls = {
               enabled = true;
               fingerprint = "chrome";
@@ -106,12 +106,7 @@
         auto_detect_interface = true;
         rules = [
           {
-            domain_suffix = [
-              "reddit.com"
-              "redd.it"
-              "redditstatic.com"
-              "redditmedia.com"
-            ];
+            geosite = ["reddit"];
             outbound = "direct";
           }
           {
@@ -134,7 +129,7 @@
             outbound = "block";
           }
           {
-            port = 53;
+            protocol = "dns";
             outbound = "dns-out";
           }
         ];
