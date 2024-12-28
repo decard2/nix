@@ -13,5 +13,6 @@
     ./bash.nix
     ./jora
     ./bitwarden.nix
+    ./roodl.nix
   ];
 }

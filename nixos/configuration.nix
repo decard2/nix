@@ -101,17 +101,7 @@
       extraConfig = ''
         Defaults timestamp_timeout=1440
       '';
-      # extraRules = [
-      #   {
-      #     users = ["decard"];
-      #     commands = [
-      #       {
-      #         command = "/run/current-system/sw/bin/awg-quick";
-      #         options = ["NOPASSWD"];
-      #       }
-      #     ];
-      #   }
-      # ];
+
       extraRules = [
         {
           users = ["decard"];

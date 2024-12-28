@@ -10,14 +10,15 @@
     alejandra
     bun
     gitui
+    pnpm
+    moon
 
     # Rust
     rustc
     cargo
     cargo-edit
-    rust-analyzer # для IDE
-    rustfmt # для форматирования
-    clippy # линтер
+    rust-analyzer
+    rustfmt
 
     gcc
     pkg-config
@@ -39,7 +40,6 @@
       hour_format = "hour24";
       auto_update = false;
       theme = "One Dark";
-      # proxy = "http://172.30.0.1:7890";
 
       assistant = {
         enabled = true;
