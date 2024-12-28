@@ -9,6 +9,5 @@
     pavucontrol
     nvd
     zettlr
-    clash-rs
   ];
 }

@@ -9,15 +9,32 @@
 
     useDHCP = false;
     dhcpcd.enable = false;
+
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [51413];
+      allowedUDPPorts = [51413];
+      extraCommands = ''
+        # Разрешаем входящие соединения для торрентов
+        iptables -A INPUT -p tcp --dport 51413 -j ACCEPT
+        iptables -A INPUT -p udp --dport 51413 -j ACCEPT
+        # Разрешаем исходящие соединения
+        iptables -A OUTPUT -p tcp --dport 51413 -j ACCEPT
+        iptables -A OUTPUT -p udp --dport 51413 -j ACCEPT
+      '';
+    };
   };
 
-  services.resolved.enable = true;
+  services.resolved = {
+    enable = true;
+    dnssec = "true";
+  };
 
   services.sing-box = {
     enable = true;
     settings = {
       log = {
-        level = "info";
+        level = "warn";
       };
       dns = {
         servers = [
@@ -132,6 +149,16 @@
             protocol = "dns";
             outbound = "dns-out";
           }
+          {
+            port = [123];
+            outbound = "direct";
+            network = "udp";
+          }
+          {
+            port = [51413];
+            outbound = "direct";
+            network = "tcp";
+          }
         ];
       };
     };
@@ -166,10 +193,5 @@
       Restart = "on-failure";
       RestartSec = "3";
     };
-  };
-
-  # Файрвол
-  networking.firewall = {
-    enable = true;
   };
 }
