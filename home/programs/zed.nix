@@ -10,8 +10,6 @@
     alejandra
     bun
     gitui
-    pnpm
-    moon
 
     # Rust
     rustc
