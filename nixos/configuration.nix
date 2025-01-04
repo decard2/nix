@@ -160,7 +160,6 @@
   environment = {
     systemPackages = with pkgs; [
       home-manager
-      # pkgs-unstable.amneziawg-tools
       dnsutils
       jq
 
