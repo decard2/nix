@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   services.transmission = {
     enable = true;
     user = "decard"; # твой пользователь
@@ -33,11 +33,7 @@
   };
 
   # Добавляем нужные пакеты в систему
-  environment.systemPackages = with pkgs; [
-    transmission_4
-    stig
-    tremc
-  ];
+  environment.systemPackages = with pkgs; [ transmission_4 stig tremc ];
 
   # Создаём нужные директории при установке
   systemd.tmpfiles.rules = [

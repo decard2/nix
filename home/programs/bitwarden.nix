@@ -1,8 +1,5 @@
-{pkgs, ...}: {
-  home.packages = with pkgs; [
-    rbw
-    pinentry
-  ];
+{ pkgs, ... }: {
+  home.packages = with pkgs; [ rbw pinentry ];
 
   home.file.".config/rbw/config.json".text = ''
     {

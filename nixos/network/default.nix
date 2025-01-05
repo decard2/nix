@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   networking = {
     hostName = "emerald";
 
@@ -12,8 +12,8 @@
 
     firewall = {
       enable = true;
-      allowedTCPPorts = [51413];
-      allowedUDPPorts = [51413];
+      allowedTCPPorts = [ 51413 ];
+      allowedUDPPorts = [ 51413 ];
       extraCommands = ''
         # Разрешаем входящие соединения для торрентов
         iptables -A INPUT -p tcp --dport 51413 -j ACCEPT
@@ -33,9 +33,7 @@
   services.sing-box = {
     enable = true;
     settings = {
-      log = {
-        level = "warn";
-      };
+      log = { level = "warn"; };
       dns = {
         servers = [
           {
@@ -54,32 +52,30 @@
         ];
         rules = [
           {
-            query_type = [32 33];
+            query_type = [ 32 33 ];
             server = "dns-block";
           }
           {
-            domain_suffix = [".lan"];
+            domain_suffix = [ ".lan" ];
             server = "dns-block";
           }
         ];
         strategy = "prefer_ipv6";
       };
 
-      inbounds = [
-        {
-          type = "tun";
-          tag = "tun-in";
-          interface_name = "singbox-tun";
-          inet4_address = "172.19.0.1/28";
-          inet6_address = "fdfe:dcba:9876::1/126";
-          mtu = 9000;
-          auto_route = true;
-          strict_route = false;
-          stack = "gvisor";
-          endpoint_independent_nat = true;
-          sniff = true;
-        }
-      ];
+      inbounds = [{
+        type = "tun";
+        tag = "tun-in";
+        interface_name = "singbox-tun";
+        inet4_address = "172.19.0.1/28";
+        inet6_address = "fdfe:dcba:9876::1/126";
+        mtu = 9000;
+        auto_route = true;
+        strict_route = false;
+        stack = "gvisor";
+        endpoint_independent_nat = true;
+        sniff = true;
+      }];
 
       outbounds = [
         {
@@ -123,26 +119,20 @@
         auto_detect_interface = true;
         rules = [
           {
-            geosite = ["reddit"];
+            geosite = [ "reddit" ];
             outbound = "direct";
           }
           {
             network = "udp";
-            port = [135 137 138 139 5353];
+            port = [ 135 137 138 139 5353 ];
             outbound = "block";
           }
           {
-            ip_cidr = [
-              "224.0.0.0/3"
-              "ff00::/8"
-            ];
+            ip_cidr = [ "224.0.0.0/3" "ff00::/8" ];
             outbound = "block";
           }
           {
-            source_ip_cidr = [
-              "224.0.0.0/3"
-              "ff00::/8"
-            ];
+            source_ip_cidr = [ "224.0.0.0/3" "ff00::/8" ];
             outbound = "block";
           }
           {
@@ -150,12 +140,12 @@
             outbound = "dns-out";
           }
           {
-            port = [123];
+            port = [ 123 ];
             outbound = "direct";
             network = "udp";
           }
           {
-            port = [51413];
+            port = [ 51413 ];
             outbound = "direct";
             network = "tcp";
           }
@@ -166,8 +156,8 @@
 
   # Нужные правила для маршрутизации
   systemd.services.sing-box = {
-    after = ["network.target"];
-    wantedBy = ["multi-user.target"];
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
     serviceConfig = {
       ExecStartPre = pkgs.writeScript "sing-box-pre" ''
         #!${pkgs.bash}/bin/bash

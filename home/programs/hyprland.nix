@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   home.packages = with pkgs; [
     playerctl
     wireplumber
@@ -75,8 +75,7 @@
       };
 
       # 5. Правила для окон
-      windowrule = [
-      ];
+      windowrule = [ ];
 
       # 6. Автозапуск
       exec-once = [
@@ -92,10 +91,8 @@
       ];
 
       # 7. Бинды клавиш и мыши
-      bindm = [
-        "SUPER, mouse:272, movewindow"
-        "SUPER, mouse:273, resizewindow"
-      ];
+      bindm =
+        [ "SUPER, mouse:272, movewindow" "SUPER, mouse:273, resizewindow" ];
 
       bind = [
         # Основные команды

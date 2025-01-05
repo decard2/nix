@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   programs.nushell = {
     enable = true;
 
@@ -442,13 +442,9 @@
     enable = true;
     nix-direnv.enable = true;
     config = {
-      whitelist = {
-        prefix = [
-          "$HOME/projects"
-          "$HOME/nix"
-        ];
-      };
-      warn_timeout = "1m"; # Предупреждение, если загрузка занимает больше минуты
+      whitelist = { prefix = [ "$HOME/projects" "$HOME/nix" ]; };
+      warn_timeout =
+        "1m"; # Предупреждение, если загрузка занимает больше минуты
       # Расширенный лог для отладки
       stdlib = ''
         : ''${XDG_CACHE_HOME:=$HOME/.cache}
@@ -458,7 +454,5 @@
     };
   };
 
-  home.packages = with pkgs; [
-    carapace
-  ];
+  home.packages = with pkgs; [ carapace ];
 }
