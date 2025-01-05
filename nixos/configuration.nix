@@ -1,4 +1,5 @@
-{ pkgs, config, ... }: {
+{ pkgs, config, ... }:
+{
   # 1. БАЗОВЫЕ НАСТРОЙКИ СИСТЕМЫ
   # ============================
   imports = [
@@ -14,7 +15,10 @@
   nixpkgs.config.cudaSupport = true;
 
   nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
 
     trusted-substituters = [
       "https://cache.nixos.org"
@@ -55,11 +59,10 @@
     plymouth = {
       enable = true;
       theme = "flame";
-      themePackages = with pkgs;
-        [
-          # By default we would install all themes
-          (adi1090x-plymouth-themes.override { selected_themes = [ "flame" ]; })
-        ];
+      themePackages = with pkgs; [
+        # By default we would install all themes
+        (adi1090x-plymouth-themes.override { selected_themes = [ "flame" ]; })
+      ];
     };
 
     kernelParams = [
@@ -83,6 +86,7 @@
   nix.gc = {
     automatic = true;
     dates = "weekly";
+    persistent = true;
     options = "--delete-older-than 30d";
   };
 
@@ -97,13 +101,17 @@
         Defaults timestamp_timeout=1440
       '';
 
-      extraRules = [{
-        users = [ "decard" ];
-        commands = [{
-          command = "/run/current-system/sw/bin/tailscale";
-          options = [ "NOPASSWD" ];
-        }];
-      }];
+      extraRules = [
+        {
+          users = [ "decard" ];
+          commands = [
+            {
+              command = "/run/current-system/sw/bin/tailscale";
+              options = [ "NOPASSWD" ];
+            }
+          ];
+        }
+      ];
     };
   };
 
@@ -143,8 +151,14 @@
   # =========================
   users.users.decard = {
     isNormalUser = true;
-    extraGroups =
-      [ "wheel" "networkmanager" "video" "netdev" "storage" "plugdev" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+      "video"
+      "netdev"
+      "storage"
+      "plugdev"
+    ];
     initialPassword = "changeme";
     shell = pkgs.nushell;
   };
@@ -184,7 +198,10 @@
 
   i18n = {
     defaultLocale = "en_US.UTF-8";
-    supportedLocales = [ "en_US.UTF-8/UTF-8" "ru_RU.UTF-8/UTF-8" ];
+    supportedLocales = [
+      "en_US.UTF-8/UTF-8"
+      "ru_RU.UTF-8/UTF-8"
+    ];
     extraLocaleSettings = {
       LC_ADDRESS = "ru_RU.UTF-8";
       LC_IDENTIFICATION = "ru_RU.UTF-8";
