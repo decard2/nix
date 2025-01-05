@@ -1,9 +1,6 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   home = {
-    packages = with pkgs; [
-      qt6ct
-      bibata-cursors
-    ];
+    packages = with pkgs; [ qt6ct bibata-cursors ];
     pointerCursor = {
       gtk.enable = true;
       x11.enable = true;
@@ -22,7 +19,8 @@
       # Перемещаем Wayland-специфичные переменные из environment.nix
       NIXOS_OZONE_WL = "1";
       DISABLE_LAYER_AMD_SWITCHABLE_GRAPHICS_1 = "1";
-      VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json";
+      VK_ICD_FILENAMES =
+        "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json";
     };
   };
 
@@ -36,11 +34,7 @@
       name = "Adwaita";
       package = pkgs.adwaita-icon-theme;
     };
-    gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = true;
-    };
-    gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = true;
-    };
+    gtk3.extraConfig = { gtk-application-prefer-dark-theme = true; };
+    gtk4.extraConfig = { gtk-application-prefer-dark-theme = true; };
   };
 }

@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   programs.chromium = {
     enable = true;
     commandLineArgs = [
@@ -17,7 +17,5 @@
     };
   };
 
-  home.packages = with pkgs; [
-    firefox
-  ];
+  home.packages = with pkgs; [ firefox ];
 }

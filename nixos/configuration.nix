@@ -1,8 +1,4 @@
-{
-  pkgs,
-  config,
-  ...
-}: {
+{ pkgs, config, ... }: {
   # 1. БАЗОВЫЕ НАСТРОЙКИ СИСТЕМЫ
   # ============================
   imports = [
@@ -18,7 +14,7 @@
   nixpkgs.config.cudaSupport = true;
 
   nix.settings = {
-    experimental-features = ["nix-command" "flakes"];
+    experimental-features = [ "nix-command" "flakes" ];
 
     trusted-substituters = [
       "https://cache.nixos.org"
@@ -59,12 +55,11 @@
     plymouth = {
       enable = true;
       theme = "flame";
-      themePackages = with pkgs; [
-        # By default we would install all themes
-        (adi1090x-plymouth-themes.override {
-          selected_themes = ["flame"];
-        })
-      ];
+      themePackages = with pkgs;
+        [
+          # By default we would install all themes
+          (adi1090x-plymouth-themes.override { selected_themes = [ "flame" ]; })
+        ];
     };
 
     kernelParams = [
@@ -102,24 +97,20 @@
         Defaults timestamp_timeout=1440
       '';
 
-      extraRules = [
-        {
-          users = ["decard"];
-          commands = [
-            {
-              command = "/run/current-system/sw/bin/tailscale";
-              options = ["NOPASSWD"];
-            }
-          ];
-        }
-      ];
+      extraRules = [{
+        users = [ "decard" ];
+        commands = [{
+          command = "/run/current-system/sw/bin/tailscale";
+          options = [ "NOPASSWD" ];
+        }];
+      }];
     };
   };
 
   # 5. СИСТЕМНЫЕ СЕРВИСЫ
   # ===================
   services = {
-    xserver.videoDrivers = ["nvidia"];
+    xserver.videoDrivers = [ "nvidia" ];
 
     udev.extraRules = ''
       KERNEL=="tun", GROUP="netdev", MODE="0666", OPTIONS+="static_node=net/tun"
@@ -131,7 +122,7 @@
 
     dbus = {
       enable = true;
-      packages = [pkgs.dconf];
+      packages = [ pkgs.dconf ];
     };
 
     pipewire = {
@@ -152,7 +143,8 @@
   # =========================
   users.users.decard = {
     isNormalUser = true;
-    extraGroups = ["wheel" "networkmanager" "video" "netdev" "storage" "plugdev"];
+    extraGroups =
+      [ "wheel" "networkmanager" "video" "netdev" "storage" "plugdev" ];
     initialPassword = "changeme";
     shell = pkgs.nushell;
   };
@@ -186,16 +178,13 @@
 
   console = {
     font = "ter-v32n";
-    packages = with pkgs; [terminus_font];
+    packages = with pkgs; [ terminus_font ];
     useXkbConfig = true;
   };
 
   i18n = {
     defaultLocale = "en_US.UTF-8";
-    supportedLocales = [
-      "en_US.UTF-8/UTF-8"
-      "ru_RU.UTF-8/UTF-8"
-    ];
+    supportedLocales = [ "en_US.UTF-8/UTF-8" "ru_RU.UTF-8/UTF-8" ];
     extraLocaleSettings = {
       LC_ADDRESS = "ru_RU.UTF-8";
       LC_IDENTIFICATION = "ru_RU.UTF-8";
@@ -217,6 +206,30 @@
       withUWSM = true;
     };
     dconf.enable = true;
+
+    nix-ld = {
+      enable = true;
+      libraries = with pkgs; [
+        # Базовый набор для работы
+        stdenv.cc.cc
+        glibc
+        # openssl
+        # curl
+
+        # # Графика (не дублируем vulkan, он уже есть)
+        # xorg.libX11
+        # xorg.libXcursor
+        # xorg.libXrandr
+        # xorg.libXrender
+        # xorg.libxcb
+
+        # # Дополнительные системные библиотеки
+        # glib
+        # gtk3
+        # zlib
+        # icu
+      ];
+    };
   };
 
   # 9. СИСТЕМНЫЕ СЛУЖБЫ
@@ -225,9 +238,9 @@
     user.services.hyprpolkitagent = {
       enable = true;
       description = "Hyprland Polkit Agent";
-      wantedBy = ["graphical-session.target"];
-      wants = ["graphical-session.target"];
-      after = ["graphical-session.target"];
+      wantedBy = [ "graphical-session.target" ];
+      wants = [ "graphical-session.target" ];
+      after = [ "graphical-session.target" ];
       serviceConfig = {
         Type = "simple";
         ExecStart = "${pkgs.hyprpolkitagent}/bin/hyprpolkitagent";

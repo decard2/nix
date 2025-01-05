@@ -18,7 +18,7 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                mountOptions = ["umask=0077"];
+                mountOptions = [ "umask=0077" ];
               };
             };
             root = {
@@ -26,35 +26,31 @@
               size = "100%";
               content = {
                 type = "btrfs";
-                extraArgs = ["-f"];
+                extraArgs = [ "-f" ];
                 subvolumes = {
                   "/root" = {
                     mountpoint = "/";
-                    mountOptions = ["compress=zstd"];
+                    mountOptions = [ "compress=zstd" ];
                   };
                   "/home" = {
                     mountpoint = "/home";
-                    mountOptions = ["compress=zstd"];
+                    mountOptions = [ "compress=zstd" ];
                   };
                   "/nix" = {
                     mountpoint = "/nix";
-                    mountOptions = ["compress=zstd" "noatime"];
+                    mountOptions = [ "compress=zstd" "noatime" ];
                   };
                   "/log" = {
                     mountpoint = "/var/log";
-                    mountOptions = ["compress=zstd"];
+                    mountOptions = [ "compress=zstd" ];
                   };
                   "/cache" = {
                     mountpoint = "/var/cache";
-                    mountOptions = ["compress=zstd"];
+                    mountOptions = [ "compress=zstd" ];
                   };
                   "/swap" = {
                     mountpoint = "/.swapvol";
-                    swap = {
-                      swapfile = {
-                        size = "32G";
-                      };
-                    };
+                    swap = { swapfile = { size = "32G"; }; };
                   };
                 };
               };

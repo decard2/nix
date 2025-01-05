@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   programs.bash = {
     enable = true;
     enableCompletion = true;
@@ -33,7 +33,5 @@
   };
 
   # Добавляем зависимости для bash
-  home.packages = with pkgs; [
-    bash-completion
-  ];
+  home.packages = with pkgs; [ bash-completion ];
 }

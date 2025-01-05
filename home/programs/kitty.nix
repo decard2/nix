@@ -1,4 +1,4 @@
-{...}: {
+{ ... }: {
   programs.kitty = {
     enable = true;
     font = {
@@ -9,6 +9,6 @@
       background_opacity = "0.90";
       confirm_os_window_close = 0;
     };
-    extraConfig = '''';
+    extraConfig = "";
   };
 }
