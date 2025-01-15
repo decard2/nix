@@ -1,15 +1,19 @@
 { pkgs, ... }:
 {
+  # Разрешаем IPv6 privacy extensions
+  boot.kernel.sysctl = {
+    "net.ipv6.conf.all.use_tempaddr" = 2;
+    "net.ipv6.conf.enp0s20f0u3u4.use_tempaddr" = 2;
+  };
+
   networking = {
     hostName = "emerald";
-
-    networkmanager = {
-      enable = true;
-      wifi.backend = "iwd";
-    };
-
-    useDHCP = false;
-    dhcpcd.enable = false;
+    dhcpcd.extraConfig = "nohook resolv.conf";
+    nameservers = [
+      "::1"
+      "127.0.0.1"
+    ];
+    wireless.iwd.enable = true;
 
     firewall = {
       enable = true;
@@ -26,10 +30,28 @@
     };
   };
 
-  services.resolved = {
+  services.dnscrypt-proxy2 = {
     enable = true;
-    dnssec = "true";
+    settings = {
+      ipv6_servers = true;
+      require_dnssec = true;
+      listen_addresses = [
+        "[::1]:53"
+        "127.0.0.1:53"
+      ];
+
+      sources.public-resolvers = {
+        urls = [
+          "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
+          "https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
+        ];
+        cache_file = "/var/lib/dnscrypt-proxy2/public-resolvers.md";
+        minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
+      };
+    };
   };
+
+  systemd.services.dnscrypt-proxy2.serviceConfig.StateDirectory = "dnscrypt-proxy";
 
   services.sing-box = {
     enable = true;
@@ -41,7 +63,7 @@
         servers = [
           {
             tag = "dns-remote";
-            address = "dhcp://auto";
+            address = "tls://[2606:4700:4700::1111]";
           }
           {
             tag = "dns-direct";
@@ -90,13 +112,13 @@
           type = "vless";
           tag = "proxy";
           server = "95.164.8.24";
-          server_port = 3567;
+          server_port = 443;
           uuid = "84466b63-d52c-414c-852f-6c5856028248";
           flow = "xtls-rprx-vision";
           network = "tcp";
           tls = {
             enabled = true;
-            server_name = "google.ca";
+            server_name = "www.tallinn.ee";
             utls = {
               enabled = true;
               fingerprint = "chrome";
