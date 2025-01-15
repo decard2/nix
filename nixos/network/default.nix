@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   networking = {
     hostName = "emerald";
 
@@ -33,12 +34,14 @@
   services.sing-box = {
     enable = true;
     settings = {
-      log = { level = "warn"; };
+      log = {
+        level = "warn";
+      };
       dns = {
         servers = [
           {
             tag = "dns-remote";
-            address = "tls://[2606:4700:4700::1111]";
+            address = "dhcp://auto";
           }
           {
             tag = "dns-direct";
@@ -52,7 +55,10 @@
         ];
         rules = [
           {
-            query_type = [ 32 33 ];
+            query_type = [
+              32
+              33
+            ];
             server = "dns-block";
           }
           {
@@ -63,19 +69,21 @@
         strategy = "prefer_ipv6";
       };
 
-      inbounds = [{
-        type = "tun";
-        tag = "tun-in";
-        interface_name = "singbox-tun";
-        inet4_address = "172.19.0.1/28";
-        inet6_address = "fdfe:dcba:9876::1/126";
-        mtu = 9000;
-        auto_route = true;
-        strict_route = false;
-        stack = "gvisor";
-        endpoint_independent_nat = true;
-        sniff = true;
-      }];
+      inbounds = [
+        {
+          type = "tun";
+          tag = "tun-in";
+          interface_name = "singbox-tun";
+          inet4_address = "172.19.0.1/28";
+          inet6_address = "fdfe:dcba:9876::1/126";
+          mtu = 9000;
+          auto_route = true;
+          strict_route = false;
+          stack = "gvisor";
+          endpoint_independent_nat = true;
+          sniff = true;
+        }
+      ];
 
       outbounds = [
         {
@@ -124,15 +132,27 @@
           }
           {
             network = "udp";
-            port = [ 135 137 138 139 5353 ];
+            port = [
+              135
+              137
+              138
+              139
+              5353
+            ];
             outbound = "block";
           }
           {
-            ip_cidr = [ "224.0.0.0/3" "ff00::/8" ];
+            ip_cidr = [
+              "224.0.0.0/3"
+              "ff00::/8"
+            ];
             outbound = "block";
           }
           {
-            source_ip_cidr = [ "224.0.0.0/3" "ff00::/8" ];
+            source_ip_cidr = [
+              "224.0.0.0/3"
+              "ff00::/8"
+            ];
             outbound = "block";
           }
           {

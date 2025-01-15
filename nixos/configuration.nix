@@ -42,9 +42,6 @@
   # =============================
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
-    # extraModulePackages = [
-    #   pkgs.linuxPackages_zen.amneziawg
-    # ];
 
     loader = {
       systemd-boot = {
@@ -230,21 +227,6 @@
         # Базовый набор для работы
         stdenv.cc.cc
         glibc
-        # openssl
-        # curl
-
-        # # Графика (не дублируем vulkan, он уже есть)
-        # xorg.libX11
-        # xorg.libXcursor
-        # xorg.libXrandr
-        # xorg.libXrender
-        # xorg.libxcb
-
-        # # Дополнительные системные библиотеки
-        # glib
-        # gtk3
-        # zlib
-        # icu
       ];
     };
   };

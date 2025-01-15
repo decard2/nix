@@ -4,8 +4,8 @@ def get_projects [] {
             bucket: "docs.rolder.app"
             icon: "📋"  # документация
         }
-        project2: {
-            bucket: "another-bucket"
+        playground: {
+            bucket: "playground"
             icon: "🎮"  # типа игра
         }
     }
