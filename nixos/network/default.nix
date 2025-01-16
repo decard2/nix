@@ -9,14 +9,16 @@
   networking = {
     hostName = "emerald";
     dhcpcd.extraConfig = "nohook resolv.conf";
+
     nameservers = [
-      "::1"
       "127.0.0.1"
     ];
+
     wireless.iwd.enable = true;
 
     firewall = {
       enable = true;
+      # torrents
       allowedTCPPorts = [ 51413 ];
       allowedUDPPorts = [ 51413 ];
       extraCommands = ''
@@ -30,28 +32,15 @@
     };
   };
 
-  services.dnscrypt-proxy2 = {
-    enable = true;
-    settings = {
-      ipv6_servers = true;
-      require_dnssec = true;
-      listen_addresses = [
-        "[::1]:53"
-        "127.0.0.1:53"
-      ];
+  environment.systemPackages = with pkgs; [
+    dnsproxy
+  ];
 
-      sources.public-resolvers = {
-        urls = [
-          "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
-          "https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
-        ];
-        cache_file = "/var/lib/dnscrypt-proxy2/public-resolvers.md";
-        minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
-      };
-    };
+  systemd.services.dnsproxy = {
+    description = "dnsproxy";
+    serviceConfig.ExecStart = "${pkgs.dnsproxy}/bin/dnsproxy -l 127.0.0.1 -u quic://dns.comss.one -b 83.220.169.155 --cache --cache-optimistic";
+    wantedBy = [ "multi-user.target" ];
   };
-
-  systemd.services.dnscrypt-proxy2.serviceConfig.StateDirectory = "dnscrypt-proxy";
 
   services.sing-box = {
     enable = true;
@@ -59,50 +48,14 @@
       log = {
         level = "warn";
       };
-      dns = {
-        servers = [
-          {
-            tag = "dns-remote";
-            address = "tls://[2606:4700:4700::1111]";
-          }
-          {
-            tag = "dns-direct";
-            address = "local";
-            detour = "direct";
-          }
-          {
-            address = "rcode://success";
-            tag = "dns-block";
-          }
-        ];
-        rules = [
-          {
-            query_type = [
-              32
-              33
-            ];
-            server = "dns-block";
-          }
-          {
-            domain_suffix = [ ".lan" ];
-            server = "dns-block";
-          }
-        ];
-        strategy = "prefer_ipv6";
-      };
 
       inbounds = [
         {
           type = "tun";
-          tag = "tun-in";
           interface_name = "singbox-tun";
           inet4_address = "172.19.0.1/28";
           inet6_address = "fdfe:dcba:9876::1/126";
-          mtu = 9000;
           auto_route = true;
-          strict_route = false;
-          stack = "gvisor";
-          endpoint_independent_nat = true;
           sniff = true;
         }
       ];
@@ -131,67 +84,28 @@
           };
         }
         {
-          type = "block";
-          tag = "block";
-        }
-        {
           type = "direct";
           tag = "direct";
-        }
-        {
-          type = "dns";
-          tag = "dns-out";
         }
       ];
 
       route = {
-        final = "proxy";
-        auto_detect_interface = true;
         rules = [
+          {
+            protocol = "dns";
+            outbound = "direct";
+          }
           {
             geosite = [ "reddit" ];
             outbound = "direct";
           }
           {
-            network = "udp";
-            port = [
-              135
-              137
-              138
-              139
-              5353
-            ];
-            outbound = "block";
-          }
-          {
-            ip_cidr = [
-              "224.0.0.0/3"
-              "ff00::/8"
-            ];
-            outbound = "block";
-          }
-          {
-            source_ip_cidr = [
-              "224.0.0.0/3"
-              "ff00::/8"
-            ];
-            outbound = "block";
-          }
-          {
-            protocol = "dns";
-            outbound = "dns-out";
-          }
-          {
-            port = [ 123 ];
-            outbound = "direct";
-            network = "udp";
-          }
-          {
             port = [ 51413 ];
             outbound = "direct";
-            network = "tcp";
           }
         ];
+        auto_detect_interface = true;
+        final = "proxy";
       };
     };
   };
