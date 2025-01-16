@@ -172,7 +172,6 @@
       vulkan-validation-layers
       vulkan-tools
       vaapiIntel
-      linuxPackages.nvidia_x11
       vaapiVdpau
       libvdpau-va-gl
       nvidia-vaapi-driver
