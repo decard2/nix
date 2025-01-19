@@ -1,4 +1,7 @@
 { pkgs, config, ... }:
+let
+  enableNvidia = false;
+in
 {
   # 1. БАЗОВЫЕ НАСТРОЙКИ СИСТЕМЫ
   # ============================
@@ -43,6 +46,17 @@
   boot = {
     kernelPackages = pkgs.linuxPackages_zen;
 
+    blacklistedKernelModules =
+      if !enableNvidia then
+        [
+          "nouveau"
+          "nvidia"
+          "nvidia_drm"
+          "nvidia_uvm"
+        ]
+      else
+        [ "nouveau" ];
+
     loader = {
       systemd-boot = {
         enable = true;
@@ -62,13 +76,22 @@
       ];
     };
 
-    kernelParams = [
-      "quiet"
-      "rd.systemd.show_status=false"
-      "rd.udev.log_level=3"
-      "udev.log_priority=3"
-      "nvidia-drm.modeset=1"
-    ];
+    kernelParams =
+      if enableNvidia then
+        [
+          "quiet"
+          "rd.systemd.show_status=false"
+          "rd.udev.log_level=3"
+          "udev.log_priority=3"
+          "nvidia-drm.modeset=1"
+        ]
+      else
+        [
+          "quiet"
+          "rd.systemd.show_status=false"
+          "rd.udev.log_level=3"
+          "udev.log_priority=3"
+        ];
 
     kernel.sysctl = {
       "net.ipv4.tcp_congestion_control" = "bbr3";
@@ -115,7 +138,7 @@
   # 5. СИСТЕМНЫЕ СЕРВИСЫ
   # ===================
   services = {
-    xserver.videoDrivers = [ "nvidia" ];
+    xserver.videoDrivers = if enableNvidia then [ "nvidia" ] else [ "modesetting" ];
 
     udev.extraRules = ''
       KERNEL=="tun", GROUP="netdev", MODE="0666", OPTIONS+="static_node=net/tun"
@@ -253,19 +276,14 @@
   # ===================
   hardware = {
     nvidia = {
-      modesetting.enable = true;
-      powerManagement.enable = false;
-      powerManagement.finegrained = false;
-      open = false;
-      nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.production;
-      prime = {
-        intelBusId = "PCI:0:2:0";
-        nvidiaBusId = "PCI:1:0:0";
-        sync.enable = true;
-      };
+      modesetting.enable = enableNvidia;
+      powerManagement.enable = !enableNvidia;
+      powerManagement.finegrained = !enableNvidia;
+      open = false;
+      nvidiaSettings = enableNvidia;
     };
-    nvidia-container-toolkit.enable = true;
+    nvidia-container-toolkit.enable = enableNvidia;
     graphics = {
       enable = true;
       enable32Bit = true;

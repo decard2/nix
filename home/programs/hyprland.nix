@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     playerctl
     wireplumber
@@ -13,6 +14,7 @@
   wayland.windowManager.hyprland = {
     systemd.enable = false;
     enable = true;
+
     settings = {
       # 1. Мониторы и воркспейсы
       monitor = [
@@ -91,8 +93,10 @@
       ];
 
       # 7. Бинды клавиш и мыши
-      bindm =
-        [ "SUPER, mouse:272, movewindow" "SUPER, mouse:273, resizewindow" ];
+      bindm = [
+        "SUPER, mouse:272, movewindow"
+        "SUPER, mouse:273, resizewindow"
+      ];
 
       bind = [
         # Основные команды
