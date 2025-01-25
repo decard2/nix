@@ -14,5 +14,6 @@
     ./jora
     ./bitwarden.nix
     ./roodl.nix
+    ./lmstudio.nix
   ];
 }
