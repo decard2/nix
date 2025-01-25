@@ -42,22 +42,20 @@
             version = "1";
             available_models = [
               {
-                name = "deepseek-coder";
-                max_tokens = 128000;
-              }
-              {
                 name = "deepseek-chat";
                 max_tokens = 128000;
               }
+              # {
+              #   name = "deepseek-reasoner";
+              #   max_tokens = 128000;
+              # }
             ];
-            api_url = "https://api.deepseek.com/beta";
+            api_url = "https://api.deepseek.com/v1";
           };
         };
 
         assistant = {
-          # enabled = true;
           version = "2";
-          # default_open_ai_model = "deepseek-chat";
 
           default_model = {
             provider = "openai";
