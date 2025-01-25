@@ -43,7 +43,7 @@
             available_models = [
               {
                 name = "deepseek-chat";
-                max_tokens = 128000;
+                max_tokens = 64000;
               }
               # {
               #   name = "deepseek-reasoner";
