@@ -1,6 +1,6 @@
 { pkgs, config, ... }:
 let
-  enableNvidia = true;
+  enableNvidia = false;
 in
 {
   # 1. БАЗОВЫЕ НАСТРОЙКИ СИСТЕМЫ

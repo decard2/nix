@@ -37,14 +37,31 @@
         auto_update = false;
         theme = "One Dark";
 
+        language_models = {
+          openai = {
+            version = "1";
+            available_models = [
+              {
+                name = "deepseek-coder";
+                max_tokens = 128000;
+              }
+              {
+                name = "deepseek-chat";
+                max_tokens = 128000;
+              }
+            ];
+            api_url = "https://api.deepseek.com/beta";
+          };
+        };
+
         assistant = {
-          enabled = true;
+          # enabled = true;
           version = "2";
-          default_open_ai_model = null;
+          # default_open_ai_model = "deepseek-chat";
 
           default_model = {
-            provider = "zed.dev";
-            model = "claude-3-5-sonnet-latest";
+            provider = "openai";
+            model = "deepseek-chat";
           };
         };
         features = {
