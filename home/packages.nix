@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, flox, ... }:
+{
   home.packages = with pkgs; [
     unzip
     btop
@@ -9,5 +10,8 @@
     pavucontrol
     nvd
     zettlr
+    bun
+    gitui
+    flox.packages.${pkgs.system}.default
   ];
 }
