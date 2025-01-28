@@ -1,9 +1,6 @@
 { pkgs, pkgs-unstable, ... }:
 {
   home.packages = with pkgs; [
-    bun
-    gitui
-
     # Nix
     nixd
     nixfmt-rfc-style
@@ -37,29 +34,31 @@
         auto_update = false;
         theme = "One Dark";
 
-        language_models = {
-          openai = {
-            version = "1";
-            available_models = [
-              {
-                name = "deepseek-chat";
-                max_tokens = 64000;
-              }
-              # {
-              #   name = "deepseek-reasoner";
-              #   max_tokens = 128000;
-              # }
-            ];
-            api_url = "https://api.deepseek.com/v1";
-          };
-        };
+        # language_models = {
+        #   openai = {
+        #     version = "1";
+        #     available_models = [
+        #       {
+        #         name = "deepseek-chat";
+        #         max_tokens = 64000;
+        #       }
+        #       # {
+        #       #   name = "deepseek-reasoner";
+        #       #   max_tokens = 128000;
+        #       # }
+        #     ];
+        #     api_url = "https://api.deepseek.com/v1";
+        #   };
+        # };
 
         assistant = {
           version = "2";
 
           default_model = {
-            provider = "openai";
-            model = "deepseek-chat";
+            # provider = "openai";
+            # model = "deepseek-chat";
+            provider = "zed.dev";
+            model = "claude-3-5-sonnet-latest";
           };
         };
         features = {

@@ -6,8 +6,17 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-24.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    flox.url = "github:flox/flox";
   };
-  outputs = { nixpkgs, nixpkgs-unstable, disko, home-manager, ... }:
+  outputs =
+    {
+      nixpkgs,
+      nixpkgs-unstable,
+      disko,
+      home-manager,
+      flox,
+      ...
+    }:
     let
       system = "x86_64-linux";
       hostName = "emerald";
@@ -19,7 +28,8 @@
         inherit system;
         config.allowUnfree = true;
       };
-    in {
+    in
+    {
       nixosConfigurations.${hostName} = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
@@ -29,7 +39,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = { inherit pkgs pkgs-unstable; };
+            home-manager.extraSpecialArgs = { inherit pkgs pkgs-unstable flox; };
             home-manager.users.decard = import ./home;
           }
         ];
