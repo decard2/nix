@@ -49,9 +49,8 @@ $env.config = $current
 
 # Определяем правильный запуск bash
 def --env bash [] {
-  ^/run/current-system/sw/bin/bash --rcfile /etc/profile
+  ^/run/current-system/sw/bin/bash -l
 }
-
 
 # Основные переменные окружения
 $env.EDITOR = 'zeditor'

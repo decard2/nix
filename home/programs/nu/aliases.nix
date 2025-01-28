@@ -5,6 +5,7 @@
   ".." = "cd ..";
   "..." = "cd ../..";
   c = "clear";
+  b = "^/run/current-system/sw/bin/bash -l";
 
   ### NixOS ###
   nrb = "sudo nixos-rebuild switch --flake .#emerald";
