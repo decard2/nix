@@ -1,7 +1,8 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 format = """
-[](bg:color_darkgreen fg:color_darkgreen)\
+$shell\
+[](bg:color_darkgreen fg:color_green)\
 $directory\
 [](fg:color_darkgreen bg:color_green)\
 $git_branch\
@@ -39,38 +40,12 @@ color_purple = '#b16286'
 color_red = '#cc241d'
 color_yellow = '#d79921'
 
-[os]
+[shell]
+bash_indicator = "b->"
+nu_indicator = "n->"
+style = "fg:color_fg0 bg:color_darkgreen"
+format = '[$indicator ]($style)'
 disabled = false
-style = "bg:color_orange fg:color_fg0"
-
-[os.symbols]
-Windows = "󰍲"
-Ubuntu = "󰕈"
-SUSE = ""
-Raspbian = "󰐿"
-Mint = "󰣭"
-Macos = "󰀵"
-Manjaro = ""
-Linux = "󰌽"
-Gentoo = "󰣨"
-Fedora = "󰣛"
-Alpine = ""
-Amazon = ""
-Android = ""
-Arch = "󰣇"
-Artix = "󰣇"
-EndeavourOS = ""
-CentOS = ""
-Debian = "󰣚"
-Redhat = "󱄛"
-RedHatEnterprise = "󱄛"
-Pop = ""
-
-[username]
-show_always = true
-style_user = "bg:color_orange fg:color_fg0"
-style_root = "bg:color_orange fg:color_fg0"
-format = '[ $user ]($style)'
 
 [directory]
 style = "fg:color_fg0 bg:color_darkgreen"
@@ -81,9 +56,9 @@ truncation_symbol = "…/"
 [directory.substitutions]
 "Documents" = "󰈙 "
 "Downloads" = " "
-"Music" = "󰝚 "
 "Pictures" = " "
-"Developer" = "󰲋 "
+"projects" = "󰲋 "
+"nix" = "󱄅 "
 
 [git_branch]
 symbol = ""
