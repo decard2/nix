@@ -8,10 +8,10 @@ $directory\
 $git_branch\
 $git_status\
 [](fg:color_green bg:color_blue)\
-$c\
 $rust\
 $golang\
 $nodejs\
+$bun\
 $php\
 $java\
 $kotlin\
@@ -40,8 +40,8 @@ color_red = '#cc241d'
 color_yellow = '#d79921'
 
 [shell]
-bash_indicator = "b->"
-nu_indicator = "n->"
+bash_indicator = "🐧"
+nu_indicator = "💠"
 style = "fg:color_fg0 bg:color_darkgreen"
 format = '[$indicator ]($style)'
 disabled = false
@@ -53,11 +53,11 @@ truncation_length = 3
 truncation_symbol = "…/"
 
 [directory.substitutions]
-"Documents" = "󰈙 "
-"Downloads" = " "
-"Pictures" = " "
-"projects" = "󰲋 "
-"nix" = "󱄅 "
+"Documents" = "📄 "
+"Downloads" = "📥 "
+"Pictures" = "🖼️ "
+"projects" = "💻 "
+"nix" = "❄️ "
 
 [git_branch]
 symbol = ""
@@ -67,24 +67,29 @@ format = '[[ $symbol $branch ](fg:color_fg0 bg:color_green)]($style)'
 [git_status]
 style = "bg:color_green"
 format = '[[($all_status$ahead_behind )](fg:color_fg0 bg:color_green)]($style)'
+modified = "●"
+untracked = "○"
+staged = "♦"
+renamed = "⟳"
+deleted = "✕"
 
-[nodejs]
-symbol = ""
+[bun]
+symbol = "🧅"                                                            # Можно использовать и "bun" если эмодзи не по душе
 style = "bg:color_blue"
 format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
 
-[c]
-symbol = " "
+[nodejs]
+symbol = "󰎙"
 style = "bg:color_blue"
 format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [rust]
-symbol = ""
+symbol = "🦀"
 style = "bg:color_blue"
 format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [golang]
-symbol = ""
+symbol = "🐹"
 style = "bg:color_blue"
 format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
 
@@ -94,12 +99,12 @@ style = "bg:color_blue"
 format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [java]
-symbol = ""
+symbol = "☕"
 style = "bg:color_blue"
 format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [kotlin]
-symbol = ""
+symbol = "🎯"
 style = "bg:color_blue"
 format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
 
@@ -109,16 +114,17 @@ style = "bg:color_blue"
 format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [python]
-symbol = ""
+symbol = "🐍"
 style = "bg:color_blue"
 format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
 
 [docker_context]
-symbol = ""
+symbol = "🐋"
 style = "bg:color_bg3"
 format = '[[ $symbol( $context) ](fg:#83a598 bg:color_bg3)]($style)'
 
 [conda]
+symbol = "🐍"
 style = "bg:color_bg3"
 format = '[[ $symbol( $environment) ](fg:#83a598 bg:color_bg3)]($style)'
 
@@ -138,4 +144,4 @@ error_symbol = '[](bold fg:color_red)'
 vimcmd_symbol = '[](bold fg:color_green)'
 vimcmd_replace_one_symbol = '[](bold fg:color_purple)'
 vimcmd_replace_symbol = '[](bold fg:color_purple)'
-vimcmd_visual_symbol = '[](bold fg:color_yellow)'
+vimcmd_visual_symbol = '[](bold fg:color_yellow)'      # vim визуальный режим
