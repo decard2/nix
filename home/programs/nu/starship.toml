@@ -4,6 +4,7 @@ format = """
 $shell\
 [](bg:color_darkgreen fg:color_green)\
 $directory\
+${custom.flox}\
 [](fg:color_darkgreen bg:color_green)\
 $git_branch\
 $git_status\
@@ -73,8 +74,15 @@ staged = "♦"
 renamed = "⟳"
 deleted = "✕"
 
+[custom.flox]
+command = "nu /home/decard/nix/bin/nuScripts/getFloxEnv.nu"
+when = "if ((flox envs --active --json | from json | length) > 0) { exit 0 } else { exit 1 }"
+style = "bg:color_blue"
+format = '[[ ❄️ $output ](fg:color_fg0 bg:color_darkgreen)]($style)'
+shell = ["nu"]
+
 [bun]
-symbol = "🧅"                                                            # Можно использовать и "bun" если эмодзи не по душе
+symbol = "🧅"
 style = "bg:color_blue"
 format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
 

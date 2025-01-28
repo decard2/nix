@@ -65,7 +65,6 @@ $env.XDG_SESSION_DESKTOP = 'Hyprland'
 # Загружаем кастомные скрипты
 source /home/decard/nix/bin/nuScripts/deployRoodl.nu
 
-
 # Автозапуск Hyprland
 def check_and_start_hyprland [] {
   let display = ($env | get -i DISPLAY | default "")
