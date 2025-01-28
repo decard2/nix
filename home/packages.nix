@@ -10,7 +10,6 @@
     pavucontrol
     nvd
     zettlr
-    bun
     gitui
     flox.packages.${pkgs.system}.default
   ];

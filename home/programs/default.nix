@@ -4,7 +4,7 @@
     ./zed.nix
     ./hyprland.nix
     ./yofi.nix
-    ./nu.nix
+    ./nu
     ./browsers.nix
     ./telegram.nix
     ./yazi.nix
