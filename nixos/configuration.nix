@@ -189,8 +189,6 @@ in
   environment = {
     systemPackages = with pkgs; [
       home-manager
-      dnsutils
-      jq
 
       intel-media-driver
       libvdpau
@@ -202,7 +200,6 @@ in
       libvdpau-va-gl
       nvidia-vaapi-driver
 
-      xfce.thunar
       ntfs3g
       go-mtpfs
     ];

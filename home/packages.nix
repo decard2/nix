@@ -14,5 +14,7 @@
     flox.packages.${pkgs.system}.default
     jq
     fzf
+    dnsutils
+    xfce.thunar
   ];
 }

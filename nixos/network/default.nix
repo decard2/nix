@@ -10,9 +10,7 @@
     hostName = "emerald";
     dhcpcd.extraConfig = "nohook resolv.conf";
 
-    nameservers = [
-      "127.0.0.1"
-    ];
+    nameservers = [ "127.0.0.1" ];
 
     wireless.iwd.enable = true;
 
@@ -38,7 +36,7 @@
 
   systemd.services.dnsproxy = {
     description = "dnsproxy";
-    serviceConfig.ExecStart = "${pkgs.dnsproxy}/bin/dnsproxy -l 127.0.0.1 -u quic://dns.comss.one -b 83.220.169.155 --cache --cache-optimistic";
+    serviceConfig.ExecStart = "${pkgs.dnsproxy}/bin/dnsproxy -l 127.0.0.1 -u https://cloudflare-dns.com/dns-query -b 1.1.1.1 --cache --cache-optimistic";
     wantedBy = [ "multi-user.target" ];
   };
 
