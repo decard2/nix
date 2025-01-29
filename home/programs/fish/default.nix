@@ -5,7 +5,11 @@
     interactiveShellInit = ''
       set fish_greeting # Отключаем приветствие
       fish_config theme choose "ayu Dark"
-      check_and_start_hyprland
+
+      uwsm check may-start
+      if test $status = 0; and not test $DISPLAY; and not test $WAYLAND_DISPLAY
+          exec uwsm start hyprland-uwsm.desktop
+      end
     '';
     shellAbbrs = import ./abbrs.nix;
     functions = import ./functions.nix;

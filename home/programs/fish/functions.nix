@@ -25,18 +25,6 @@
     body = builtins.readFile ../../../bin/deployRoodl.fish;
   };
 
-  check_and_start_hyprland = {
-    body = ''
-      if test -z "$DISPLAY" -a -z "$WAYLAND_DISPLAY"
-        if command -v Hyprland >/dev/null
-          exec Hyprland
-        else
-          echo "❌ Hyprland не найден"
-        end
-      end
-    '';
-  };
-
   cleanNix = {
     body = ''
       function cleanup --on-signal SIGINT
