@@ -1,19 +1,30 @@
 # Базовая конфигурация
 $env.config = {
-  show_banner: false
-  # Добавляем хуки для direnv
-  hooks: {
-    # pre_prompt: [{ ||
-    #   if (which direnv | is-empty) {
-    #     return
-    #   }
+    show_banner: false
+    hooks: {
+        env_change: {
+            PWD: [{ |before, after|
+                if $before == $after { return }
 
-    #   direnv export json | from json | default {} | load-env
-    #   if 'ENV_CONVERSIONS' in $env and 'PATH' in $env.ENV_CONVERSIONS {
-    #     $env.PATH = do $env.ENV_CONVERSIONS.PATH.from_string $env.PATH
-    #   }
-    # }]
-  }
+                let is_activating = ($env | get -i FLOX_ACTIVATING | default false)
+
+                if not $is_activating {
+                    load-env { FLOX_ACTIVATING: true }
+
+                    let after_has_flox = ($after | path join ".flox" | path exists)
+                    let active_env = (^flox envs --active --json | from json)
+                    let has_active_env = ($active_env | length) > 0
+
+                    if $after_has_flox and (not $has_active_env) {
+                        print $"\n🚀 Активация flox окружения...\n"
+                        flox activate -- nu
+                    }
+
+                    hide-env FLOX_ACTIVATING
+                }
+            }]
+        }
+    }
 }
 
 # Настройка автодополнения

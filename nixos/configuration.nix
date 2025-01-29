@@ -123,17 +123,17 @@ in
         Defaults timestamp_timeout=1440
       '';
 
-      extraRules = [
-        {
-          users = [ "decard" ];
-          commands = [
-            {
-              command = "/run/current-system/sw/bin/tailscale";
-              options = [ "NOPASSWD" ];
-            }
-          ];
-        }
-      ];
+      # extraRules = [
+      #   {
+      #     users = [ "decard" ];
+      #     commands = [
+      #       {
+      #         command = "/run/current-system/sw/bin/tailscale";
+      #         options = [ "NOPASSWD" ];
+      #       }
+      #     ];
+      #   }
+      # ];
     };
   };
 
@@ -182,7 +182,8 @@ in
       "plugdev"
     ];
     initialPassword = "changeme";
-    shell = pkgs.nushell;
+    # shell = pkgs.nushell;
+    shell = pkgs.fish;
   };
 
   environment = {
@@ -239,6 +240,7 @@ in
   # 8. ГРАФИЧЕСКОЕ ОКРУЖЕНИЕ
   # ======================
   programs = {
+    fish.enable = true;
     hyprland = {
       enable = true;
       withUWSM = true;

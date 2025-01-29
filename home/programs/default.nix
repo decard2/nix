@@ -4,7 +4,8 @@
     ./zed.nix
     ./hyprland.nix
     ./yofi.nix
-    ./nu
+    # ./nu
+    ./fish
     ./browsers.nix
     ./telegram.nix
     ./yazi.nix

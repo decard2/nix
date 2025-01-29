@@ -82,11 +82,11 @@
         "t3-src": "t3-src"
       },
       "locked": {
-        "lastModified": 1738004974,
-        "narHash": "sha256-g/cg7UsS4jwJrrK6Nadn4+SS2Du62/KffglIIvGzcuA=",
+        "lastModified": 1738080223,
+        "narHash": "sha256-HF5SHWlnw1TtPCXrzem62fas2U5qRVbgruVH47IrDYI=",
         "owner": "flox",
         "repo": "flox",
-        "rev": "075bc827da02386db44babbabb83363be39a25f6",
+        "rev": "668b3f5567d71baed89b4da4886b30379373cb87",
         "type": "github"
       },
       "original": {
