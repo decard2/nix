@@ -33,8 +33,6 @@
         else
           echo "❌ Hyprland не найден"
         end
-      else
-        echo "Дисплей уже активен"
       end
     '';
   };

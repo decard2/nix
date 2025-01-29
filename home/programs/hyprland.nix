@@ -146,6 +146,10 @@
         "SUPER, 8, workspace, 8"
         "SUPER, 9, workspace, 9"
 
+        # Перемещение workspace
+        "SUPER CTRL, left, movecurrentworkspacetomonitor, l"
+        "SUPER CTRL, right, movecurrentworkspacetomonitor, r"
+
         # Перемещение окон между воркспейсами
         "SUPER_SHIFT, 1, movetoworkspace, 1"
         "SUPER_SHIFT, 2, movetoworkspace, 2"
