@@ -86,8 +86,7 @@
         "[workspace special:btop silent] uwsm app -- kitty -e btop"
         "[workspace special:telegram silent] uwsm app -- telegram-desktop"
         "uwsm app -- udiskie"
-        "uwsm app -- ~/nix/bin/auto_hyprsunset.nu"
-        # "uwsm app -- sudo awg-quick up ~/nix/config/vpn.conf"
+        "uwsm app -- ~/nix/bin/autoHyprsunset.fish"
         # "[workspace special:jora silent] uwsm app -- kitty -e jora"
         "[workspace special:jora silent] uwsm app -- kitty"
       ];
@@ -108,13 +107,6 @@
         "SUPER, P, pseudo,"
         "SUPER, S, togglesplit,"
         "SUPER, Z, togglespecialworkspace, jora"
-
-        # VPN
-        # "SUPER, W, exec, uwsm app -- sudo awg-quick up ~/nix/config/vpn.conf"
-        # "SUPER, E, exec, uwsm app -- sudo awg-quick down ~/nix/config/vpn.conf"
-        # Tailscale exit node
-        "SUPER, W, exec, uwsm app -- sudo tailscale up --login-server=https://hs.rolder.net --exit-node=moscow"
-        "SUPER, E, exec, uwsm app -- sudo tailscale up --login-server=https://hs.rolder.net --exit-node="
 
         # Виртуалка
         "SUPER_SHIFT, W, exec, uwsm app -- virsh -c qemu:///system start win11; uwsm app -- virt-viewer --connect qemu:///system win11"

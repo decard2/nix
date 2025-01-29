@@ -12,5 +12,7 @@
     zettlr
     gitui
     flox.packages.${pkgs.system}.default
+    jq
+    fzf
   ];
 }

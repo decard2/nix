@@ -25,7 +25,7 @@
       package = zed;
       extensions = [
         "nix"
-        "nu"
+        "fish"
         "biome"
         "helm"
       ];
@@ -67,7 +67,7 @@
         terminal = {
           env = {
             TERM = "xterm-256color";
-            STARSHIP_SHELL = "nu";
+            STARSHIP_SHELL = "fish";
           };
           font_family = "FiraCode Nerd Font";
           font_size = 12;

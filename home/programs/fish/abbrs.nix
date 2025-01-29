@@ -5,7 +5,7 @@
   ".." = "cd ..";
   "..." = "cd ../..";
   c = "clear";
-  b = "^/run/current-system/sw/bin/bash -l";
+  b = "bash -l";
 
   ### NixOS ###
   nrb = "sudo nixos-rebuild switch --flake ~/nix#emerald";
@@ -16,7 +16,7 @@
   g = "gitui";
   dr = "deployRoodl";
   ## Flox
-  fa = "flox activate -- nu";
+  fa = "flox activate -- fish";
   ## Bun
   ba = "bun add";
   bad = "bun add --dev";
@@ -73,7 +73,7 @@
   dl = "docker logs";
   dlf = "docker logs -f";
 
-  # Docker Compose алиасы
+  # Docker Compose
   dcu = "docker-compose up";
   dcud = "docker-compose up -d";
   dcd = "docker-compose down";
@@ -83,6 +83,6 @@
   dcps = "docker-compose ps";
   dcpull = "docker-compose pull";
 
-  # Lazydocker алиас
+  # Lazydocker
   lzd = "lazydocker";
 }

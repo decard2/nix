@@ -43,6 +43,7 @@ color_yellow = '#d79921'
 [shell]
 bash_indicator = "🐧"
 nu_indicator = "💠"
+fish_indicator = "🐟"
 style = "fg:color_fg0 bg:color_darkgreen"
 format = '[$indicator ]($style)'
 disabled = false
