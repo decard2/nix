@@ -6,7 +6,7 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager/release-24.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    flox.url = "github:flox/flox";
+    flox.url = "github:flox/flox/v1.3.11";
   };
   outputs =
     {

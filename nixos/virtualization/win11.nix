@@ -53,7 +53,7 @@
               </hyperv>
               <vmport state='off'/>
             </features>
-            <cpu mode="host-model" check="partial"/>
+            <cpu mode='host-passthrough' check='none' migratable='on'/>
             <clock offset='localtime'>
               <timer name='rtc' tickpolicy='catchup'/>
               <timer name='pit' tickpolicy='delay'/>
