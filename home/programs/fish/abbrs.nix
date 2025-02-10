@@ -13,7 +13,7 @@
   nd = "nvd diff /run/booted-system/ /run/current-system/";
 
   ### Разработка ###
-  g = "gitui";
+  g = "lazygit";
   dr = "deployRoodl";
   ## Flox
   fa = "flox activate -- fish";

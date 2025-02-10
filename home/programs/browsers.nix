@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   programs.chromium = {
     enable = true;
     commandLineArgs = [
@@ -11,6 +12,7 @@
       "--enable-features=Vulkan"
       "--use-vulkan"
       "--enable-gpu-rasterization"
+      "--ignore-gpu-blacklist"
     ];
     package = pkgs.chromium.override {
       enableWideVine = true; # Для поддержки DRM контента
