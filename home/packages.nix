@@ -10,7 +10,7 @@
     pavucontrol
     nvd
     zettlr
-    gitui
+    lazygit
     flox.packages.${pkgs.system}.default
     jq
     fzf
