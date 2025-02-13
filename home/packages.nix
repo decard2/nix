@@ -16,5 +16,6 @@
     fzf
     dnsutils
     xfce.thunar
+    file-roller
   ];
 }

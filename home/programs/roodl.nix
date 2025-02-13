@@ -2,30 +2,60 @@
 let
   roodl = pkgs.stdenv.mkDerivation rec {
     pname = "roodl";
-    version = "1.1.0";
+    version = "1.2.0";
 
     src = pkgs.fetchzip {
-      url =
-        "https://github.com/rolderdev/roodl1/releases/download/v${version}/Roodl-v${version}-Linux.zip";
-      sha256 = "05xwjp0m7z3x50vf6i1v6q9dcyma8x5adwnr6bzqyajzysnvp4qr";
+      url = "https://github.com/rolderdev/roodl1/releases/download/v${version}/Roodl-v${version}-Linux.zip";
+      sha256 = "sha256-sRgO2mxMAfbtGXfQnqhbI+A9Rb9qCxBq6PNGsZHR0Ik=";
       stripRoot = false;
     };
 
-    nativeBuildInputs = with pkgs; [ makeWrapper appimage-run ];
+    nativeBuildInputs = with pkgs; [
+      makeWrapper
+      appimage-run
+    ];
 
-    buildInputs = with pkgs; [ stdenv.cc.cc.lib fuse ];
+    buildInputs = with pkgs; [
+      stdenv.cc.cc.lib
+      fuse
+      glib
+      nss
+      nspr
+      dbus
+      atk
+      cups
+      libdrm
+      gtk3
+      pango
+      cairo
+      xorg.libX11
+      xorg.libXcomposite
+      xorg.libXdamage
+      xorg.libXext
+      xorg.libXfixes
+      xorg.libXrandr
+      xorg.libxcb
+      mesa
+      expat
+      libxkbcommon
+      alsa-lib
+    ];
 
     installPhase = ''
       runHook preInstall
 
       mkdir -p $out/bin $out/share/applications $out/opt/roodl
 
-      cp "${src}/Roodl Editor-${version}.AppImage" $out/opt/roodl/roodl.AppImage
-      chmod +x $out/opt/roodl/roodl.AppImage
+      cp -r linux-unpacked/* $out/opt/roodl/
 
-      makeWrapper ${pkgs.appimage-run}/bin/appimage-run $out/bin/roodl \
-        --add-flags "$out/opt/roodl/roodl.AppImage"
+      # Делаем бинарник исполняемым
+      chmod +x $out/opt/roodl/roodl-editor
 
+      # Создаем обертку
+      makeWrapper $out/opt/roodl/roodl-editor $out/bin/roodl \
+        --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath buildInputs}
+
+      # Создаем .desktop файл
       cat > $out/share/applications/roodl.desktop << EOF
       [Desktop Entry]
       Name=Roodl
@@ -45,4 +75,7 @@ let
       mainProgram = "roodl";
     };
   };
-in { home.packages = [ roodl ]; }
+in
+{
+  home.packages = [ roodl ];
+}
