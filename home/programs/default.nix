@@ -4,6 +4,7 @@
     ./kitty.nix
     ./browsers.nix
     ./telegram.nix
+    ./dev
   ];
 
   home.packages = with pkgs; [
