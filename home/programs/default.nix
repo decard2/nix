@@ -1,19 +1,15 @@
+{ pkgs, ... }:
 {
   imports = [
     ./kitty.nix
-    ./zed.nix
-    ./hyprland.nix
-    ./yofi.nix
-    ./fish
     ./browsers.nix
     ./telegram.nix
-    ./yazi.nix
-    ./virt-manager.nix
-    ./devops
-    ./bash.nix
-    ./jora
-    ./bitwarden.nix
-    ./roodl.nix
-    ./lmstudio.nix
+  ];
+
+  home.packages = with pkgs; [
+    firefox
+    telegram-desktop
+    hunspell
+    hunspellDicts.ru_RU
   ];
 }

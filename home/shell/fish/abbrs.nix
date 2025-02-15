@@ -11,6 +11,8 @@
   nrb = "sudo nixos-rebuild switch --flake ~/nix#emerald";
   nup = "nix flake update --flake ~/nix";
   nd = "nvd diff /run/booted-system/ /run/current-system/";
+  ns = "nix shell";
+  nr = "nix run";
 
   ### Разработка ###
   g = "lazygit";

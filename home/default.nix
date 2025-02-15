@@ -1,11 +1,10 @@
-{ ... }: {
+{ pkgs, ... }:
+{
   imports = [
-    ./programs
-    ./packages.nix
-    ./fonts.nix
     ./environment.nix
-    ./theme.nix
-    ./nixpkgs.nix
+    ./de
+    ./shell
+    ./programs
   ];
 
   home = {
@@ -14,6 +13,14 @@
     stateVersion = "24.11";
   };
 
-  programs.home-manager.enable = true;
-  fonts.fontconfig.enable = true;
+  programs = {
+    home-manager.enable = true;
+  };
+
+  home.packages = with pkgs; [
+    unzip
+    btop
+    neofetch
+    nvd
+  ];
 }

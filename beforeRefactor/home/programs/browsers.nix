@@ -18,4 +18,6 @@
       enableWideVine = true; # Для поддержки DRM контента
     };
   };
+
+  home.packages = with pkgs; [ firefox ];
 }

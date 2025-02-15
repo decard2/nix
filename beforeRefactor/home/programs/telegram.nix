@@ -1,4 +1,7 @@
-{
+{ pkgs, ... }: {
+  home.packages = with pkgs; [ telegram-desktop hunspell hunspellDicts.ru_RU ];
+
+  # Основные настройки
   xdg.configFile."telegram-desktop/config.json".text = ''
     {
       "telegram_desktop": {
