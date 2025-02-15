@@ -1,4 +1,9 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  pkgs-unstable,
+  config,
+  ...
+}:
 let
   enableNvidia = false;
 in
@@ -244,14 +249,14 @@ in
     };
     dconf.enable = true;
 
-    nix-ld = {
-      enable = true;
-      libraries = with pkgs; [
-        # Базовый набор для работы
-        stdenv.cc.cc
-        glibc
-      ];
-    };
+    # nix-ld.dev = {
+    #   enable = true;
+    #   libraries = with pkgs-unstable; [
+    #     # Базовый набор для работы
+    #     stdenv.cc.cc
+    #     glibc
+    #   ];
+    # };
   };
 
   # 9. СИСТЕМНЫЕ СЛУЖБЫ
