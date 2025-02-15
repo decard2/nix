@@ -65,3 +65,6 @@ sudo nixos-rebuild switch --flake ".#emerald"
 
 3. Все конфиги системы находятся в ~/nix
 4. Profit! 🎉
+
+sudo rm -rf /etc/nixos
+sudo ln -s ~/nix /etc/nixos
