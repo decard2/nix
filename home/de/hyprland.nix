@@ -74,7 +74,7 @@
         "[workspace special:btop silent] uwsm app -- kitty -e btop"
         "[workspace special:telegram silent] uwsm app -- telegram-desktop"
         "uwsm app -- udiskie"
-        "uwsm app -- ~/nix/bin/autoHyprsunset.fish"
+        "uwsm app -- ~/nix/home/scripts/autoHyprsunset.fish"
         # "[workspace special:jora silent] uwsm app -- kitty -e jora"
         "[workspace special:jora silent] uwsm app -- kitty"
       ];
