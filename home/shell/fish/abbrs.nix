@@ -8,8 +8,8 @@
   b = "bash -l";
 
   ### NixOS ###
-  nrb = "sudo nixos-rebuild switch --flake ~/nix#emerald";
-  nup = "nix flake update --flake ~/nix";
+  nrb = "sudo nixos-rebuild switch";
+  nup = "nix flake update";
   nd = "nvd diff /run/booted-system/ /run/current-system/";
   ns = "nix shell";
   nr = "nix run";
