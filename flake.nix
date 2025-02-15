@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
-    nixpkgs.config.allowUnfree = true;
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -29,6 +28,8 @@
           disko.nixosModules.disko
           home-manager.nixosModules.home-manager
           {
+            nixpkgs.config.allowUnfree = true;
+
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit inputs; };

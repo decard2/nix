@@ -38,6 +38,13 @@ sudo nix \
     --flake "/tmp/nix#emerald" \
     --write-efi-boot-entries \
     --disk main /dev/nvme0n1
+
+sudo nix \
+    --experimental-features 'flakes nix-command' \
+    run github:nix-community/disko#disko-install -- \
+    --flake github:decard2/nix#emerald \
+    --write-efi-boot-entries \
+    --disk main /dev/nvme0n1
 ```
 
 4. Перезагружаемся:
