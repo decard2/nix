@@ -21,7 +21,6 @@
     {
       nixosConfigurations.emerald = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        hostName = "emerald";
         specialArgs = { inherit inputs; };
         modules = [
           ./system
