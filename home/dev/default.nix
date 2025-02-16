@@ -1,4 +1,9 @@
-{ pkgs, inputs, ... }:
+{
+  pkgs,
+  inputs,
+  lib,
+  ...
+}:
 {
   imports = [
     ./zed
@@ -40,7 +45,12 @@
     };
   };
 
-  home.file.".ssh".onChange = "chmod 700 $TARGET";
+  home.activation = {
+    sshPermissions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      $DRY_RUN_CMD mkdir -p $HOME/.ssh
+      $DRY_RUN_CMD chmod 700 $HOME/.ssh
+    '';
+  };
 
   home.packages = with pkgs; [
     lazygit
