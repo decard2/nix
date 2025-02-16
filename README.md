@@ -9,47 +9,31 @@
 3. Подключись к интернету:
 
 ```bash
-sudo systemctl start NetworkManager
-nmtui  # или просто воткни ethernet
+sudo systemctl start wpa_supplicant
+wpa_cli
+	add_network
+	set_network 0 ssid "JoraNet"
+	set_network 0 psk "PASSWORD"
+	enable_network 0
+ping ya.ru
 ```
 
 ### Установка
 
-1. Склонируй репозиторий:
-
-```bash
-cd /tmp
-sudo nix-env -iA nixos.git
-git clone https://github.com/decard2/nix
-```
-
-2. Генерим конфиг оборудования:
-
-```bash
-nixos-generate-config --no-filesystems --dir /tmp/nix/nixos
-```
-
-3. Размечаем диск и устанавливаем систему через disko-install:
+1. Размечаем диск, форматируем и монтируем его:
 
 ```bash
 sudo nix \
     --experimental-features 'flakes nix-command' \
-    run github:nix-community/disko#disko-install -- \
-    --flake "/tmp/nix#emerald" \
-    --write-efi-boot-entries \
-    --disk main /dev/nvme0n1
-
-sudo nix \
-    --experimental-features 'flakes nix-command' \
-    run github:nix-community/disko#disko-install -- \
-    --flake github:decard2/nix#emerald \
-    --write-efi-boot-entries \
-    --disk main /dev/nvme0n1
+    run github:nix-community/disko -- \
+    -f github:decard2/nix#emerald \
+    -m destroy,format,mount
 ```
 
-4. Перезагружаемся:
+2. Устанавливаем ОС:
 
 ```bash
+sudo nixos-install --flake github:decard2/nix#emerald
 reboot
 ```
 
@@ -63,15 +47,9 @@ reboot
 passwd
 # Повторно делаем git clone
 git clone https://github.com/decard2/nix.git
-# Преключаем систему на наш репо, создав конфиг железа повторно
-sudo nixos-generate-config --no-filesystems --dir ./nix/nixos
-cd nix
-git add nixos/hardware-configuration.nix
-sudo nixos-rebuild switch --flake ".#emerald"
-```
-
-3. Все конфиги системы находятся в ~/nix
-4. Profit! 🎉
-
+# Преключаем систему на наш репо
 sudo rm -rf /etc/nixos
 sudo ln -s ~/nix /etc/nixos
+```
+
+Profit! 🎉

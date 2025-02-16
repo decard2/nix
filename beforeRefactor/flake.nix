@@ -7,8 +7,8 @@
     home-manager.url = "github:nix-community/home-manager/release-24.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     flox.url = "github:flox/flox/v1.3.11";
-    nix-ld.url = "github:Mic92/nix-ld";
-    nix-ld.inputs.nixpkgs.follows = "nixpkgs-unstable";
+#    nix-ld.url = "github:Mic92/nix-ld";
+#    nix-ld.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
   outputs =
     {
@@ -17,7 +17,7 @@
       disko,
       home-manager,
       flox,
-      nix-ld,
+ #     nix-ld,
       ...
     }:
     let
@@ -39,7 +39,7 @@
           ./nixos/configuration.nix
           disko.nixosModules.disko
           home-manager.nixosModules.home-manager
-          nix-ld.nixosModules.nix-ld
+  #        nix-ld.nixosModules.nix-ld
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
@@ -48,7 +48,7 @@
                 pkgs
                 pkgs-unstable
                 flox
-                nix-ld
+#                nix-ld
                 ;
             };
             home-manager.users.decard = import ./home;

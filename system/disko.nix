@@ -2,9 +2,8 @@
   disko.devices = {
     disk = {
       main = {
-        # название, которое использует disko-install
         type = "disk";
-        device = "/dev/vda"; # будет перезаписан disko-install
+        device = "/dev/nvme0n1";
         content = {
           type = "gpt";
           partitions = {

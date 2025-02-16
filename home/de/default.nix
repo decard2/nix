@@ -13,6 +13,7 @@
     bibata-cursors
     xfce.thunar
     file-roller
+    alsa-lib
     playerctl
     pamixer
     pavucontrol
@@ -25,5 +26,6 @@
     hyprpolkitagent
     yofi
     papirus-icon-theme
+    jq
   ];
 }
