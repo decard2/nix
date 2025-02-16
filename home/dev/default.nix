@@ -26,6 +26,7 @@
           identityFile = "~/.ssh/id_ed25519";
           extraOptions = {
             AddKeysToAgent = "yes";
+            StrictHostKeyChecking = "no";
           };
         };
       };
