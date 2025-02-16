@@ -2,3 +2,5 @@
 tmp
 target
 .direnv
+**/keys/*
+!**/keys/*.pub
