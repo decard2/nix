@@ -159,34 +159,5 @@
       withUWSM = true;
     };
     dconf.enable = true;
-    nix-ld.enable = true;
   };
-
-  # 9. СИСТЕМНЫЕ СЛУЖБЫ
-  # ==================
-  # systemd = {
-  #   user.services.hyprpolkitagent = {
-  #     enable = true;
-  #     description = "Hyprland Polkit Agent";
-  #     wantedBy = [ "graphical-session.target" ];
-  #     wants = [ "graphical-session.target" ];
-  #     after = [ "graphical-session.target" ];
-  #     serviceConfig = {
-  #       Type = "simple";
-  #       ExecStart = "${pkgs.hyprpolkitagent}/bin/hyprpolkitagent";
-  #       Restart = "on-failure";
-  #       RestartSec = 1;
-  #       TimeoutStopSec = 10;
-  #     };
-  #   };
-  # };
-
-  # 10. НАСТРОЙКИ ГРАФИКИ
-  # ===================
-  # hardware = {
-  #   graphics = {
-  #     enable = true;
-  #     enable32Bit = true;
-  #   };
-  # };
 }

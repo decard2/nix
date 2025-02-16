@@ -1,5 +1,9 @@
-{ pkgs, ... }: {
-  home.packages = with pkgs; [ yofi papirus-icon-theme ];
+{ pkgs, ... }:
+{
+  home.packages = with pkgs; [
+    yofi
+    papirus-icon-theme
+  ];
 
   # Конфиг для yofi
   xdg.configFile."yofi/yofi.config".text = ''

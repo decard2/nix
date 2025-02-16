@@ -1,7 +1,11 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
-  programs =
-  {
+  imports = [
+    ./zed
+    ./roodl.nix
+  ];
+
+  programs = {
     git = {
       enable = true;
       userName = "decard";
@@ -9,7 +13,8 @@
     };
   };
 
-    home.packages = with pkgs; [
-      lazygit
-    ];
+  home.packages = with pkgs; [
+    lazygit
+    inputs.flox.packages.${pkgs.system}.default
+  ];
 }

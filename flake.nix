@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -11,8 +10,7 @@
     home-manager.url = "github:nix-community/home-manager/release-24.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    # nix-ld.url = "github:Mic92/nix-ld";
-    # nix-ld.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    flox.url = "github:flox/flox/v1.3.12";
   };
 
   outputs =
@@ -20,7 +18,7 @@
       nixpkgs,
       disko,
       home-manager,
-      # nix-ld,
+      flox,
       ...
     }:
     {
@@ -31,7 +29,6 @@
           ./system
           disko.nixosModules.disko
           home-manager.nixosModules.home-manager
-          # nix-ld.nixosModules.nix-ld
 
           {
             nixpkgs.config.allowUnfree = true;

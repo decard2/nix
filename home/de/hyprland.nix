@@ -94,7 +94,7 @@
         "SUPER, V, togglefloating,"
         "SUPER, P, pseudo,"
         "SUPER, S, togglesplit,"
-        "SUPER, Z, togglespecialworkspace, jora"
+        # "SUPER, Z, togglespecialworkspace, jora"
 
         # Виртуалка
         "SUPER_SHIFT, W, exec, uwsm app -- virsh -c qemu:///system start win11; uwsm app -- virt-viewer --connect qemu:///system win11"
