@@ -4,8 +4,6 @@
     ./kitty.nix
     ./browsers.nix
     ./telegram.nix
-    ./dev
-    ./devops
     ./virt-manager.nix
   ];
 

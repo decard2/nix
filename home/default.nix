@@ -5,6 +5,8 @@
     ./de
     ./shell
     ./programs
+    ./dev
+    ./devops
   ];
 
   home = {
