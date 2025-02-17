@@ -43,11 +43,9 @@
   home.file = {
     ".ssh/id_ed25519" = {
       source = ./keys/id_ed25519;
-      # onChange = "chmod 600 .ssh/id_ed25519";
     };
     ".ssh/id_ed25519.pub" = {
       source = ./keys/id_ed25519.pub;
-      # onChange = "chmod 644 .ssh/id_ed25519.pub";
     };
   };
 
