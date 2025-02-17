@@ -10,7 +10,9 @@
       "flakes"
     ];
 
-    trusted-substituters = [
+    trusted-users = [ "decard" ];
+
+    substituters = [
       "https://cache.nixos.org"
       "https://nix-community.cachix.org"
       "https://hyprland.cachix.org"

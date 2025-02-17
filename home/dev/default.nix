@@ -10,6 +10,11 @@
     ./roodl.nix
   ];
 
+  home.packages = with pkgs; [
+    lazygit
+    inputs.flox.packages.${pkgs.system}.flox
+  ];
+
   programs = {
     git = {
       enable = true;
@@ -52,9 +57,4 @@
       $DRY_RUN_CMD chmod 700 $HOME/.ssh
     '';
   };
-
-  home.packages = with pkgs; [
-    lazygit
-    inputs.flox.packages.${pkgs.system}.default
-  ];
 }
