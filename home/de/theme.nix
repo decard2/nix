@@ -17,13 +17,14 @@
       GTK_USE_PORTAL = "1";
       NIXOS_OZONE_WL = "1";
       DISABLE_LAYER_AMD_SWITCHABLE_GRAPHICS_1 = "1";
+      ADW_DISABLE_PORTAL = "1";
     };
   };
 
   gtk = {
     enable = true;
     theme = {
-      name = "Adwaita-dark";
+      name = "Adwaita";
       package = pkgs.gnome-themes-extra;
     };
     iconTheme = {
@@ -35,6 +36,15 @@
     };
     gtk4.extraConfig = {
       gtk-application-prefer-dark-theme = true;
+    };
+  };
+
+  dconf = {
+    settings = {
+      "org/gnome/desktop/interface" = {
+        gtk-theme = "Adwaita";
+        color-scheme = "prefer-dark";
+      };
     };
   };
 }
