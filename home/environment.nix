@@ -1,5 +1,5 @@
-{
-  systemd.user.sessionVariables = {
+let
+  vars = {
     VK_ICD_FILENAMES = "/run/opengl-driver/share/vulkan/icd.d/intel_icd.x86_64.json";
     EDITOR = "nano";
     VISUAL = "zeditor";
@@ -9,4 +9,8 @@
     PATH = "$HOME/.local/bin:$PATH";
     DEEPSEEK_API_KEY = "sk-35039be1f9084afe802f95f4e8e331a7";
   };
+in
+{
+  systemd.user.sessionVariables = vars;
+  home.sessionVariables = vars;
 }

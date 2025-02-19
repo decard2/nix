@@ -1,4 +1,9 @@
+{ pkgs, ... }:
 {
+  home.packages = with pkgs; [
+    fzf # Для deployRoodl
+  ];
+
   programs.fish = {
     enable = true;
     interactiveShellInit = ''

@@ -9,7 +9,7 @@
 
   ### NixOS ###
   nrb = "sudo nixos-rebuild switch";
-  nup = "nix flake update";
+  nup = "nix flake update --flake ~/nix";
   nd = "nvd diff /run/booted-system/ /run/current-system/";
   ns = "nix shell";
   nr = "nix run";

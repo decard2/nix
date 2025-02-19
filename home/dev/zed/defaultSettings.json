@@ -1,5 +1,5 @@
 {
-  "extensions": ["nix"],
+  "extensions": ["nix", "biome", "fish"],
   "assistant": {
     "default_model": {
       "provider": "zed.dev",

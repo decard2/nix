@@ -15,6 +15,12 @@
           headless = true;
           logoless = false;
         };
+        thresholds = {
+          memory = {
+            critical = 90;
+            warn = 80;
+          };
+        };
       };
     };
   };
