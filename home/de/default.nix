@@ -9,6 +9,8 @@
     ./fileAssociations.nix
   ];
 
+  dconf.enable = true;
+
   home.packages = with pkgs; [
     qt6ct
     bibata-cursors
@@ -28,5 +30,6 @@
     yofi
     papirus-icon-theme
     jq
+    gtk3
   ];
 }
