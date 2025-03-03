@@ -6,6 +6,7 @@
     ./hyprland.nix
     ./yofi.nix
     ./hyprpolkitagent.nix
+    ./fileAssociations.nix
   ];
 
   home.packages = with pkgs; [
