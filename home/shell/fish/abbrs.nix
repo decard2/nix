@@ -4,7 +4,6 @@
   la = "ls -la";
   ".." = "cd ..";
   "..." = "cd ../..";
-  c = "clear";
   b = "bash -l";
 
   ### NixOS ###
@@ -17,8 +16,7 @@
   ### Разработка ###
   g = "lazygit";
   dr = "deployRoodl";
-  ## Flox
-  fa = "flox activate -- fish";
+
   ## Bun
   ba = "bun add";
   bad = "bun add --dev";
@@ -31,6 +29,7 @@
   bd = "bun dev";
   bs = "bun start";
   bb = "bun run build";
+
   # PNPM
   pn = "pnpm";
   pin = "pnpm install";
@@ -44,6 +43,22 @@
   pd = "pnpm dev";
   pout = "pnpm outdated";
   pu = "pnpm update";
+
+  # Cargo
+  c = "cargo";
+  ca = "cargo add";
+  crm = "cargo remove";
+  cr = "cargo run";
+  cb = "cargo build";
+  cu = "cargo update";
+
+  # Flox
+  f = "flox";
+  fin = "flox init";
+  fa = "flox activate -- fish";
+  fi = "flox install";
+  fs = "flox search";
+  fsh = "flox show";
 
   ### DevOps ###
   # Helm
