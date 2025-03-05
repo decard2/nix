@@ -73,6 +73,7 @@
         "[workspace special:term silent] uwsm app -- kitty"
         "[workspace special:btop silent] uwsm app -- kitty -e btop"
         "[workspace special:telegram silent] uwsm app -- telegram-desktop"
+        "[workspace special:tidal silent] uwsm app -- chromium --app=https://listen.tidal.com"
         "uwsm app -- udiskie"
         "uwsm app -- ~/nix/home/scripts/autoHyprsunset.fish"
         # "[workspace special:jora silent] uwsm app -- kitty -e jora"
@@ -90,11 +91,9 @@
         "SUPER, D, exec, uwsm app -- yofi"
         "SUPER, Return, exec, uwsm app -- kitty"
         "SUPER, Q, killactive,"
-        "SUPER, M, exit,"
         "SUPER, V, togglefloating,"
         "SUPER, P, pseudo,"
         "SUPER, S, togglesplit,"
-        # "SUPER, Z, togglespecialworkspace, jora"
 
         # Виртуалка
         "SUPER_SHIFT, W, exec, uwsm app -- virsh -c qemu:///system start win11; uwsm app -- virt-viewer --connect qemu:///system win11"
@@ -104,6 +103,7 @@
         "CTRL, grave, togglespecialworkspace, term"
         "SUPER, grave, togglespecialworkspace, btop"
         "SUPER, A, togglespecialworkspace, telegram"
+        "SUPER, M, togglespecialworkspace, tidal"
 
         # Управление фокусом
         "SUPER, left, movefocus, l"

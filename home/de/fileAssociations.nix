@@ -18,6 +18,11 @@
       "application/x-extension-xhtml" = "firefox.desktop";
       "application/x-extension-xht" = "firefox.desktop";
       "application/pdf" = "firefox.desktop";
+      "image/jpeg" = "firefox.desktop";
+      "image/png" = "firefox.desktop";
+      "image/gif" = "firefox.desktop";
+      "image/webp" = "firefox.desktop";
+      "image/svg+xml" = "firefox.desktop";
     };
   };
 }
