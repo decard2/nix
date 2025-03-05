@@ -50,11 +50,14 @@
   crm = "cargo remove";
   cr = "cargo run";
   cb = "cargo build";
+  cbr = "cargo build --release";
+  cc = "cargo check";
   cu = "cargo update";
 
   # Flox
   f = "flox";
   fin = "flox init";
+  fu = "flox upgrade";
   fa = "flox activate -- fish";
   fi = "flox install";
   fs = "flox search";
