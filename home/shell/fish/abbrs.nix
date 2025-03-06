@@ -29,6 +29,7 @@
   bd = "bun dev";
   bs = "bun start";
   bb = "bun run build";
+  bc = "bun check";
 
   # PNPM
   pn = "pnpm";
