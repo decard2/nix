@@ -7,5 +7,6 @@
     ./packages.nix
     ./nix-ld.nix
     ./virtualization
+    ./services
   ];
 }

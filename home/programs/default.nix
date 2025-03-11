@@ -9,6 +9,7 @@
 
   home.packages = with pkgs; [
     firefox
+    opera
     telegram-desktop
     hunspell
     hunspellDicts.ru_RU

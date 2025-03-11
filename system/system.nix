@@ -74,9 +74,9 @@
   # ====================
   nix.gc = {
     automatic = true;
-    dates = "weekly";
+    dates = "daily";
     persistent = true;
-    options = "--delete-older-than 30d";
+    options = "--delete-older-than 10d";
   };
 
   # 4. БЕЗОПАСНОСТЬ

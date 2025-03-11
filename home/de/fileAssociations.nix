@@ -23,6 +23,7 @@
       "image/gif" = "firefox.desktop";
       "image/webp" = "firefox.desktop";
       "image/svg+xml" = "firefox.desktop";
+      "image/avif" = "firefox.desktop";
     };
   };
 }
