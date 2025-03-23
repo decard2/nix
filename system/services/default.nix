@@ -1,3 +1,6 @@
 {
-  imports = [ ./transmission.nix ];
+  imports = [
+    ./transmission.nix
+    ./usb.nix
+  ];
 }

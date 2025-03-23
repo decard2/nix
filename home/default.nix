@@ -24,6 +24,5 @@
     btop
     neofetch
     nvd
-    udiskie
   ];
 }
