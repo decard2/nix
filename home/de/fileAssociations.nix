@@ -5,6 +5,8 @@
       "inode/directory" = "thunar.desktop";
       "application/x-gnome-saved-search" = "thunar.desktop";
 
+      "application/json" = "dev.zed.Zed.desktop";
+
       "x-scheme-handler/tg" = "org.telegram.desktop.desktop";
       "x-scheme-handler/tonsite" = "org.telegram.desktop.desktop";
       "x-scheme-handler/http" = "firefox.desktop";

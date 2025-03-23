@@ -2,14 +2,13 @@
 {
   imports = [
     ./kitty.nix
-    ./browsers.nix
+    ./chromium.nix
     ./telegram.nix
     ./virt-manager.nix
   ];
 
   home.packages = with pkgs; [
     firefox
-    opera
     telegram-desktop
     hunspell
     hunspellDicts.ru_RU
