@@ -5,6 +5,7 @@
     ./chromium.nix
     ./telegram.nix
     ./virt-manager.nix
+    ./bridge.nix
   ];
 
   home.packages = with pkgs; [
