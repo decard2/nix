@@ -22,7 +22,7 @@
   };
 
   deployRoodl = {
-    body = builtins.readFile ../../scripts/deployRoodl.fish;
+    body = builtins.readFile ../../scripts/deployRoodl/script.fish;
   };
 
   cleanNix = {

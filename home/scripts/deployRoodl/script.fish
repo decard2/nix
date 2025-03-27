@@ -5,44 +5,66 @@ function cleanup --on-signal SIGINT
     exit 1
 end
 
-# Функция для получения проектов
+# Определяем путь к конфигу - используем ту же директорию, что и скрипт
+set base_dir (dirname (status --current-filename))
+set config_path "$base_dir/projects.json"
+
+echo "🔍 Ищу конфиг: $config_path"
+
+# Функция для получения проектов из конфига
 function get_projects
-    echo '{
-        "docs": {
-            "bucket": "docs.rolder.app",
-            "icon": "📋"
-        },
-        "playground": {
-            "bucket": "playground",
-            "icon": "🎮"
-        }
-    }' | jq .
+    # Проверяем существование файла конфига
+    if not test -f "$config_path"
+        echo "❌ Файл конфига не найден: $config_path"
+        return 1
+    end
+
+    # Читаем файл конфига
+    cat "$config_path"
 end
 
 # Создание директории проекта
 function ensure_project_dir -a project_name
-    set base_dir "$HOME/deployRoodl"
-    set project_dir "$base_dir/$project_name"
-
-    if not test -d "$base_dir"
-        mkdir -p "$base_dir"
-    end
-    if not test -d "$project_dir"
-        mkdir -p "$project_dir"
-    end
-    echo "$project_dir"
+    set deploy_dir "$HOME/deployRoodl/$project_name"
+    mkdir -p "$deploy_dir"
+    echo "$deploy_dir"
 end
 
 function deployRoodl
-    # Получаем проекты и формируем список для выбора
-    set projects (get_projects)
-    set choices (echo $projects | jq -r 'to_entries | .[] | .value.icon + " " + .key + " 🪣 " + .value.bucket')
+    # Получаем проекты
+    set projects_json (get_projects)
+
+    if test $status -ne 0
+        echo "❌ Не удалось прочитать конфиг!"
+        return 1
+    end
+
+    # Проверяем, что файл валидный JSON
+    echo "$projects_json" | jq . > /dev/null 2>&1
+
+    if test $status -ne 0
+        echo "❌ Файл конфига содержит невалидный JSON!"
+        return 1
+    end
+
+    # Формируем список для выбора
+    set choices (echo "$projects_json" | jq -r 'to_entries | .[] | .value.icon + " " + .key + " 🪣 " + .value.bucket')
+
+    if test -z "$choices"
+        echo "❌ Не удалось получить список проектов из конфига!"
+        return 1
+    end
+
+    # Выводим для отладки
+    echo "📋 Доступные проекты:"
+    printf "%s\n" $choices
 
     # Используем fzf для выбора
     set selected (printf '%s\n' $choices | fzf --prompt="🚀 Выбери проект для деплоя: ")
 
-    # Проверяем прерывание на этапе выбора
-    if test $status -eq 130
+    # Проверяем прерывание
+    if test $status -ne 0
+        echo "👋 Операция отменена!"
         return 1
     end
 
@@ -53,7 +75,7 @@ function deployRoodl
 
     # Парсим выбранное значение
     set project_name (echo $selected | awk '{print $2}')
-    set bucket (echo $projects | jq -r ".[\"$project_name\"].bucket")
+    set bucket (echo "$projects_json" | jq -r ".[\"$project_name\"].bucket")
 
     # Создаём директорию для деплоя
     set deploy_dir (ensure_project_dir $project_name)
@@ -62,10 +84,11 @@ function deployRoodl
     # Основной цикл
     while true
         echo -e "\nЗакинь файлы и жмакни Enter для проверки (Ctrl+C для отмены)"
-        read input
+        read -l input
 
         # Проверяем прерывание на этапе ожидания файлов
-        if test $status -eq 1
+        if test $status -ne 0
+            echo "👋 Операция отменена!"
             return 1
         end
 
@@ -85,12 +108,10 @@ function deployRoodl
         aws s3 cp . "s3://$bucket" --recursive
         set aws_status $status
 
-        if test $aws_status -eq 130
-            echo -e "\n❌ Загрузка прервана!"
-            return 1
-        end
-
-        if test $aws_status -eq 0
+        if test $aws_status -ne 0
+            echo -e "\n❌ Что-то пошло не так при загрузке!"
+            continue
+        else
             echo -e "\n✅ Загрузка завершена! 🎉"
 
             # Очищаем папку
@@ -98,16 +119,8 @@ function deployRoodl
             rm -rf $deploy_dir
             mkdir -p $deploy_dir
 
-            if test $status -ne 0
-                echo -e "\n❌ Ошибка при очистке папки!"
-                return 1
-            end
-
             echo -e "\n🧹 Папка для деплоя очищена\n"
             break
-        else
-            echo -e "\n❌ Что-то пошло не так! Попробуем ещё раз?\n"
-            continue
         end
     end
 end
