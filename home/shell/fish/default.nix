@@ -2,6 +2,7 @@
 {
   home.packages = with pkgs; [
     fzf # Для deployRoodl
+    jq # Для deployRoodl
   ];
 
   programs.fish = {

@@ -18,3 +18,6 @@
     aws_secret_access_key = YCMQe284zQc8F40GFRJUqhToZPWEURCmpCbwdQH8
   '';
 }
+# smartclean
+# aws_access_key_id = YCAJEHaWo8nIFr2pURY0zfEge
+# aws_secret_access_key = YCMn-WiQLeRqogOgvLbkBwNCRHHOjOdpnbxRaX9m
