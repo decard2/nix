@@ -1,21 +1,18 @@
 #!/usr/bin/env fish
 
+# Жёстко задаём путь к конфигу
+set -g config_path "$HOME/nix/home/scripts/deployRoodl/projects.json"
+
 function cleanup --on-signal SIGINT
     echo -e "\n👋 Ладно, братан, в другой раз!"
     exit 1
 end
 
-# Определяем путь к конфигу - используем ту же директорию, что и скрипт
-set base_dir (dirname (status --current-filename))
-set config_path "$base_dir/projects.json"
-
-echo "🔍 Ищу конфиг: $config_path"
-
 # Функция для получения проектов из конфига
 function get_projects
-    # Проверяем существование файла конфига
-    if not test -f "$config_path"
-        echo "❌ Файл конфига не найден: $config_path"
+    # Проверка что переменная $config_path доступна
+    if not set -q config_path
+        echo "❌ Путь к конфигу не определен в функции get_projects!"
         return 1
     end
 
@@ -35,7 +32,7 @@ function deployRoodl
     set projects_json (get_projects)
 
     if test $status -ne 0
-        echo "❌ Не удалось прочитать конфиг!"
+        echo "❌ Не удалось прочитать файл конфига!"
         return 1
     end
 
