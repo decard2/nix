@@ -18,6 +18,13 @@
     '';
     shellAbbrs = import ./abbrs.nix;
     functions = import ./functions.nix;
+
+    shellInit = ''
+      # Загружаем completions для proto
+      if test -f ${./proto-completions.fish}
+        source ${./proto-completions.fish}
+      end
+    '';
   };
 
   programs.starship = {
@@ -32,6 +39,11 @@
     stdlib = ''
       use_flox() {
         eval "$(flox activate)"
+      }
+      use_proto() {
+        local proto_env
+        proto_env=$(proto activate bash --export)
+        eval "$proto_env"
       }
     '';
     config = {

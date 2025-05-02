@@ -50,6 +50,7 @@
   ca = "cargo add";
   crm = "cargo remove";
   cr = "cargo run";
+  cw = "cargo watch -x \"run\"";
   cb = "cargo build";
   cbr = "cargo build --release";
   cc = "cargo check";
