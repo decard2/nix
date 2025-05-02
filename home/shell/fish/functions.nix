@@ -1,26 +1,4 @@
 {
-  # Автоматическая активация flox
-  __flox_auto_activate = {
-    body = ''
-      # Проверяем, не находимся ли мы уже в процессе активации
-      if test -z "$FLOX_ACTIVATING"
-        set -x FLOX_ACTIVATING 1
-
-        # Проверяем наличие .flox в текущей директории
-        if test -e .flox
-          set -l active_env (flox envs --active --json | string join ' ')
-          if test -z "$active_env"
-            echo \n🚀 Активация flox окружения...\n
-            flox activate -- fish
-          end
-        end
-
-        set -e FLOX_ACTIVATING
-      end
-    '';
-    onVariable = "PWD";
-  };
-
   deployRoodl = {
     body = builtins.readFile ../../scripts/deployRoodl/script.fish;
   };

@@ -8,7 +8,7 @@ let
     # Для Zed
     XKB_CONFIG_ROOT = "/run/current-system/sw/share/X11/xkb";
     PATH = "$HOME/.local/bin:$PATH";
-    DEEPSEEK_API_KEY = "sk-35039be1f9084afe802f95f4e8e331a7";
+    DEEPSEEK_API_KEY = "sk-45e9bf482af04a02a34f2c6e17a3c48b";
     GSETTINGS_SCHEMA_DIR = "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}/glib-2.0/schemas";
   };
 in

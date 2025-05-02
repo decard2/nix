@@ -1,26 +1,34 @@
 {
-	"docs": {
-		"bucket": "docs.rolder.app",
-		"icon": "📋"
-	},
-	"playground": {
-		"bucket": "playground",
-		"icon": "🎮"
-	},
-	"startum-desktop-dev": {
-		"bucket": "dev.smartclean.site",
-		"icon": "🎮"
-	},
-	"startum-mobile-dev": {
-		"bucket": "dev-m.smartclean.site",
-		"icon": "🎮"
-	},
-	"startum-desktop-prod": {
-		"bucket": "smartclean.site",
-		"icon": "🎮"
-	},
-	"startum-mobile-prod": {
-		"bucket": "m.smartclean.site",
-		"icon": "🎮"
-	}
+  "docs": {
+    "bucket": "docs.rolder.app",
+    "icon": "📋"
+  },
+  "playground": {
+    "bucket": "playground",
+    "icon": "🎮"
+  },
+  "startum-desktop-dev": {
+    "bucket": "dev.smartclean.site",
+    "icon": "🎮"
+  },
+  "startum-mobile-dev": {
+    "bucket": "dev-m.smartclean.site",
+    "icon": "🎮"
+  },
+  "startum-desktop-prod": {
+    "bucket": "smartclean.site",
+    "icon": "🎮"
+  },
+  "startum-mobile-prod": {
+    "bucket": "m.smartclean.site",
+    "icon": "🎮"
+  },
+  "ckkm-land-dev": {
+    "bucket": "dev.ckkm.rolder.app",
+    "icon": "🎮"
+  },
+  "mf-rolder-lab": {
+    "bucket": "mf.lab.rolder.app",
+    "icon": "🎮"
+  }
 }

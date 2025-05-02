@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -16,6 +17,7 @@
   outputs =
     inputs@{
       nixpkgs,
+      nixpkgs-unstable,
       disko,
       home-manager,
       flox,
@@ -34,6 +36,8 @@
 
           {
             nixpkgs.config.allowUnfree = true;
+
+            nix.registry.nixpkgs-unstable.flake = nixpkgs-unstable;
 
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
