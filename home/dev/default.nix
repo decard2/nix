@@ -4,12 +4,6 @@
   lib,
   ...
 }:
-let
-  unstable = import inputs.nixpkgs-unstable {
-    system = "x86_64-linux";
-    config.allowUnfree = true;
-  };
-in
 {
   imports = [
     ./zed
@@ -19,7 +13,6 @@ in
   home.packages = with pkgs; [
     lazygit
     inputs.flox.packages.${pkgs.system}.flox
-    unstable.proto
   ];
 
   programs = {
