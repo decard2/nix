@@ -45,6 +45,14 @@
   pout = "pnpm outdated";
   pu = "pnpm update";
 
+  # Moon
+  m = "moon";
+  mp = "moon p";
+  mc = "moon :c";
+  mb = "moon :b";
+  mr = "moon :r";
+  mpg = "moon pg";
+
   # Cargo
   c = "cargo";
   ca = "cargo add";

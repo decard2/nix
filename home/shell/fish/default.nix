@@ -18,13 +18,6 @@
     '';
     shellAbbrs = import ./abbrs.nix;
     functions = import ./functions.nix;
-
-    shellInit = ''
-      # Загружаем completions для proto
-      if test -f ${./proto-completions.fish}
-        source ${./proto-completions.fish}
-      end
-    '';
   };
 
   programs.starship = {
