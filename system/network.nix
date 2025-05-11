@@ -1,10 +1,3 @@
-{ inputs, ... }:
-let
-  unstable = import inputs.nixpkgs-unstable {
-    system = "x86_64-linux";
-    config.allowUnfree = true;
-  };
-in
 {
   # Разрешаем IPv6 privacy extensions
   boot.kernel.sysctl = {
@@ -19,7 +12,6 @@ in
 
   services.sing-box = {
     enable = true;
-    package = unstable.sing-box;
     settings = {
       log = {
         level = "error";
