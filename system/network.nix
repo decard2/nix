@@ -1,3 +1,6 @@
+let
+  tunName = "tun-proxy";
+in
 {
   # Разрешаем IPv6 privacy extensions
   boot.kernel.sysctl = {
@@ -8,22 +11,23 @@
   networking = {
     hostName = "emerald";
     wireless.iwd.enable = true;
+    firewall.trustedInterfaces = [ tunName ];
   };
 
   services.sing-box = {
     enable = true;
     settings = {
       log = {
-        level = "error";
+        level = "warn";
         timestamp = true;
       };
 
       dns = {
         servers = [
           {
-            tag = "cloudflare-dns";
-            address = "https://1.1.1.1/dns-query";
-            detour = "proxy";
+            # tag = "cloudflare";
+            address = "tcp://1.1.1.1";
+            detour = "direct";
           }
         ];
       };
@@ -31,10 +35,14 @@
       inbounds = [
         {
           type = "tun";
-          interface_name = "singbox-tun";
-          address = [ "172.16.0.1/30" "fdfe:dcba:9876::1/126" ];
+          tag = "tun-in";
+          interface_name = tunName;
+          address = [ "172.16.0.1/30" "fd00::1/126"];
+          mtu = 1492;
           auto_route = true;
           auto_redirect = true;
+          # strict_route = true;
+          # stack = "system";
         }
       ];
 
@@ -46,7 +54,9 @@
           server_port = 8443;
           uuid = "84466b63-d52c-414c-852f-6c5856028248";
           flow = "xtls-rprx-vision";
-          # packet_encoding = "xudp";
+          connect_timeout = "30s";
+          tcp_fast_open = true;
+          tcp_multi_path = true;
           tls = {
             enabled = true;
             server_name = "www.visitstockholm.com";
@@ -68,25 +78,6 @@
       ];
 
       route = {
-        rules = [
-          {
-            action = "route";
-            rule_set = "local";
-            outbound = "direct";
-          }
-          {
-            action = "sniff";
-          }
-          {
-            protocol = "bittorrent";
-            action = "route";
-            outbound = "direct";
-          }
-          {
-            protocol = "dns";
-            action = "hijack-dns";
-          }
-        ];
         rule_set = [
           {
             tag = "local";
@@ -94,11 +85,40 @@
             rules = [
               { domain_suffix = [".ru"]; }
               { domain_keyword = ["rolder" "reddit"]; }
+              { domain = ["www.reddit.com"]; }
             ];
           }
         ];
-        auto_detect_interface = true;
-        final = "proxy";
+          rules = [
+            {
+              action = "route";
+              rule_set = "local";
+              outbound = "direct";
+            }
+            {
+              process_name = [ "qemu-system-x86_64" ];
+              outbound = "direct";
+            }
+            {
+              inbound = "tun-in";
+              action = "sniff";
+            }
+            {
+              protocol = "dns";
+              action = "hijack-dns";
+            }
+            {
+              protocol = "bittorrent";
+              action = "route";
+              outbound = "direct";
+            }
+            {
+              ip_is_private = true;
+              outbound = "direct";
+            }
+          ];
+          final = "proxy";
+          auto_detect_interface = true;
       };
     };
   };
