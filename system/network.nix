@@ -96,10 +96,6 @@ in
               outbound = "direct";
             }
             {
-              process_name = [ "qemu-system-x86_64" ];
-              outbound = "direct";
-            }
-            {
               inbound = "tun-in";
               action = "sniff";
             }
