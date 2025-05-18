@@ -5,7 +5,7 @@
     ./s3.nix
   ];
 
-  home.packages = [
-    (pkgs.callPackage ./yandex-cloud-cli.nix { })
-  ];
+  #home.packages = [
+   # (pkgs.callPackage ./yandex-cloud-cli.nix { })
+  #];
 }
