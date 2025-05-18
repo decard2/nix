@@ -29,7 +29,6 @@
     hyprpolkitagent
     yofi
     papirus-icon-theme
-    jq
     gtk3
     xdg-utils
   ];

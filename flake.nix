@@ -2,13 +2,12 @@
   description = "Decard NixOS flake";
 
   inputs = {
-    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
-    home-manager.url = "github:nix-community/home-manager";
+    home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     flox.url = "github:flox/flox";
@@ -17,7 +16,6 @@
   outputs =
     inputs@{
       nixpkgs,
-      # nixpkgs-unstable,
       disko,
       home-manager,
       ...
@@ -35,9 +33,6 @@
 
           {
             nixpkgs.config.allowUnfree = true;
-
-            # nix.registry.nixpkgs-unstable.flake = nixpkgs-unstable;
-
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.backupFileExtension = "backup";

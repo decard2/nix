@@ -11,7 +11,7 @@
               priority = 1;
               name = "boot";
               start = "1M";
-              end = "128M";
+              end = "512M";
               type = "EF00";
               content = {
                 type = "filesystem";
@@ -21,37 +21,11 @@
               };
             };
             root = {
-              name = "root";
               size = "100%";
               content = {
-                type = "btrfs";
-                extraArgs = [ "-f" ];
-                subvolumes = {
-                  "/root" = {
-                    mountpoint = "/";
-                    mountOptions = [ "compress=zstd" ];
-                  };
-                  "/home" = {
-                    mountpoint = "/home";
-                    mountOptions = [ "compress=zstd" ];
-                  };
-                  "/nix" = {
-                    mountpoint = "/nix";
-                    mountOptions = [ "compress=zstd" "noatime" ];
-                  };
-                  "/log" = {
-                    mountpoint = "/var/log";
-                    mountOptions = [ "compress=zstd" ];
-                  };
-                  "/cache" = {
-                    mountpoint = "/var/cache";
-                    mountOptions = [ "compress=zstd" ];
-                  };
-                  "/swap" = {
-                    mountpoint = "/.swapvol";
-                    swap = { swapfile = { size = "32G"; }; };
-                  };
-                };
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/";
               };
             };
           };

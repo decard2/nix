@@ -74,10 +74,7 @@
         "[workspace special:btop silent] uwsm app -- kitty -e btop"
         "[workspace special:telegram silent] uwsm app -- telegram-desktop"
         "[workspace special:tidal silent] uwsm app -- chromium --app=https://listen.tidal.com"
-        "uwsm app -- udiskie"
         "uwsm app -- ~/nix/home/scripts/autoHyprsunset.fish"
-        # "[workspace special:jora silent] uwsm app -- kitty -e jora"
-        "[workspace special:jora silent] uwsm app -- kitty"
       ];
 
       # 7. Бинды клавиш и мыши
@@ -97,7 +94,7 @@
 
         # Виртуалка
         "SUPER_SHIFT, W, exec, uwsm app -- virsh -c qemu:///system start win11; uwsm app -- virt-viewer --connect qemu:///system win11"
-        "SUPER_SHIFT, E, exec, uwsm app -- virsh -c qemu:///system shutdown win11"
+        "SUPER_SHIFT, Q, exec, uwsm app -- virsh -c qemu:///system shutdown win11"
 
         # Скретчпады
         "CTRL, grave, togglespecialworkspace, term"

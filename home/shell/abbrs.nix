@@ -47,11 +47,6 @@
 
   # Moon
   m = "moon";
-  mp = "moon p";
-  mc = "moon :c";
-  mb = "moon :b";
-  mr = "moon :r";
-  mpg = "moon pg";
 
   # Cargo
   c = "cargo";
@@ -68,7 +63,7 @@
   f = "flox";
   fin = "flox init";
   fu = "flox upgrade";
-  fa = "flox activate -- fish";
+  fa = "flox activate";
   fi = "flox install";
   fs = "flox search";
   fsh = "flox show";
@@ -79,24 +74,16 @@
   hi = "helm install";
   hl = "helm list";
   hu = "helm upgrade";
+  hun = "helm uninstall";
+
   # Kubectl
   k = "kubectl";
-  kaf = "kubectl apply -f";
   kex = "kubectl exec -ti";
-  kg = "kubectl get";
-  kgp = "kubectl get pods";
-  kgn = "kubectl get nodes";
-  kd = "kubectl describe";
-  kdp = "kubectl describe pod";
-  kdn = "kubectl describe node";
-  kl = "kubectl logs";
-  klf = "kubectl logs -f";
-  kcp = "kubectl cp";
-  kdl = "kubectl delete";
-  kdlp = "kubectl delete pod";
+  kn = "kubectl get nodes";
+
   # Docker
   d = "docker";
-  dc = "docker-compose";
+
   ds = "docker ps";
   di = "docker images";
   dex = "docker exec -it";
@@ -104,14 +91,10 @@
   dlf = "docker logs -f";
 
   # Docker Compose
-  dcu = "docker-compose up";
-  dcud = "docker-compose up -d";
-  dcd = "docker-compose down";
-  dcr = "docker-compose restart";
-  dcl = "docker-compose logs";
-  dclf = "docker-compose logs -f";
-  dcps = "docker-compose ps";
-  dcpull = "docker-compose pull";
+  dc = "docker compose";
+  dcu = "docker compose up";
+  dcd = "docker compose down";
+  dcl = "docker compose logs";
 
   # Lazydocker
   lzd = "lazydocker";
