@@ -1,6 +1,6 @@
 {
   deployRoodl = {
-    body = builtins.readFile ../../scripts/deployRoodl/script.fish;
+    body = builtins.readFile ../scripts/deployRoodl/script.fish;
   };
 
   cleanNix = {
