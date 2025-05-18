@@ -7,6 +7,5 @@
 
   home.packages = [
     (pkgs.callPackage ./yandex-cloud-cli.nix { })
-    # (pkgs.callPackage ./rcli.nix { })
   ];
 }

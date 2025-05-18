@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.05";
 
   # 1. БАЗОВЫЕ НАСТРОЙКИ СИСТЕМЫ
   # ============================
@@ -45,7 +45,6 @@
     loader = {
       systemd-boot = {
         enable = true;
-        # consoleMode = "max";
         editor = false;
       };
       efi.canTouchEfiVariables = true;
@@ -184,10 +183,45 @@
       enable = true;
       withUWSM = true;
     };
+    regreet = {
+      enable = true;
+      settings.GTK = {
+        application_prefer_dark_theme = true;
+      };
+    };
     dconf.enable = true;
   };
 
   hardware.graphics = {
     enable = true;
+  };
+
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.dbus}/bin/dbus-run-session ${pkgs.hyprland}/bin/Hyprland --config ${pkgs.writeText "hyprland-greeter.conf" ''
+          # Включаем только один монитор DP-2
+          monitor=DP-2,1920x1080,0x0,1
+          # Отключаем встроенный дисплей
+          monitor=eDP-1,disable
+
+          # Запускаем ReGreet
+          exec-once = ${pkgs.greetd.regreet}/bin/regreet; hyprctl dispatch exit
+
+          # Дополнительные настройки Hyprland для ReGreet
+          misc {
+            disable_hyprland_logo = true
+            disable_splash_rendering = true
+            disable_hyprland_qtutils_check = true
+          }
+
+          # Отключаем порталы для ускорения запуска
+          env = GTK_USE_PORTAL,0
+          env = GDK_DEBUG,no-portals
+        ''}";
+        user = "greeter";
+      };
+    };
   };
 }

@@ -18,12 +18,10 @@
     # Настройки Docker
     docker = {
       enable = true;
-      enableOnBoot = true;
       autoPrune = {
         enable = true;
         dates = "weekly";
       };
-      storageDriver = "btrfs";
     };
 
     # Настройки libvirt

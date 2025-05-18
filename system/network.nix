@@ -25,7 +25,6 @@ in
       dns = {
         servers = [
           {
-            # tag = "cloudflare";
             address = "tcp://1.1.1.1";
             detour = "direct";
           }
@@ -41,8 +40,6 @@ in
           mtu = 1492;
           auto_route = true;
           auto_redirect = true;
-          # strict_route = true;
-          # stack = "system";
         }
       ];
 
