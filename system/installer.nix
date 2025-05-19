@@ -63,7 +63,6 @@
 
   # Create a script that will run at session start for nixos user
   system.activationScripts.installerAutostart = ''
-    mkdir -p /home/nixos
     cat > /home/nixos/.bash_profile << 'EOF'
     if [[ $(tty) == /dev/tty1 ]]; then
       echo "Starting NixOS installer..."
@@ -71,6 +70,5 @@
       exec nix_installer
     fi
     EOF
-    chown -R nixos:users /home/nixos
   '';
 }
