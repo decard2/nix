@@ -5,7 +5,7 @@
     ./system.nix
     ./network.nix
     ./packages.nix
-    #./nix-ld.nix
+    ./nix-ld.nix
     ./virtualization
     ./services
   ];
