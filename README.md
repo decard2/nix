@@ -4,7 +4,7 @@
 
 1. backup.fish - внутри настройки
 2. В папке nix - nix build
-3. sudo dd if=./result/iso/nixos-.iso of=/dev/sda bs=4M status=progress
+3. sudo dd bs=4M status=progress if=./result/iso/nixos-.iso of=/dev/sda
 
 ## Установка
 
