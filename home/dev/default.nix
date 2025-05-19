@@ -25,29 +25,20 @@
     ssh = {
       enable = true;
 
-      # matchBlocks = {
-      #   "github.com" = {
-      #     host = "github.com";
-      #     identityFile = "~/.ssh/id_ed25519";
-      #     extraOptions = {
-      #       AddKeysToAgent = "yes";
-      #       StrictHostKeyChecking = "no";
-      #     };
-      #   };
-      # };
+      matchBlocks = {
+        "github.com" = {
+          host = "github.com";
+          identityFile = "~/.ssh/id_ed25519";
+          extraOptions = {
+            AddKeysToAgent = "yes";
+            StrictHostKeyChecking = "no";
+          };
+        };
+      };
     };
   };
 
   services.ssh-agent.enable = true;
-
-  # home.file = {
-  #   ".ssh/id_ed25519" = {
-  #     source = ./keys/id_ed25519;
-  #   };
-  #   ".ssh/id_ed25519.pub" = {
-  #     source = ./keys/id_ed25519.pub;
-  #   };
-  # };
 
   home.activation = {
     sshPermissions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
