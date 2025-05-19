@@ -6,7 +6,12 @@
     curl
     gnutar
     gzip
+    helm-ls
   ];
+
+  home.sessionVariables = {
+    DEEPSEEK_API_KEY = "sk-45e9bf482af04a02a34f2c6e17a3c48b";
+  };
 
   home.activation.installZed = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     if [ ! -f $HOME/.local/bin/zed ]; then
@@ -23,8 +28,6 @@
       $DRY_RUN_CMD mkdir -p "$ZED_SETTINGS_DIR"
     fi
 
-    if [ ! -f "$ZED_SETTINGS_FILE" ]; then
-      $DRY_RUN_CMD cp ${./defaultSettings.json} "$ZED_SETTINGS_FILE"
-    fi
+    $DRY_RUN_CMD cp -f ${./settings.json} "$ZED_SETTINGS_FILE"
   '';
 }

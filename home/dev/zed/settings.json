@@ -1,0 +1,62 @@
+{
+	"auto_install_extensions": {
+		"html": true,
+		"nix": true,
+		"biome": true,
+		"astro": true,
+		"helm": true,
+		"git-firefly": true
+	},
+	"ui_font_size": 16,
+	"buffer_font_size": 16,
+	"theme": {
+		"mode": "system",
+		"light": "One Light",
+		"dark": "One Dark"
+	},
+	"edit_predictions": {
+		"mode": "subtle",
+		"copilot": {
+			"proxy": null,
+			"proxy_no_verify": null
+		},
+		"enabled_in_text_threads": false
+	},
+	"languages": {
+		"Nix": {
+			"language_servers": ["nixd", "!nil"],
+			"formatter": {
+				"external": {
+					"command": "nixfmt",
+					"arguments": ["--quiet", "--"]
+				}
+			}
+		},
+		"JSON": { "formatter": { "language_server": { "name": "biome" } } },
+		"JSONC": { "formatter": { "language_server": { "name": "biome" } } },
+		"JavaScript": { "formatter": { "language_server": { "name": "biome" } } },
+		"TypeScript": { "formatter": { "language_server": { "name": "biome" } } },
+		"JSX": { "formatter": { "language_server": { "name": "biome" } } },
+		"Vue": { "formatter": { "language_server": { "name": "biome" } } },
+		"Astro": {
+			"language_servers": ["astro-language-server", "..."],
+			"formatter": ["prettier", { "language_server": { "name": "biome" } }]
+		},
+		"Svelte": { "formatter": { "language_server": { "name": "biome" } } },
+		"CSS": { "formatter": { "language_server": { "name": "biome" } } },
+		"Markdown": { "format_on_save": "on" }
+	},
+	"code_actions_on_format": {
+		"source.fixAll.biome": true,
+		"source.organizeImports.biome": true
+	},
+	"file_types": {
+		"Helm": [
+			"**/templates/**/*.tpl",
+			"**/templates/**/*.yaml",
+			"**/templates/**/*.yml",
+			"**/helmfile.d/**/*.yaml",
+			"**/helmfile.d/**/*.yml"
+		]
+	}
+}
