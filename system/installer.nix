@@ -38,12 +38,13 @@
       # Start wpa_supplicant with our configuration
       echo "Starting wpa_supplicant..."
       sudo systemctl start wpa_supplicant
-      echo "🔌 Starting WIFI on interface $WIFI_INTERFACE..."
+      sleep 2
+      echo "🔌 Starting WiFi on interface $WIFI_INTERFACE..."
       sudo wpa_supplicant -B -i "$WIFI_INTERFACE" -c "$WPA_CONF"
 
       # Wait a moment for the system to obtain an IP address automatically
       echo "📡 Waiting for network configuration..."
-      sleep 5
+      sleep 10
 
       echo "💾 Formatting and mounting disks..."
       sudo nix \
