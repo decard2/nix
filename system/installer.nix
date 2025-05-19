@@ -9,38 +9,6 @@
     config.allowUnfree = true;
   };
 
-  nix = {
-    settings.experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
-  };
-
-  console = {
-    font = "ter-v32n";
-    packages = with pkgs; [ terminus_font ];
-    useXkbConfig = true;
-  };
-
-  i18n = {
-    defaultLocale = "en_US.UTF-8";
-    supportedLocales = [
-      "en_US.UTF-8/UTF-8"
-      "ru_RU.UTF-8/UTF-8"
-    ];
-    extraLocaleSettings = {
-      LC_ADDRESS = "ru_RU.UTF-8";
-      LC_IDENTIFICATION = "ru_RU.UTF-8";
-      LC_MEASUREMENT = "ru_RU.UTF-8";
-      LC_MONETARY = "ru_RU.UTF-8";
-      LC_NAME = "ru_RU.UTF-8";
-      LC_NUMERIC = "ru_RU.UTF-8";
-      LC_PAPER = "ru_RU.UTF-8";
-      LC_TELEPHONE = "ru_RU.UTF-8";
-      LC_TIME = "ru_RU.UTF-8";
-    };
-  };
-
   environment.systemPackages = with pkgs; [
     git
     (writeShellScriptBin "nix_installer" ''
@@ -54,28 +22,48 @@
       read -sp "Введи пароль от WiFi: " PASSWORD
       echo ""
 
-      # Запускаем wpa_supplicant если он не запущен
-      sudo systemctl start wpa_supplicant
-
-      # Подключаемся к сети
-      wpa_cli -i wlp2s0 <<EOF
-        add_network
-        set_network 0 ssid "$SSID"
-        set_network 0 psk "$PASSWORD"
-        enable_network 0
-        quit
-      EOF
+      # Определяем имя WiFi интерфейса
+      WIFI_INTERFACE=$(ip link | grep -o 'wl[a-z0-9]*' | head -n 1)
+      if [ -z "$WIFI_INTERFACE" ]; then
+        echo "❌ Не найден беспроводной интерфейс. Выход."
+        exit 1
+      fi
+      echo "🔍 Найден WiFi интерфейс: $WIFI_INTERFACE"
+      
+      # Создаем временный конфигурационный файл
+      WPA_CONF=$(mktemp)
+      wpa_passphrase "$SSID" "$PASSWORD" > "$WPA_CONF"
+      
+      # Останавливаем любые существующие экземпляры wpa_supplicant
+      sudo systemctl stop wpa_supplicant 2>/dev/null || true
+      sudo killall wpa_supplicant 2>/dev/null || true
+      
+      # Запускаем wpa_supplicant с нашей конфигурацией
+      sudo ip link set "$WIFI_INTERFACE" up
+      echo "🔌 Запуск wpa_supplicant на интерфейсе $WIFI_INTERFACE..."
+      sudo wpa_supplicant -B -i "$WIFI_INTERFACE" -c "$WPA_CONF"
+      
+      # Получаем IP-адрес через DHCP
+      echo "📡 Получение IP-адреса..."
+      sudo dhclient -v "$WIFI_INTERFACE"
 
       echo "🌐 Проверяю подключение к интернету..."
-      for i in {1..10}; do
-        if ping -c 1 ya.ru &>/dev/null; then
-          echo "✅ Подключение установлено!"
+      for i in {1..15}; do
+        if ping -c 1 8.8.8.8 &>/dev/null; then
+          echo "✅ Подключение к интернету установлено!"
+          # Очистка временного файла
+          rm -f "$WPA_CONF"
           break
         fi
-        echo "⏳ Жду подключения... ($i/10)"
+        echo "⏳ Жду подключения... ($i/15)"
         sleep 2
-        if [ $i -eq 10 ]; then
+        if [ $i -eq 15 ]; then
           echo "❌ Не удалось подключиться к интернету. Выход."
+          # Диагностическая информация
+          echo "📊 Диагностическая информация:"
+          ip addr show "$WIFI_INTERFACE"
+          sudo wpa_cli -i "$WIFI_INTERFACE" status
+          rm -f "$WPA_CONF"
           exit 1
         fi
       done
