@@ -7,7 +7,7 @@
 {
   imports = [
     ./zed
-    #./roodl.nix
+    ./roodl.nix
   ];
 
   home.packages = with pkgs; [

@@ -6,7 +6,7 @@
     ./hyprland.nix
     ./yofi.nix
     ./hyprpolkitagent.nix
-    #./fileAssociations.nix
+    ./fileAssociations.nix
   ];
 
   dconf.enable = true;
