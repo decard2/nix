@@ -206,10 +206,8 @@
     settings = {
       default_session = {
         command = "${pkgs.dbus}/bin/dbus-run-session ${pkgs.hyprland}/bin/Hyprland --config ${pkgs.writeText "hyprland-greeter.conf" ''
-          # Включаем только один монитор DP-2
-          monitor=DP-2,1920x1080,0x0,1
-          # Отключаем встроенный дисплей
-          # monitor=eDP-1,disable
+          # Автоопределение всех мониторов
+          monitor=,preferred,auto,1
 
           # Запускаем ReGreet
           exec-once = ${pkgs.greetd.regreet}/bin/regreet; hyprctl dispatch exit
