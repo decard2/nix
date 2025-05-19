@@ -5,7 +5,8 @@
 		"biome": true,
 		"astro": true,
 		"helm": true,
-		"git-firefly": true
+		"git-firefly": true,
+		"fish": true
 	},
 	"ui_font_size": 16,
 	"buffer_font_size": 16,
