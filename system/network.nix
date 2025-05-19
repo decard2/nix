@@ -36,7 +36,10 @@ in
           type = "tun";
           tag = "tun-in";
           interface_name = tunName;
-          address = [ "172.16.0.1/30" "fd00::1/126"];
+          address = [
+            "172.16.0.1/30"
+            "fd00::1/126"
+          ];
           mtu = 1492;
           auto_route = true;
           auto_redirect = true;
@@ -80,38 +83,43 @@ in
             tag = "local";
             type = "inline";
             rules = [
-              { domain_suffix = [".ru"]; }
-              { domain_keyword = ["rolder" "reddit"]; }
-              { domain = ["www.reddit.com"]; }
+              { domain_suffix = [ ".ru" ]; }
+              {
+                domain_keyword = [
+                  "rolder"
+                  "reddit"
+                ];
+              }
+              { domain = [ "www.reddit.com" ]; }
             ];
           }
         ];
-          rules = [
-            {
-              action = "route";
-              rule_set = "local";
-              outbound = "direct";
-            }
-            {
-              inbound = "tun-in";
-              action = "sniff";
-            }
-            {
-              protocol = "dns";
-              action = "hijack-dns";
-            }
-            {
-              protocol = "bittorrent";
-              action = "route";
-              outbound = "direct";
-            }
-            {
-              ip_is_private = true;
-              outbound = "direct";
-            }
-          ];
-          final = "proxy";
-          auto_detect_interface = true;
+        rules = [
+          {
+            action = "route";
+            rule_set = "local";
+            outbound = "direct";
+          }
+          {
+            inbound = "tun-in";
+            action = "sniff";
+          }
+          {
+            protocol = "dns";
+            action = "hijack-dns";
+          }
+          {
+            protocol = "bittorrent";
+            action = "route";
+            outbound = "direct";
+          }
+          {
+            ip_is_private = true;
+            outbound = "direct";
+          }
+        ];
+        final = "proxy";
+        auto_detect_interface = true;
       };
     };
   };

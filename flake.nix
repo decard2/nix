@@ -11,6 +11,9 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     flox.url = "github:flox/flox";
+
+    nixos-generators.url = "github:nix-community/nixos-generators";
+    nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -18,14 +21,16 @@
       nixpkgs,
       disko,
       home-manager,
+      nixos-generators,
       ...
     }:
+    let
+      system = "x86_64-linux";
+    in
     {
       nixosConfigurations.emerald = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = {
-          inherit inputs;
-        };
+        inherit system;
+        specialArgs = { inherit inputs; };
         modules = [
           ./system
           disko.nixosModules.disko
@@ -40,6 +45,19 @@
             home-manager.users.decard = import ./home;
           }
         ];
+      };
+
+      # ISO образ для автоустановки
+      packages.${system} = {
+        default = nixos-generators.nixosGenerate {
+          inherit system;
+          modules = [
+            "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+            "${nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
+            ./system/installer.nix
+          ];
+          format = "iso";
+        };
       };
     };
 }
