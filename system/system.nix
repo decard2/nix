@@ -40,7 +40,12 @@
       options nouveau modeset=0
     '';
 
-    blacklistedKernelModules = [ "nouveau" "nvidia" "nvidia_drm" "nvidia_modeset" ];
+    blacklistedKernelModules = [
+      "nouveau"
+      "nvidia"
+      "nvidia_drm"
+      "nvidia_modeset"
+    ];
 
     loader = {
       systemd-boot = {
@@ -204,7 +209,7 @@
           # Включаем только один монитор DP-2
           monitor=DP-2,1920x1080,0x0,1
           # Отключаем встроенный дисплей
-          monitor=eDP-1,disable
+          # monitor=eDP-1,disable
 
           # Запускаем ReGreet
           exec-once = ${pkgs.greetd.regreet}/bin/regreet; hyprctl dispatch exit
