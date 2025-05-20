@@ -3,7 +3,6 @@
   imports = [
     ./kitty.nix
     ./chromium.nix
-    ./telegram.nix
     ./virt-manager.nix
     ./bridge.nix
   ];
