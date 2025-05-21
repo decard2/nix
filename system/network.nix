@@ -1,6 +1,3 @@
-let
-  tunName = "tun-proxy";
-in
 {
   # Разрешаем IPv6 privacy extensions
   boot.kernel.sysctl = {
@@ -11,7 +8,6 @@ in
   networking = {
     hostName = "emerald";
     wireless.iwd.enable = true;
-    firewall.trustedInterfaces = [ tunName ];
   };
 
   services.sing-box = {
@@ -35,12 +31,11 @@ in
         {
           type = "tun";
           tag = "tun-in";
-          interface_name = tunName;
+          interface_name = "tun-proxy";
           address = [
             "172.16.0.1/30"
             "fd00::1/126"
           ];
-          mtu = 1492;
           auto_route = true;
           auto_redirect = true;
         }
@@ -50,24 +45,21 @@ in
         {
           tag = "proxy";
           type = "vless";
-          server = "185.156.109.205";
-          server_port = 8443;
-          uuid = "84466b63-d52c-414c-852f-6c5856028248";
+          server = "helsinki.rolder.net";
+          server_port = 443;
+          uuid = "4ad49612-0a70-47c3-9900-f47b88c36bc0";
           flow = "xtls-rprx-vision";
-          connect_timeout = "30s";
-          tcp_fast_open = true;
-          tcp_multi_path = true;
           tls = {
             enabled = true;
-            server_name = "www.visitstockholm.com";
+            server_name = "www.microsoft.com";
             utls = {
               enabled = true;
               fingerprint = "chrome";
             };
             reality = {
               enabled = true;
-              public_key = "uVvacfSbGNEF4ELVeUEjXGyv3TWUjKu80QTDDQAn8kA";
-              short_id = "e6de3a5883656f31";
+              public_key = "1RmhIVt9cczpKnnXpqM_i4ODjk7yXUomcIs2QJhA4U0";
+              short_id = "6a06f4ce3afb4d9f";
             };
           };
         }
@@ -78,28 +70,7 @@ in
       ];
 
       route = {
-        rule_set = [
-          {
-            tag = "local";
-            type = "inline";
-            rules = [
-              { domain_suffix = [ ".ru" ]; }
-              {
-                domain_keyword = [
-                  "rolder"
-                  "reddit"
-                ];
-              }
-              { domain = [ "www.reddit.com" ]; }
-            ];
-          }
-        ];
         rules = [
-          {
-            action = "route";
-            rule_set = "local";
-            outbound = "direct";
-          }
           {
             inbound = "tun-in";
             action = "sniff";
@@ -110,7 +81,13 @@ in
           }
           {
             protocol = "bittorrent";
-            action = "route";
+            outbound = "direct";
+          }
+          {
+            domain_keyword = [
+              "rolder"
+              "reddit"
+            ];
             outbound = "direct";
           }
           {
