@@ -47,7 +47,7 @@
           type = "vless";
           server = "helsinki.rolder.net";
           server_port = 443;
-          uuid = "4ad49612-0a70-47c3-9900-f47b88c36bc0";
+          uuid = "d4ad90fa-94c9-4a6c-9183-4e7cf235b629";
           flow = "xtls-rprx-vision";
           tls = {
             enabled = true;
