@@ -21,7 +21,7 @@
       dns = {
         servers = [
           {
-            address = "tcp://1.1.1.1";
+            address = "https://1.1.1.1/dns-query";
             detour = "direct";
           }
         ];
@@ -45,7 +45,7 @@
         {
           tag = "proxy";
           type = "vless";
-          server = "helsinki.rolder.net";
+          server = "45.15.127.8";
           server_port = 443;
           uuid = "d4ad90fa-94c9-4a6c-9183-4e7cf235b629";
           flow = "xtls-rprx-vision";

@@ -38,5 +38,9 @@
 	"wecoop-desktop-test": {
 		"bucket": "test.wecoop.rolder.app",
 		"icon": "🎮"
+	},
+	"rasko-desktop-test": {
+		"bucket": "test.rasko.rolder.app",
+		"icon": "🎮"
 	}
 }
