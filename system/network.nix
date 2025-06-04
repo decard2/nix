@@ -15,7 +15,6 @@
     settings = {
       log = {
         level = "warn";
-        timestamp = true;
       };
 
       dns = {
@@ -84,15 +83,23 @@
             outbound = "direct";
           }
           {
-            domain_keyword = [
-              "rolder"
-              "reddit"
-            ];
+            rule_set = "local";
             outbound = "direct";
           }
           {
             ip_is_private = true;
             outbound = "direct";
+          }
+        ];
+        rule_set = [
+          {
+            type = "inline";
+            tag = "local";
+            rules = [
+              {
+                domain_keyword = [ "rolder" ];
+              }
+            ];
           }
         ];
         final = "proxy";
