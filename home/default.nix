@@ -24,5 +24,6 @@
     btop
     neofetch
     nvd
+    sshpass
   ];
 }

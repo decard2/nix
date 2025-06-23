@@ -44,7 +44,7 @@
         {
           tag = "proxy";
           type = "vless";
-          server = "45.15.127.8";
+          server = "2a11:3805:0:3b::1";
           server_port = 443;
           uuid = "d4ad90fa-94c9-4a6c-9183-4e7cf235b629";
           flow = "xtls-rprx-vision";
@@ -77,10 +77,6 @@
           {
             protocol = "dns";
             action = "hijack-dns";
-          }
-          {
-            protocol = "bittorrent";
-            outbound = "direct";
           }
           {
             rule_set = "local";
