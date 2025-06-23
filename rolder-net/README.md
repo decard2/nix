@@ -129,10 +129,15 @@ Use the password specified during installation.
 
 ```bash
 # On the server
-sudo nixos-rebuild switch --flake github:username/repo#hostname
+ssh -p 4444 rolder@TARGET_IP
+sudo nixos-rebuild switch --flake github:decard2/nix?dir=rolder-net#hostname
 
-# Or remotely
-nixos-rebuild switch --flake .#hostname --target-host rolder@TARGET_IP --use-remote-sudo
+# Or remotely from local directory
+cd rolder-net
+NIX_SSHOPTS="-p 4444" nixos-rebuild switch --flake .#hostname --target-host rolder@TARGET_IP --ask-sudo-password
+
+# Or remotely from GitHub
+NIX_SSHOPTS="-p 4444" nixos-rebuild switch --flake github:decard2/nix?dir=rolder-net#hostname --target-host rolder@TARGET_IP --ask-sudo-password
 ```
 
 ## Technical Details
