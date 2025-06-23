@@ -53,6 +53,7 @@
     isNormalUser = true;
     extraGroups = [
       "wheel"
+      "docker"
     ];
     hashedPassword = rolderPassword;
     openssh.authorizedKeys.keys = [
@@ -78,6 +79,7 @@
     git
     curl
     htop
+    docker-compose
   ];
 
   # Common VM/KVM settings
@@ -97,6 +99,16 @@
     "virtio_rng"
   ];
   boot.kernelModules = [ "kvm-intel" ];
+
+  # Docker configuration
+  virtualisation.docker = {
+    enable = true;
+    enableOnBoot = true;
+    autoPrune = {
+      enable = true;
+      dates = "weekly";
+    };
+  };
 
   # Enable flakes
   nix.settings.experimental-features = [
