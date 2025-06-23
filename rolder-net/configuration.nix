@@ -46,6 +46,7 @@
   networking.firewall.allowedTCPPorts = [
     4444
     2222
+    443
   ]; # Custom SSH port + Remnawave
 
   # Time zone
@@ -138,6 +139,7 @@
     "nix-command"
     "flakes"
   ];
+  nix.settings.trusted-users = [ "rolder" ];
 
   system.stateVersion = "25.05";
 }
