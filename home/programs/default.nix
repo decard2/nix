@@ -5,6 +5,7 @@
     ./chromium.nix
     ./virt-manager.nix
     ./bridge.nix
+    ./yandex-browser.nix
   ];
 
   home.packages = with pkgs; [
