@@ -1,12 +1,16 @@
 {
   wayland.windowManager.hyprland = {
     systemd.enable = true;
+    systemd.variables = [ "--all" ];
     enable = true;
+    # Use packages from NixOS module to avoid conflicts
+    package = null;
+    portalPackage = null;
 
     settings = {
       # 1. Мониторы и воркспейсы
       monitor = [
-        "DP-1,1920x1080@60.0,1500x0,1.0"
+        "DP-2,1920x1080@60.0,1500x0,1.0"
         "eDP-1,3000x2000@59.999001,0x0,2.0"
       ];
       workspace = [
