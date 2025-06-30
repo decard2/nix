@@ -42,5 +42,9 @@
 	"rasko-desktop-test": {
 		"bucket": "test.rasko.rolder.app",
 		"icon": "🎮"
+	},
+	"reglamentator-rolder-lab": {
+		"bucket": "reglamentator.lab.rolder.app",
+		"icon": "🎮"
 	}
 }
