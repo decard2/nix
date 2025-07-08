@@ -102,11 +102,15 @@ newnode = nixpkgs.lib.nixosSystem {
 
 ```bash
 curl -X GET "https://rolder.net/api/inbounds" \
-  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+  -H "Authorization: Bearer YOUR_API_TOKEN" \
   -H "Content-Type: application/json"
 ```
 
 В ответе будет список инбаундов с их UUID, которые нужно использовать в `inboundUuid`.
+
+### Смена API токена
+
+API токен определен в `common.nix` в переменной `remnawave_api_token`.
 
 ### Добавление хоста
 

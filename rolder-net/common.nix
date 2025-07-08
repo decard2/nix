@@ -7,10 +7,18 @@
   ...
 }:
 
+let
+  # API token for Remnawave panel
+  remnawave_api_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiYTg1YjZkMDEtOTUyNS00Mjg3LTk3ZDYtMmVkZjg4ZWVlYTZiIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5OTI0ODcsImV4cCI6MTAzOTE5MDYwODd9.xRzDMZ7iInTXWK_cJtSM74hdC1wmkHYmlSAsO3q0MRc";
+in
+
 {
   imports = [
     ./hardware-common.nix
   ] ++ (map (container: ./containers/${container}.nix) hostConfig.containers);
+
+  # Pass API token to all containers
+  _module.args.remnawave_api_token = remnawave_api_token;
 
   # Network configuration
   networking.hostName = hostConfig.hostname;
