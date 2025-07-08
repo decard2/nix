@@ -1,0 +1,101 @@
+{
+	"log": {
+		"loglevel": "info"
+	},
+	"inbounds": [
+		{
+			"tag": "Helsinki",
+			"port": 443,
+			"protocol": "vless",
+			"settings": {
+				"clients": [],
+				"decryption": "none"
+			},
+			"sniffing": {
+				"enabled": true,
+				"destOverride": ["http", "tls", "quic"]
+			},
+			"streamSettings": {
+				"network": "raw",
+				"security": "reality",
+				"realitySettings": {
+					"dest": "www.microsoft.com:443",
+					"show": false,
+					"shortIds": ["6a06f4ce3afb4d9f"],
+					"privateKey": "AXM1OTh7_IFgITmbUfcSN9dizHSHaN30XzZtPT75RW0",
+					"serverNames": ["www.microsoft.com"]
+				}
+			}
+		},
+		{
+			"tag": "Frankfurt",
+			"port": 443,
+			"protocol": "vless",
+			"settings": {
+				"clients": [],
+				"decryption": "none"
+			},
+			"sniffing": {
+				"enabled": true,
+				"destOverride": ["http", "tls", "quic"]
+			},
+			"streamSettings": {
+				"network": "raw",
+				"security": "reality",
+				"realitySettings": {
+					"dest": "www.microsoft.com:443",
+					"show": false,
+					"shortIds": ["6a06f4ce3afb4d9f"],
+					"privateKey": "LhdkD43-YbmL2kYBpG5Q2VCu_iuPgnuMQMgjeIA422A",
+					"serverNames": ["www.microsoft.com"]
+				}
+			}
+		}
+	],
+	"outbounds": [
+		{
+			"tag": "warp",
+			"protocol": "wireguard",
+			"settings": {
+				"peers": [
+					{
+						"endpoint": "engage.cloudflareclient.com:2408",
+						"publicKey": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo="
+					}
+				],
+				"address": [
+					"172.16.0.2/32",
+					"2606:4700:110:87f6:dd02:546:ee48:f5da/128"
+				],
+				"secretKey": "cCjDzAz9HgVnxAPx6WEa94JcdorVDPgIvdEVjNRrQV4="
+			}
+		},
+		{
+			"tag": "DIRECT",
+			"protocol": "freedom"
+		},
+		{
+			"tag": "BLOCK",
+			"protocol": "blackhole"
+		}
+	],
+	"routing": {
+		"rules": [
+			{
+				"ip": ["geoip:private"],
+				"type": "field",
+				"outboundTag": "BLOCK"
+			},
+			{
+				"type": "field",
+				"protocol": ["bittorrent"],
+				"outboundTag": "BLOCK"
+			},
+			{
+				"type": "field",
+				"domain": ["geosite:instagram"],
+				"outboundTag": "warp"
+			}
+		]
+	}
+}

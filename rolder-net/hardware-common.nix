@@ -1,9 +1,7 @@
 # Common hardware configuration for all hosts
 # This file contains shared hardware settings for KVM/QEMU VMs
 {
-  config,
   lib,
-  pkgs,
   modulesPath,
   ...
 }:
