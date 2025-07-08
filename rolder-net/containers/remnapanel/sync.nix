@@ -275,4 +275,68 @@
       echo "Users configuration successfully synced to Remnawave API"
     '';
   };
+
+  # Sync additional settings to Remnawave API
+  systemd.services.remnawave-additional-settings-sync = {
+    description = "Sync additional settings to Remnawave API";
+    after = [
+      "network.target"
+      "podman-remnawave-backend.service"
+    ];
+    wants = [ "podman-remnawave-backend.service" ];
+    wantedBy = [ "multi-user.target" ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      Restart = "on-failure";
+      RestartSec = "10s";
+    };
+
+    script = ''
+      echo "Syncing additional settings to Remnawave API..."
+      echo "Additional settings config path: ${./configs/additional-settings.json}"
+
+      # Wait for API to be available
+      for i in {1..30}; do
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 5 https://rolder.net/api/system/health > /dev/null; then
+          break
+        fi
+        echo "Waiting for Remnawave API to be available... ($i/30)"
+        sleep 10
+      done
+
+      # Sync subscription settings
+      SUBSCRIPTION_SETTINGS=$(${pkgs.jq}/bin/jq -c '.subscriptionSettings' ${./configs/additional-settings.json})
+      if [ "$SUBSCRIPTION_SETTINGS" != "null" ]; then
+        # Get current subscription settings to obtain UUID
+        CURRENT_SETTINGS=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/subscription-settings" \
+          -H "Authorization: Bearer ${remnawave_api_token}" \
+          -H "Content-Type: application/json")
+
+        SUBSCRIPTION_UUID=$(echo "$CURRENT_SETTINGS" | ${pkgs.jq}/bin/jq -r '.response.uuid')
+
+        if [ ! -z "$SUBSCRIPTION_UUID" ] && [ "$SUBSCRIPTION_UUID" != "null" ]; then
+          # Add UUID to subscription settings
+          SUBSCRIPTION_DATA=$(echo "$SUBSCRIPTION_SETTINGS" | ${pkgs.jq}/bin/jq ". + {\"uuid\": \"$SUBSCRIPTION_UUID\"}")
+
+          if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/subscription-settings" \
+            -H "Authorization: Bearer ${remnawave_api_token}" \
+            -H "Content-Type: application/json" \
+            -d "$SUBSCRIPTION_DATA" \
+            --silent --show-error --fail; then
+            echo "Subscription settings successfully synced to Remnawave API"
+          else
+            echo "Warning: Failed to sync subscription settings to Remnawave API"
+            exit 1
+          fi
+        else
+          echo "Warning: Could not obtain subscription settings UUID"
+          exit 1
+        fi
+      fi
+
+      echo "Additional settings successfully synced to Remnawave API"
+    '';
+  };
 }

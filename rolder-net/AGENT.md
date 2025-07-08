@@ -48,7 +48,7 @@
 
 - Автоматическая синхронизация конфигов через API
 - Сертификаты синхронизируются между panel и node
-- Конфиги в JSON файлах: hosts.json, nodes.json, users.json, xray.json
+- Конфиги в JSON файлах: hosts.json, nodes.json, users.json, xray.json, additional-settings.json
 
 ## Важные пути
 
@@ -148,3 +148,19 @@ API токен определен в `common.nix` в переменной `remna
 - Outbounds (исходящие соединения)
 - Routing rules
 - DNS настройки
+
+## Дополнительные настройки
+
+В файле `containers/remnapanel/configs/additional-settings.json` хранятся дополнительные настройки для различных API endpoints:
+
+### Настройки подписки
+
+```json
+{
+  "subscriptionSettings": {
+    "profileTitle": "Rolder"
+  }
+}
+```
+
+Эти настройки автоматически применяются через API при старте панели. Можно добавлять другие разделы для других API endpoints по мере необходимости.
