@@ -49,8 +49,158 @@
     '';
   };
 
+  # Sync hosts configuration to Remnawave API
+  systemd.services.remnawave-hosts-sync = {
+    description = "Sync hosts configuration to Remnawave API";
+    after = [
+      "network.target"
+      "podman-remnawave-backend.service"
+    ];
+    wants = [ "podman-remnawave-backend.service" ];
+    wantedBy = [ "multi-user.target" ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      Restart = "on-failure";
+      RestartSec = "10s";
+    };
+
+    script = ''
+      echo "Syncing hosts configuration to Remnawave API..."
+      echo "Hosts config path: ${./configs/hosts.json}"
+
+      # Wait for API to be available
+      for i in {1..30}; do
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 5 https://rolder.net/api/system/health > /dev/null; then
+          break
+        fi
+        echo "Waiting for Remnawave API to be available... ($i/30)"
+        sleep 10
+      done
+
+      # Get existing hosts
+      EXISTING_HOSTS=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/hosts" \
+        -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+        -H "Content-Type: application/json")
+
+      # Process each host from config
+      ${pkgs.jq}/bin/jq -c '.[]' ${./configs/hosts.json} | while read host; do
+        ADDRESS=$(echo $host | ${pkgs.jq}/bin/jq -r '.address')
+        PORT=$(echo $host | ${pkgs.jq}/bin/jq -r '.port')
+        REMARK=$(echo $host | ${pkgs.jq}/bin/jq -r '.remark')
+
+        # Find existing host by address+port
+        EXISTING_UUID=$(echo "$EXISTING_HOSTS" | ${pkgs.jq}/bin/jq -r ".response[] | select(.address == \"$ADDRESS\" and .port == $PORT) | .uuid")
+
+        if [ ! -z "$EXISTING_UUID" ] && [ "$EXISTING_UUID" != "null" ]; then
+          # Update existing host
+          UPDATE_DATA=$(echo $host | ${pkgs.jq}/bin/jq ". + {\"uuid\": \"$EXISTING_UUID\"}")
+          if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/hosts" \
+            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+            -H "Content-Type: application/json" \
+            -d "$UPDATE_DATA" \
+            --silent --show-error --fail; then
+            echo "Host updated successfully: $REMARK ($ADDRESS:$PORT)"
+          else
+            echo "Warning: Failed to update host: $REMARK ($ADDRESS:$PORT)"
+            exit 1
+          fi
+        else
+          # Create new host
+          if ${pkgs.curl}/bin/curl -X POST "https://rolder.net/api/hosts" \
+            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+            -H "Content-Type: application/json" \
+            -d "$host" \
+            --silent --show-error --fail; then
+            echo "Host created successfully: $REMARK ($ADDRESS:$PORT)"
+          else
+            echo "Warning: Failed to create host: $REMARK ($ADDRESS:$PORT)"
+            exit 1
+          fi
+        fi
+      done
+
+      echo "Hosts configuration successfully synced to Remnawave API"
+    '';
+  };
+
+  # Sync nodes configuration to Remnawave API
+  systemd.services.remnawave-nodes-sync = {
+    description = "Sync nodes configuration to Remnawave API";
+    after = [
+      "network.target"
+      "podman-remnawave-backend.service"
+    ];
+    wants = [ "podman-remnawave-backend.service" ];
+    wantedBy = [ "multi-user.target" ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      Restart = "on-failure";
+      RestartSec = "10s";
+    };
+
+    script = ''
+      echo "Syncing nodes configuration to Remnawave API..."
+      echo "Nodes config path: ${./configs/nodes.json}"
+
+      # Wait for API to be available
+      for i in {1..30}; do
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 5 https://rolder.net/api/system/health > /dev/null; then
+          break
+        fi
+        echo "Waiting for Remnawave API to be available... ($i/30)"
+        sleep 10
+      done
+
+      # Get existing nodes
+      EXISTING_NODES=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/nodes" \
+        -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+        -H "Content-Type: application/json")
+
+      # Process each node from config
+      ${pkgs.jq}/bin/jq -c '.[]' ${./configs/nodes.json} | while read node; do
+        ADDRESS=$(echo $node | ${pkgs.jq}/bin/jq -r '.address')
+        PORT=$(echo $node | ${pkgs.jq}/bin/jq -r '.port')
+        NAME=$(echo $node | ${pkgs.jq}/bin/jq -r '.name')
+
+        # Find existing node by address+port
+        EXISTING_UUID=$(echo "$EXISTING_NODES" | ${pkgs.jq}/bin/jq -r ".response[] | select(.address == \"$ADDRESS\" and .port == $PORT) | .uuid")
+
+        if [ ! -z "$EXISTING_UUID" ] && [ "$EXISTING_UUID" != "null" ]; then
+          # Update existing node
+          UPDATE_DATA=$(echo $node | ${pkgs.jq}/bin/jq ". + {\"uuid\": \"$EXISTING_UUID\"}")
+          if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/nodes" \
+            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+            -H "Content-Type: application/json" \
+            -d "$UPDATE_DATA" \
+            --silent --show-error --fail; then
+            echo "Node updated successfully: $NAME ($ADDRESS:$PORT)"
+          else
+            echo "Warning: Failed to update node: $NAME ($ADDRESS:$PORT)"
+            exit 1
+          fi
+        else
+          # Create new node
+          if ${pkgs.curl}/bin/curl -X POST "https://rolder.net/api/nodes" \
+            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+            -H "Content-Type: application/json" \
+            -d "$node" \
+            --silent --show-error --fail; then
+            echo "Node created successfully: $NAME ($ADDRESS:$PORT)"
+          else
+            echo "Warning: Failed to create node: $NAME ($ADDRESS:$PORT)"
+            exit 1
+          fi
+        fi
+      done
+
+      echo "Nodes configuration successfully synced to Remnawave API"
+    '';
+  };
+
   # Future sync services can be added here:
-  # - systemd.services.remnawave-hosts-sync
-  # - systemd.services.remnawave-nodes-sync
   # - systemd.services.remnawave-users-sync
 }
