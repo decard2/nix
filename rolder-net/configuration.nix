@@ -78,6 +78,9 @@
     };
   };
 
+  # QEMU Guest agent
+  services.qemuGuest.enable = true;
+
   # Basic packages
   environment.systemPackages = with pkgs; [
     git
