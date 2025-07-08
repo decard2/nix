@@ -44,12 +44,10 @@
         {
           tag = "proxy";
           type = "vless";
-          # Helsinki
-          server = "45.15.127.8";
           # Frankfurt
-          # server = "37.221.125.150";
+          server = "37.221.125.150";
           server_port = 443;
-          uuid = "d4ad90fa-94c9-4a6c-9183-4e7cf235b629";
+          uuid = "76e88ad5-7d63-4227-ad0e-ca888727cced";
           flow = "xtls-rprx-vision";
           tls = {
             enabled = true;
@@ -60,10 +58,8 @@
             };
             reality = {
               enabled = true;
-              # Helsinki
-              public_key = "1RmhIVt9cczpKnnXpqM_i4ODjk7yXUomcIs2QJhA4U0";
               # Frankfurt
-              # public_key = "hromxQ3K1pRAkPEETnv2z4hHpIbOTDYKuGvvRZYSR3I";
+              public_key = "DaUuYK1LLHW4Au__i_WlJrgOJOCs668ee3aBt65phno";
               short_id = "6a06f4ce3afb4d9f";
             };
           };
