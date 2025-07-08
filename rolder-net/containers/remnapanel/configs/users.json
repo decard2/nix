@@ -5,9 +5,6 @@
 		"trafficLimitBytes": 536870912000,
 		"trafficLimitStrategy": "MONTH",
 		"expireAt": "2100-01-01T00:00:00.000Z",
-		"activeUserInbounds": [
-			"c9f274c7-d7a3-4e5c-87e9-5f9990e93bba",
-			"e8d6d592-98c8-4dba-bb41-b7d901b08acf"
-		]
+		"activeUserInbounds": ["9d8ee310-f03a-43c7-93c6-a1937afd4522"]
 	}
 ]

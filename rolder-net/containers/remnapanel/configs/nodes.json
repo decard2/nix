@@ -4,6 +4,6 @@
 		"address": "37.221.125.150",
 		"port": 2222,
 		"countryCode": "DE",
-		"excludedInbounds": ["e8d6d592-98c8-4dba-bb41-b7d901b08acf"]
+		"excludedInbounds": []
 	}
 ]
