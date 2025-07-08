@@ -201,6 +201,77 @@
     '';
   };
 
-  # Future sync services can be added here:
-  # - systemd.services.remnawave-users-sync
+  # Sync users configuration to Remnawave API
+  systemd.services.remnawave-users-sync = {
+    description = "Sync users configuration to Remnawave API";
+    after = [
+      "network.target"
+      "podman-remnawave-backend.service"
+    ];
+    wants = [ "podman-remnawave-backend.service" ];
+    wantedBy = [ "multi-user.target" ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      Restart = "on-failure";
+      RestartSec = "10s";
+    };
+
+    script = ''
+      echo "Syncing users configuration to Remnawave API..."
+      echo "Users config path: ${./configs/users.json}"
+
+      # Wait for API to be available
+      for i in {1..30}; do
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 5 https://rolder.net/api/system/health > /dev/null; then
+          break
+        fi
+        echo "Waiting for Remnawave API to be available... ($i/30)"
+        sleep 10
+      done
+
+      # Get existing users
+      EXISTING_USERS=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/users" \
+        -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+        -H "Content-Type: application/json")
+
+      # Process each user from config
+      ${pkgs.jq}/bin/jq -c '.[]' ${./configs/users.json} | while read user; do
+        USERNAME=$(echo $user | ${pkgs.jq}/bin/jq -r '.username')
+
+        # Find existing user by username
+        EXISTING_UUID=$(echo "$EXISTING_USERS" | ${pkgs.jq}/bin/jq -r ".response.users[] | select(.username == \"$USERNAME\") | .uuid")
+
+        if [ ! -z "$EXISTING_UUID" ] && [ "$EXISTING_UUID" != "null" ]; then
+          # Update existing user
+          UPDATE_DATA=$(echo $user | ${pkgs.jq}/bin/jq ". + {\"uuid\": \"$EXISTING_UUID\"}")
+          if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/users" \
+            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+            -H "Content-Type: application/json" \
+            -d "$UPDATE_DATA" \
+            --silent --show-error --fail; then
+            echo "User updated successfully: $USERNAME (UUID: $EXISTING_UUID)"
+          else
+            echo "Warning: Failed to update user: $USERNAME"
+            exit 1
+          fi
+        else
+          # Create new user
+          if ${pkgs.curl}/bin/curl -X POST "https://rolder.net/api/users" \
+            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+            -H "Content-Type: application/json" \
+            -d "$user" \
+            --silent --show-error --fail; then
+            echo "User created successfully: $USERNAME"
+          else
+            echo "Warning: Failed to create user: $USERNAME"
+            exit 1
+          fi
+        fi
+      done
+
+      echo "Users configuration successfully synced to Remnawave API"
+    '';
+  };
 }
