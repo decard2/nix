@@ -1,11 +1,12 @@
 {
 	"log": {
-		"loglevel": "info"
+		"loglevel": "none"
 	},
 	"inbounds": [
 		{
 			"tag": "Frankfurt",
 			"port": 443,
+			"listen": "0.0.0.0",
 			"protocol": "vless",
 			"settings": {
 				"clients": [],
@@ -19,33 +20,17 @@
 				"network": "raw",
 				"security": "reality",
 				"realitySettings": {
-					"dest": "www.microsoft.com:443",
 					"show": false,
+					"xver": 0,
+					"target": "emailex.io:443",
 					"shortIds": ["6a06f4ce3afb4d9f"],
-					"privateKey": "LhdkD43-YbmL2kYBpG5Q2VCu_iuPgnuMQMgjeIA422A",
-					"serverNames": ["www.microsoft.com"]
+					"privateKey": "ysHHGFbqCv9RdXqyiYpNALUR6OTZ3hFwJ3KYbJEf8V4",
+					"serverNames": ["emailex.io"]
 				}
 			}
 		}
 	],
 	"outbounds": [
-		{
-			"tag": "warp",
-			"protocol": "wireguard",
-			"settings": {
-				"peers": [
-					{
-						"endpoint": "engage.cloudflareclient.com:2408",
-						"publicKey": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo="
-					}
-				],
-				"address": [
-					"172.16.0.2/32",
-					"2606:4700:110:87f6:dd02:546:ee48:f5da/128"
-				],
-				"secretKey": "cCjDzAz9HgVnxAPx6WEa94JcdorVDPgIvdEVjNRrQV4="
-			}
-		},
 		{
 			"tag": "DIRECT",
 			"protocol": "freedom"
@@ -64,13 +49,13 @@
 			},
 			{
 				"type": "field",
-				"protocol": ["bittorrent"],
+				"domain": ["geosite:private"],
 				"outboundTag": "BLOCK"
 			},
 			{
 				"type": "field",
-				"domain": ["geosite:instagram"],
-				"outboundTag": "warp"
+				"protocol": ["bittorrent"],
+				"outboundTag": "BLOCK"
 			}
 		]
 	}
