@@ -4,11 +4,6 @@
 		"remark": "🇩🇪 Франкфурт",
 		"address": "37.221.125.150",
 		"port": 443,
-		"path": "/",
-		"sni": "www.microsoft.com",
-		"host": "www.microsoft.com",
-		"allowInsecure": false,
-		"isDisabled": false,
-		"securityLayer": "TLS"
+		"isDisabled": false
 	}
 ]

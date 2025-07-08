@@ -4,30 +4,6 @@
 	},
 	"inbounds": [
 		{
-			"tag": "Helsinki",
-			"port": 443,
-			"protocol": "vless",
-			"settings": {
-				"clients": [],
-				"decryption": "none"
-			},
-			"sniffing": {
-				"enabled": true,
-				"destOverride": ["http", "tls", "quic"]
-			},
-			"streamSettings": {
-				"network": "raw",
-				"security": "reality",
-				"realitySettings": {
-					"dest": "www.microsoft.com:443",
-					"show": false,
-					"shortIds": ["6a06f4ce3afb4d9f"],
-					"privateKey": "AXM1OTh7_IFgITmbUfcSN9dizHSHaN30XzZtPT75RW0",
-					"serverNames": ["www.microsoft.com"]
-				}
-			}
-		},
-		{
 			"tag": "Frankfurt",
 			"port": 443,
 			"protocol": "vless",

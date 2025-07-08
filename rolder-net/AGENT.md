@@ -121,13 +121,7 @@ API токен определен в `common.nix` в переменной `remna
   "inboundUuid": "UUID_FROM_INBOUNDS_API",
   "remark": "[Эмодзи флага страны] [Город]",
   "address": "IP_ADDRESS",
-  "port": 443,
-  "path": "/",
-  "sni": "www.microsoft.com",
-  "host": "www.microsoft.com",
-  "allowInsecure": false,
-  "isDisabled": false,
-  "securityLayer": "TLS"
+  "isDisabled": false
 }
 ```
 
