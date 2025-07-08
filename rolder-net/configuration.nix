@@ -105,7 +105,6 @@
     "virtio_balloon"
     "virtio_rng"
   ];
-  boot.kernelModules = [ "kvm-intel" ];
 
   # Docker configuration
   virtualisation.docker = {
