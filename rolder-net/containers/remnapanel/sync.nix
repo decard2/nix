@@ -1,6 +1,7 @@
 # Remnawave API synchronization services
 {
   pkgs,
+  remnawave_api_token,
   ...
 }:
 
@@ -37,7 +38,7 @@
 
       # Sync xray configuration
       if ${pkgs.curl}/bin/curl -X PUT "https://rolder.net/api/xray" \
-        -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+        -H "Authorization: Bearer ${remnawave_api_token}" \
         -H "Content-Type: application/json" \
         -d @${./configs/xray.json} \
         --silent --show-error --fail; then
@@ -81,7 +82,7 @@
 
       # Get existing hosts
       EXISTING_HOSTS=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/hosts" \
-        -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+        -H "Authorization: Bearer ${remnawave_api_token}" \
         -H "Content-Type: application/json")
 
       # Process each host from config
@@ -97,7 +98,7 @@
           # Update existing host
           UPDATE_DATA=$(echo $host | ${pkgs.jq}/bin/jq ". + {\"uuid\": \"$EXISTING_UUID\"}")
           if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/hosts" \
-            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+            -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$UPDATE_DATA" \
             --silent --show-error --fail; then
@@ -109,7 +110,7 @@
         else
           # Create new host
           if ${pkgs.curl}/bin/curl -X POST "https://rolder.net/api/hosts" \
-            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+            -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$host" \
             --silent --show-error --fail; then
@@ -157,7 +158,7 @@
 
       # Get existing nodes
       EXISTING_NODES=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/nodes" \
-        -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+        -H "Authorization: Bearer ${remnawave_api_token}" \
         -H "Content-Type: application/json")
 
       # Process each node from config
@@ -173,7 +174,7 @@
           # Update existing node
           UPDATE_DATA=$(echo $node | ${pkgs.jq}/bin/jq ". + {\"uuid\": \"$EXISTING_UUID\"}")
           if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/nodes" \
-            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+            -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$UPDATE_DATA" \
             --silent --show-error --fail; then
@@ -185,7 +186,7 @@
         else
           # Create new node
           if ${pkgs.curl}/bin/curl -X POST "https://rolder.net/api/nodes" \
-            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+            -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$node" \
             --silent --show-error --fail; then
@@ -233,7 +234,7 @@
 
       # Get existing users
       EXISTING_USERS=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/users" \
-        -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+        -H "Authorization: Bearer ${remnawave_api_token}" \
         -H "Content-Type: application/json")
 
       # Process each user from config
@@ -247,7 +248,7 @@
           # Update existing user
           UPDATE_DATA=$(echo $user | ${pkgs.jq}/bin/jq ". + {\"uuid\": \"$EXISTING_UUID\"}")
           if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/users" \
-            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+            -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$UPDATE_DATA" \
             --silent --show-error --fail; then
@@ -259,7 +260,7 @@
         else
           # Create new user
           if ${pkgs.curl}/bin/curl -X POST "https://rolder.net/api/users" \
-            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+            -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$user" \
             --silent --show-error --fail; then

@@ -1,6 +1,7 @@
 # Remnanode certificate synchronization service
 {
   pkgs,
+  remnawave_api_token,
   ...
 }:
 
@@ -32,7 +33,7 @@
 
       # Get certificate from Panel API
       CERT_RESPONSE=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/keygen" \
-        -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzMwYzc5ZmEtMzUxMC00N2EwLWJhNDYtYTQ5NGE4Y2E1ODdjIiwidXNlcm5hbWUiOm51bGwsInJvbGUiOiJBUEkiLCJpYXQiOjE3NTE5Nzc2NjYsImV4cCI6MTAzOTE4OTEyNjZ9.UBBiJ03SHTVmp1v_hDbQyn95SPcc-aZk8BKjyTj60cw" \
+        -H "Authorization: Bearer ${remnawave_api_token}" \
         -H "Content-Type: application/json")
 
       if [ $? -eq 0 ]; then
