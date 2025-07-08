@@ -47,11 +47,11 @@
           # Frankfurt
           server = "37.221.125.150";
           server_port = 443;
-          uuid = "76e88ad5-7d63-4227-ad0e-ca888727cced";
+          uuid = "98d48f50-bbe8-4d43-8268-304471947824";
           flow = "xtls-rprx-vision";
           tls = {
             enabled = true;
-            server_name = "www.microsoft.com";
+            server_name = "emailex.io";
             utls = {
               enabled = true;
               fingerprint = "chrome";
