@@ -1,15 +1,9 @@
 # Remnanode container configuration module
 {
-  config,
-  lib,
-  pkgs,
   ...
 }:
 
 {
-  # OCI Containers backend
-  virtualisation.oci-containers.backend = "podman";
-
   # Remnawave Node container
   virtualisation.oci-containers.containers.remnanode = {
     image = "remnawave/node:latest";

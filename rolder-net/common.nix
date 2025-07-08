@@ -1,9 +1,8 @@
 # Common base configuration for all hosts
 # This module contains shared settings that apply to all servers
 {
-  config,
-  lib,
   pkgs,
+  lib,
   hostConfig,
   ...
 }:
@@ -44,12 +43,8 @@
     isNormalUser = true;
     extraGroups = [
       "wheel"
-      "docker"
     ];
     hashedPassword = hostConfig.rolderPassword;
-    openssh.authorizedKeys.keys = [
-      # Add your SSH public key here if needed
-    ];
   };
 
   # SSH - Enhanced Security
@@ -73,17 +68,43 @@
     git
     curl
     htop
-    docker-compose
   ];
 
-  # Docker configuration
-  virtualisation.docker = {
+  # Enable containers support
+  virtualisation.containers.enable = true;
+
+  # OCI Containers backend
+  virtualisation.oci-containers.backend = "podman";
+
+  # Podman configuration
+  virtualisation.podman = {
     enable = true;
-    enableOnBoot = true;
+    defaultNetwork.settings.dns_enabled = true;
     autoPrune = {
       enable = true;
       dates = "weekly";
     };
+    # Docker registry mirrors
+    dockerCompat = true;
+  };
+
+  # Container registry configuration
+  environment.etc."containers/registries.conf" = lib.mkForce {
+    text = ''
+      unqualified-search-registries = ["docker.io", "quay.io"]
+
+      [[registry]]
+      location = "docker.io"
+
+      [[registry.mirror]]
+      location = "mirror.gcr.io"
+
+      [[registry.mirror]]
+      location = "registry.dockermirror.com"
+
+      [[registry.mirror]]
+      location = "docker.m.daocloud.io"
+    '';
   };
 
   # Enable flakes and trusted users
