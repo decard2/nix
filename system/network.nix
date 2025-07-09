@@ -14,23 +14,60 @@
     enable = true;
     settings = {
       log = {
-        level = "warn";
+        level = "error";
       };
 
       dns = {
         servers = [
           {
-            address = "https://1.1.1.1/dns-query";
+            tag = "dns-remote";
+            address = "tls://1.1.1.1";
+            address_resolver = "dns-local";
+            address_strategy = "ipv4_only";
+            detour = "proxy";
+          }
+          {
+            tag = "dns-local";
+            address = "192.168.3.1";
             detour = "direct";
           }
+          {
+            tag = "dns-block";
+            address = "rcode://success";
+          }
         ];
+        rules = [
+          {
+            rule_set = [ "oisd-big" ];
+            server = "dns-block";
+            disable_cache = true;
+          }
+          {
+            rule_set = [
+              "geosite-telegram"
+              "geoip-telegram"
+              "torrents"
+              "torrent-clients"
+            ];
+            server = "dns-local";
+          }
+          {
+            rule_set = [
+              "ru-bundle"
+              "discord-voice-ip-list"
+              "break-wall"
+            ];
+            server = "dns-remote";
+          }
+        ];
+        final = "dns-local";
       };
 
       inbounds = [
         {
           type = "tun";
           tag = "tun-in";
-          interface_name = "tun-proxy";
+          interface_name = "tun-freedom";
           address = [
             "172.16.0.1/30"
             "fd00::1/126"
@@ -41,6 +78,10 @@
       ];
 
       outbounds = [
+        {
+          type = "direct";
+          tag = "direct";
+        }
         {
           tag = "proxy";
           type = "vless";
@@ -64,16 +105,11 @@
             };
           };
         }
-        {
-          type = "direct";
-          tag = "direct";
-        }
       ];
 
       route = {
         rules = [
           {
-            inbound = "tun-in";
             action = "sniff";
           }
           {
@@ -81,27 +117,133 @@
             action = "hijack-dns";
           }
           {
-            rule_set = "local";
+            clash_mode = "Direct";
             outbound = "direct";
           }
           {
-            ip_is_private = true;
+            rule_set = "torrent-clients";
             outbound = "direct";
+          }
+          {
+            clash_mode = "Global";
+            outbound = "proxy";
+          }
+          {
+            rule_set = [ "oisd-big" ];
+            action = "reject";
+            method = "drop";
+          }
+          {
+            rule_set = [
+              "geosite-telegram"
+              "geoip-telegram"
+            ];
+            outbound = "direct";
+          }
+          {
+            rule_set = [
+              "ru-bundle"
+              "discord-voice-ip-list"
+              "break-wall"
+            ];
+            outbound = "proxy";
           }
         ];
+
         rule_set = [
           {
+            type = "remote";
+            tag = "oisd-big";
+            format = "binary";
+            url = "https://github.com/burjuyz/RuRulesets/raw/main/ruleset-domain-oisd_big.srs";
+          }
+          {
+            type = "remote";
+            tag = "geosite-telegram";
+            format = "binary";
+            url = "https://github.com/MetaCubeX/meta-rules-dat/raw/sing/geo/geosite/telegram.srs";
+          }
+          {
+            type = "remote";
+            tag = "geoip-telegram";
+            format = "binary";
+            url = "https://github.com/MetaCubeX/meta-rules-dat/raw/sing/geo/geoip/telegram.srs";
+          }
+          {
+            type = "remote";
+            tag = "ru-bundle";
+            format = "binary";
+            url = "https://github.com/legiz-ru/sb-rule-sets/raw/main/ru-bundle.srs";
+          }
+          {
+            type = "remote";
+            tag = "discord-voice-ip-list";
+            format = "binary";
+            url = "https://github.com/legiz-ru/sb-rule-sets/raw/main/discord-voice-ip-list.srs";
+          }
+          {
+            type = "remote";
+            tag = "torrent-clients";
+            format = "binary";
+            url = "https://raw.githubusercontent.com/legiz-ru/sb-rule-sets/main/torrent-clients.srs";
+          }
+          {
             type = "inline";
-            tag = "local";
+            tag = "break-wall";
             rules = [
               {
-                domain_keyword = [ "rolder" ];
+                domain = [ "2ip.io" ];
+                domain_keyword = [
+                  "openai"
+                  "anthropic"
+                  "claude"
+                  "zed"
+                ];
+                domain_suffix = [
+                  "perplexity.ai"
+                  "chatgpt.com"
+                  "auth0.com"
+                  "client-api.arkoselabs.com"
+                  "events.statsigapi.net"
+                  "featuregates.org"
+                  "identrust.com"
+                  "intercom.io"
+                  "intercomcdn.com"
+                  "oaistatic.com"
+                  "oaiusercontent.com"
+                  "openai.com"
+                  "openaiapi-site.azureedge.net"
+                  "sentry.io"
+                  "stripe.com"
+                  "bard.google.com"
+                  "gemini.google.com"
+                  "makersuite.google.com"
+                  "anthropic.com"
+                  "claude.ai.com"
+                  "integrate.api.nvidia.com"
+                  "llm.zed.dev"
+                ];
+              }
+            ];
+          }
+          {
+            type = "inline";
+            tag = "torrents";
+            rules = [
+              {
+                source_port = [ 51413 ];
               }
             ];
           }
         ];
-        final = "proxy";
+
         auto_detect_interface = true;
+      };
+
+      experimental = {
+        cache_file = {
+          enabled = true;
+        };
       };
     };
   };
