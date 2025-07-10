@@ -6,7 +6,6 @@
 		{
 			"tag": "Frankfurt",
 			"port": 443,
-			"listen": "0.0.0.0",
 			"protocol": "vless",
 			"settings": {
 				"clients": [],
@@ -21,11 +20,10 @@
 				"security": "reality",
 				"realitySettings": {
 					"show": false,
-					"xver": 0,
-					"target": "emailex.io:443",
+					"target": "www.twitch.tv:443",
 					"shortIds": ["6a06f4ce3afb4d9f"],
 					"privateKey": "ysHHGFbqCv9RdXqyiYpNALUR6OTZ3hFwJ3KYbJEf8V4",
-					"serverNames": ["emailex.io"]
+					"serverNames": ["www.twitch.tv"]
 				}
 			}
 		}
