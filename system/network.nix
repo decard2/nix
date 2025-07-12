@@ -28,7 +28,7 @@
           }
           {
             tag = "dns-local";
-            address = "192.168.3.1";
+            address = "1.1.1.1";
             detour = "direct";
           }
           {
