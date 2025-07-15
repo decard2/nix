@@ -76,7 +76,7 @@
         "uwsm app -- hyprcursor"
         "[workspace special:term silent] uwsm app -- kitty"
         "[workspace special:btop silent] uwsm app -- kitty -e btop"
-        "[workspace special:telegram silent] uwsm app -- telegram-desktop"
+        "[workspace special:telegram silent] uwsm app -- Telegram"
         "[workspace special:tidal silent] uwsm app -- chromium --app=https://listen.tidal.com"
         "uwsm app -- ~/nix/home/scripts/autoHyprsunset.fish"
       ];
