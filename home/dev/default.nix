@@ -13,6 +13,7 @@
   home.packages = with pkgs; [
     lazygit
     inputs.flox.packages.${pkgs.system}.flox
+    devenv
   ];
 
   programs = {

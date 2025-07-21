@@ -20,28 +20,17 @@
       dns = {
         servers = [
           {
-            tag = "dns-remote";
+            tag = "remote";
             address = "tls://1.1.1.1";
-            address_resolver = "dns-local";
-            address_strategy = "ipv4_only";
-            detour = "proxy";
+            address_resolver = "local";
           }
           {
-            tag = "dns-local";
-            address = "1.1.1.1";
+            tag = "local";
+            address = "77.88.8.8";
             detour = "direct";
-          }
-          {
-            tag = "dns-block";
-            address = "rcode://success";
           }
         ];
         rules = [
-          {
-            rule_set = [ "oisd-big" ];
-            server = "dns-block";
-            disable_cache = true;
-          }
           {
             rule_set = [
               "geosite-telegram"
@@ -49,7 +38,7 @@
               "torrents"
               "torrent-clients"
             ];
-            server = "dns-local";
+            server = "local";
           }
           {
             rule_set = [
@@ -57,10 +46,10 @@
               "discord-voice-ip-list"
               "break-wall"
             ];
-            server = "dns-remote";
+            server = "remote";
           }
         ];
-        final = "dns-local";
+        final = "local";
       };
 
       inbounds = [
@@ -74,6 +63,7 @@
           ];
           auto_route = true;
           auto_redirect = true;
+          strict_route = true;
         }
       ];
 
@@ -129,11 +119,6 @@
             outbound = "proxy";
           }
           {
-            rule_set = [ "oisd-big" ];
-            action = "reject";
-            method = "drop";
-          }
-          {
             rule_set = [
               "geosite-telegram"
               "geoip-telegram"
@@ -151,12 +136,6 @@
         ];
 
         rule_set = [
-          {
-            type = "remote";
-            tag = "oisd-big";
-            format = "binary";
-            url = "https://github.com/burjuyz/RuRulesets/raw/main/ruleset-domain-oisd_big.srs";
-          }
           {
             type = "remote";
             tag = "geosite-telegram";
@@ -219,6 +198,9 @@
                   "gemini.google.com"
                   "makersuite.google.com"
                   "anthropic.com"
+                  "statsig.anthropic.com"
+                  "console.anthropic.com"
+                  "api.anthropic.com"
                   "claude.ai.com"
                   "integrate.api.nvidia.com"
                   "llm.zed.dev"
@@ -236,13 +218,16 @@
             ];
           }
         ];
-
         auto_detect_interface = true;
       };
 
       experimental = {
         cache_file = {
           enabled = true;
+          store_rdrc = true;
+        };
+        clash_api = {
+          default_mode = "Enhanced";
         };
       };
     };
