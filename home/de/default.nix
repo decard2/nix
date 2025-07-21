@@ -7,7 +7,6 @@
     ./yofi.nix
     ./hyprpolkitagent.nix
     ./fileAssociations.nix
-    ./hyprsunset.nix
   ];
 
   dconf.enable = true;
@@ -26,7 +25,7 @@
     hyprshot
     wl-clipboard
     hyprcursor
-    # hyprsunset - заменен на кастомную версию 0.3.0 в hyprsunset.nix
+    wlsunset
     hyprpolkitagent
     yofi
     papirus-icon-theme
