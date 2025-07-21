@@ -68,6 +68,12 @@
   fs = "flox search";
   fsh = "flox show";
 
+  # Devenv
+  d = "devenv";
+  di = "devenv init";
+  du = "devenv updade";
+  ds = "devenv search";
+
   ### DevOps ###
   # Helm
   h = "helm";
@@ -82,10 +88,7 @@
   kn = "kubectl get nodes";
 
   # Docker
-  d = "docker";
-
-  ds = "docker ps";
-  di = "docker images";
+  dps = "docker ps";
   dex = "docker exec -it";
   dl = "docker logs";
   dlf = "docker logs -f";
