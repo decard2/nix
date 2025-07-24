@@ -76,20 +76,24 @@
           tag = "proxy";
           type = "vless";
           # Frankfurt
-          server = "37.221.125.150";
+          # server = "37.221.125.150";
+          # Bucharest
+          server = "45.67.34.30";
           server_port = 443;
           uuid = "98d48f50-bbe8-4d43-8268-304471947824";
           flow = "xtls-rprx-vision";
           tls = {
             enabled = true;
-            server_name = "www.twitch.tv";
+            # Frankfurt
+            # server_name = "mail.chumbucket.cc";
+            # Bucharest
+            server_name = "north-point.ro";
             utls = {
               enabled = true;
               fingerprint = "chrome";
             };
             reality = {
               enabled = true;
-              # Frankfurt
               public_key = "DaUuYK1LLHW4Au__i_WlJrgOJOCs668ee3aBt65phno";
               short_id = "6a06f4ce3afb4d9f";
             };

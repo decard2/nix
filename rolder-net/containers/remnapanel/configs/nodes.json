@@ -4,6 +4,13 @@
 		"address": "37.221.125.150",
 		"port": 2222,
 		"countryCode": "DE",
-		"excludedInbounds": []
+		"excludedInbounds": ["33f826b0-5942-46b8-9b23-9576cd60a1d0"]
+	},
+	{
+		"name": "Bucharest",
+		"address": "45.67.34.30",
+		"port": 2222,
+		"countryCode": "RO",
+		"excludedInbounds": ["f0d2c958-0049-4328-8f21-0cd48663ead9"]
 	}
 ]
