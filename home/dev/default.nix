@@ -17,6 +17,8 @@
   ];
 
   programs = {
+    bun.enable = true;
+
     git = {
       enable = true;
       userName = "decard";
