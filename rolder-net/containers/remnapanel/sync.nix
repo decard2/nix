@@ -39,7 +39,9 @@
       # Wait for API to be available
       echo "Waiting for Remnawave API to be ready..."
       for i in {1..60}; do
-        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 https://rolder.net/api/system/health > /dev/null 2>&1; then
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 \
+          -H "Authorization: Bearer ${remnawave_api_token}" \
+          https://rolder.net/api/xray > /dev/null 2>&1; then
           echo "API is ready!"
           break
         fi
@@ -101,7 +103,9 @@
       # Wait for API to be available
       echo "Waiting for Remnawave API to be ready..."
       for i in {1..60}; do
-        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 https://rolder.net/api/system/health > /dev/null 2>&1; then
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 \
+          -H "Authorization: Bearer ${remnawave_api_token}" \
+          https://rolder.net/api/hosts > /dev/null 2>&1; then
           echo "API is ready!"
           break
         fi
@@ -194,7 +198,9 @@
       # Wait for API to be available
       echo "Waiting for Remnawave API to be ready..."
       for i in {1..60}; do
-        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 https://rolder.net/api/system/health > /dev/null 2>&1; then
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 \
+          -H "Authorization: Bearer ${remnawave_api_token}" \
+          https://rolder.net/api/nodes > /dev/null 2>&1; then
           echo "API is ready!"
           break
         fi
@@ -287,7 +293,9 @@
       # Wait for API to be available
       echo "Waiting for Remnawave API to be ready..."
       for i in {1..60}; do
-        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 https://rolder.net/api/system/health > /dev/null 2>&1; then
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 \
+          -H "Authorization: Bearer ${remnawave_api_token}" \
+          https://rolder.net/api/users > /dev/null 2>&1; then
           echo "API is ready!"
           break
         fi
@@ -378,7 +386,9 @@
       # Wait for API to be available
       echo "Waiting for Remnawave API to be ready..."
       for i in {1..60}; do
-        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 https://rolder.net/api/system/health > /dev/null 2>&1; then
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 \
+          -H "Authorization: Bearer ${remnawave_api_token}" \
+          https://rolder.net/api/subscription-settings > /dev/null 2>&1; then
           echo "API is ready!"
           break
         fi
