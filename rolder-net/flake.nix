@@ -22,7 +22,6 @@
               gateway = "37.221.125.1";
               rolderPassword = "$6$5VyQ15pyF.cRI95q$CN.UM.kgGa6twTEHFn4fIz6NNVpMWYzbv9J/2UQzJaRN3zr7B74PfZFx7LBbKNUBw9DmR5ApMy.wbF/uMXboa/"; # Htvyfdfht
               containers = [ "remnanode" ];
-              nodeDomain = "n1.rolder.net";
             };
           };
           modules = [
@@ -41,7 +40,6 @@
               gateway = "45.67.34.1";
               rolderPassword = "$6$5VyQ15pyF.cRI95q$CN.UM.kgGa6twTEHFn4fIz6NNVpMWYzbv9J/2UQzJaRN3zr7B74PfZFx7LBbKNUBw9DmR5ApMy.wbF/uMXboa/";
               containers = [ "remnanode" ];
-              nodeDomain = "n2.rolder.net";
             };
           };
           modules = [

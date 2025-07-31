@@ -85,9 +85,9 @@
           tls = {
             enabled = true;
             # Frankfurt
-            # server_name = ""www.microsoft.com";
+            # server_name = "www.microsoft.com";
             # Bucharest
-            server_name = "n2.rolder.net";
+            server_name = "www.microsoft.com";
             utls = {
               enabled = true;
               fingerprint = "chrome";
