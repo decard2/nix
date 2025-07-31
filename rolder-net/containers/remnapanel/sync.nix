@@ -37,11 +37,18 @@
       fi
 
       # Wait for API to be available
-      for i in {1..30}; do
-        if ${pkgs.curl}/bin/curl -s --connect-timeout 5 https://rolder.net/api/system/health > /dev/null; then
+      echo "Waiting for Remnawave API to be ready..."
+      for i in {1..60}; do
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 https://rolder.net/api/system/health > /dev/null 2>&1; then
+          echo "API is ready!"
           break
         fi
-        echo "Waiting for Remnawave API to be available... ($i/30)"
+        if [ $i -eq 60 ]; then
+          echo "Error: API is not available after 10 minutes, skipping sync"
+          rm -f "$CONFIG_FILE"
+          exit 0
+        fi
+        echo "Waiting for Remnawave API to be available... ($i/60)"
         sleep 10
       done
 
@@ -92,11 +99,18 @@
       fi
 
       # Wait for API to be available
-      for i in {1..30}; do
-        if ${pkgs.curl}/bin/curl -s --connect-timeout 5 https://rolder.net/api/system/health > /dev/null; then
+      echo "Waiting for Remnawave API to be ready..."
+      for i in {1..60}; do
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 https://rolder.net/api/system/health > /dev/null 2>&1; then
+          echo "API is ready!"
           break
         fi
-        echo "Waiting for Remnawave API to be available... ($i/30)"
+        if [ $i -eq 60 ]; then
+          echo "Error: API is not available after 10 minutes, skipping sync"
+          rm -f "$CONFIG_FILE"
+          exit 0
+        fi
+        echo "Waiting for Remnawave API to be available... ($i/60)"
         sleep 10
       done
 
@@ -178,11 +192,18 @@
       fi
 
       # Wait for API to be available
-      for i in {1..30}; do
-        if ${pkgs.curl}/bin/curl -s --connect-timeout 5 https://rolder.net/api/system/health > /dev/null; then
+      echo "Waiting for Remnawave API to be ready..."
+      for i in {1..60}; do
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 https://rolder.net/api/system/health > /dev/null 2>&1; then
+          echo "API is ready!"
           break
         fi
-        echo "Waiting for Remnawave API to be available... ($i/30)"
+        if [ $i -eq 60 ]; then
+          echo "Error: API is not available after 10 minutes, skipping sync"
+          rm -f "$CONFIG_FILE"
+          exit 0
+        fi
+        echo "Waiting for Remnawave API to be available... ($i/60)"
         sleep 10
       done
 
@@ -264,11 +285,18 @@
       fi
 
       # Wait for API to be available
-      for i in {1..30}; do
-        if ${pkgs.curl}/bin/curl -s --connect-timeout 5 https://rolder.net/api/system/health > /dev/null; then
+      echo "Waiting for Remnawave API to be ready..."
+      for i in {1..60}; do
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 https://rolder.net/api/system/health > /dev/null 2>&1; then
+          echo "API is ready!"
           break
         fi
-        echo "Waiting for Remnawave API to be available... ($i/30)"
+        if [ $i -eq 60 ]; then
+          echo "Error: API is not available after 10 minutes, skipping sync"
+          rm -f "$CONFIG_FILE"
+          exit 0
+        fi
+        echo "Waiting for Remnawave API to be available... ($i/60)"
         sleep 10
       done
 
@@ -348,11 +376,18 @@
       fi
 
       # Wait for API to be available
-      for i in {1..30}; do
-        if ${pkgs.curl}/bin/curl -s --connect-timeout 5 https://rolder.net/api/system/health > /dev/null; then
+      echo "Waiting for Remnawave API to be ready..."
+      for i in {1..60}; do
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 https://rolder.net/api/system/health > /dev/null 2>&1; then
+          echo "API is ready!"
           break
         fi
-        echo "Waiting for Remnawave API to be available... ($i/30)"
+        if [ $i -eq 60 ]; then
+          echo "Error: API is not available after 10 minutes, skipping sync"
+          rm -f "$CONFIG_FILE"
+          exit 0
+        fi
+        echo "Waiting for Remnawave API to be available... ($i/60)"
         sleep 10
       done
 
