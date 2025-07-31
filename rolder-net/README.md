@@ -47,14 +47,14 @@ ssh -p 4444 rolder@TARGET_IP
 
 ```bash
 # Локально на сервере
-sudo nixos-rebuild switch --flake github:decard2/nix?dir=rolder-net#hostname
+sudo nixos-rebuild switch --refresh --flake github:decard2/nix?dir=rolder-net#hostname
 
 # Удаленно из локальной директории
 cd rolder-net
-NIX_SSHOPTS="-p 4444" nixos-rebuild switch --flake .#hostname --target-host rolder@TARGET_IP --ask-sudo-password
+NIX_SSHOPTS="-p 4444" nixos-rebuild switch --refresh --flake .#hostname --target-host rolder@TARGET_IP --ask-sudo-password
 
 # Удаленно из GitHub
-NIX_SSHOPTS="-p 4444" nixos-rebuild switch --flake github:decard2/nix?dir=rolder-net#hostname --target-host rolder@TARGET_IP --ask-sudo-password
+NIX_SSHOPTS="-p 4444" nixos-rebuild switch --refresh --flake github:decard2/nix?dir=rolder-net#hostname --target-host rolder@TARGET_IP --ask-sudo-password
 ```
 
 ## Развертывание
