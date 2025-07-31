@@ -4,13 +4,19 @@
 		"address": "37.221.125.150",
 		"port": 2222,
 		"countryCode": "DE",
-		"excludedInbounds": ["33f826b0-5942-46b8-9b23-9576cd60a1d0"]
+		"configProfile": {
+			"activeConfigProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
+			"activeInbounds": ["f0d2c958-0049-4328-8f21-0cd48663ead9"]
+		}
 	},
 	{
 		"name": "Bucharest",
 		"address": "45.67.34.30",
 		"port": 2222,
 		"countryCode": "RO",
-		"excludedInbounds": ["f0d2c958-0049-4328-8f21-0cd48663ead9"]
+		"configProfile": {
+			"activeConfigProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
+			"activeInbounds": ["33f826b0-5942-46b8-9b23-9576cd60a1d0"]
+		}
 	}
 ]

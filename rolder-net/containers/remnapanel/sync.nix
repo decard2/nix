@@ -6,9 +6,9 @@
 }:
 
 {
-  # Sync xray configuration to Remnawave API
-  systemd.services.remnawave-xray-sync = {
-    description = "Sync xray configuration to Remnawave API";
+  # Sync config profiles to Remnawave API
+  systemd.services.remnawave-config-profiles-sync = {
+    description = "Sync config profiles to Remnawave API";
     after = [
       "network.target"
       "podman-remnawave-backend.service"
@@ -24,8 +24,8 @@
     };
 
     script = ''
-      echo "Syncing xray configuration to Remnawave API..."
-      echo "Xray config path: ${./configs/xray.json}"
+      echo "Syncing config profiles to Remnawave API..."
+      echo "Config profiles config path: ${./configs/config-profiles.json}"
 
       # Wait for API to be available
       for i in {1..30}; do
@@ -36,17 +36,94 @@
         sleep 10
       done
 
-      # Sync xray configuration
-      if ${pkgs.curl}/bin/curl -X PUT "https://rolder.net/api/xray" \
+      # Process each config profile from config
+      ${pkgs.jq}/bin/jq -c '.[]' ${./configs/config-profiles.json} | while read profile; do
+        UUID=$(echo $profile | ${pkgs.jq}/bin/jq -r '.uuid')
+        NAME=$(echo $profile | ${pkgs.jq}/bin/jq -r '.name')
+
+        # Update existing config profile
+        UPDATE_DATA=$(echo $profile | ${pkgs.jq}/bin/jq '{uuid: .uuid, config: .config}')
+
+        if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/config-profiles" \
+          -H "Authorization: Bearer ${remnawave_api_token}" \
+          -H "Content-Type: application/json" \
+          -d "$UPDATE_DATA" \
+          --silent --show-error --fail; then
+          echo "Config profile updated successfully: $NAME (UUID: $UUID)"
+        else
+          echo "Warning: Failed to update config profile: $NAME"
+          exit 1
+        fi
+      done
+
+      echo "Config profiles successfully synced to Remnawave API"
+    '';
+  };
+
+  # Sync internal squads to Remnawave API
+  systemd.services.remnawave-internal-squads-sync = {
+    description = "Sync internal squads to Remnawave API";
+    after = [
+      "network.target"
+      "podman-remnawave-backend.service"
+      "remnawave-config-profiles-sync.service"
+    ];
+    wants = [ "podman-remnawave-backend.service" ];
+    wantedBy = [ "multi-user.target" ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      Restart = "on-failure";
+      RestartSec = "10s";
+    };
+
+    script = ''
+      echo "Syncing internal squads to Remnawave API..."
+      echo "Internal squads config path: ${./configs/internal-squads.json}"
+
+      # Wait for API to be available
+      for i in {1..30}; do
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 5 https://rolder.net/api/system/health > /dev/null; then
+          break
+        fi
+        echo "Waiting for Remnawave API to be available... ($i/30)"
+        sleep 10
+      done
+
+      # Get existing internal squads
+      EXISTING_SQUADS=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/internal-squads" \
         -H "Authorization: Bearer ${remnawave_api_token}" \
-        -H "Content-Type: application/json" \
-        -d @${./configs/xray.json} \
-        --silent --show-error --fail; then
-        echo "Xray configuration successfully synced to Remnawave API"
-      else
-        echo "Warning: Failed to sync xray configuration to Remnawave API"
-        exit 1
-      fi
+        -H "Content-Type: application/json")
+
+      # Process each internal squad from config
+      ${pkgs.jq}/bin/jq -c '.[]' ${./configs/internal-squads.json} | while read squad; do
+        UUID=$(echo $squad | ${pkgs.jq}/bin/jq -r '.uuid')
+        NAME=$(echo $squad | ${pkgs.jq}/bin/jq -r '.name')
+        INBOUNDS=$(echo $squad | ${pkgs.jq}/bin/jq -r '.inbounds')
+
+        # Check if squad exists
+        EXISTING_UUID=$(echo "$EXISTING_SQUADS" | ${pkgs.jq}/bin/jq -r ".response.internalSquads[] | select(.uuid == \"$UUID\") | .uuid")
+
+        if [ ! -z "$EXISTING_UUID" ] && [ "$EXISTING_UUID" != "null" ]; then
+          # Update existing internal squad
+          UPDATE_DATA=$(echo $squad | ${pkgs.jq}/bin/jq '{uuid: .uuid, inbounds: .inbounds}')
+          if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/internal-squads" \
+            -H "Authorization: Bearer ${remnawave_api_token}" \
+            -H "Content-Type: application/json" \
+            -d "$UPDATE_DATA" \
+            --silent --show-error --fail; then
+            echo "Internal squad updated successfully: $NAME (UUID: $UUID)"
+          else
+            echo "Warning: Failed to update internal squad: $NAME"
+            exit 1
+          fi
+        else
+          echo "Internal squad with UUID $UUID not found in API, skipping..."
+        fi
+      done
+
+      echo "Internal squads successfully synced to Remnawave API"
     '';
   };
 
@@ -56,6 +133,7 @@
     after = [
       "network.target"
       "podman-remnawave-backend.service"
+      "remnawave-config-profiles-sync.service"
     ];
     wants = [ "podman-remnawave-backend.service" ];
     wantedBy = [ "multi-user.target" ];
@@ -132,6 +210,7 @@
     after = [
       "network.target"
       "podman-remnawave-backend.service"
+      "remnawave-config-profiles-sync.service"
     ];
     wants = [ "podman-remnawave-backend.service" ];
     wantedBy = [ "multi-user.target" ];
@@ -208,6 +287,7 @@
     after = [
       "network.target"
       "podman-remnawave-backend.service"
+      "remnawave-internal-squads-sync.service"
     ];
     wants = [ "podman-remnawave-backend.service" ];
     wantedBy = [ "multi-user.target" ];

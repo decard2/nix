@@ -87,7 +87,7 @@
             # Frankfurt
             # server_name = "www.microsoft.com";
             # Bucharest
-            server_name = "www.microsoft.com";
+            server_name = "www.yahoo.com";
             utls = {
               enabled = true;
               fingerprint = "chrome";
