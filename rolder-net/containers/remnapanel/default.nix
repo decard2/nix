@@ -181,6 +181,6 @@
 
   # Import sync services
   imports = [
-    ./sync.nix
+    # ./sync.nix
   ];
 }
