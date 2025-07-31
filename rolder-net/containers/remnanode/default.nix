@@ -8,7 +8,10 @@
   virtualisation.oci-containers.containers.remnanode = {
     image = "remnawave/node:latest";
     hostname = "remnanode";
-    extraOptions = [ "--network=host" ];
+    extraOptions = [
+      "--network=host"
+      "--pull=always"
+    ];
     environment = {
       APP_PORT = "2222";
     };

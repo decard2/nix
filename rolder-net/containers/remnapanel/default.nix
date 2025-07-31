@@ -168,77 +168,12 @@
   # Create Caddy configuration file
   environment.etc."Caddyfile" = {
     text = ''
-      # Global options
-      {
-        # Email for Let's Encrypt notifications
-        email mail@rolder.dev
-
-        # Use Let's Encrypt production environment
-        acme_ca https://acme-v02.api.letsencrypt.org/directory
-
-        # Enable admin API (optional, for management)
-        admin off
-
-        # Optimize for performance
-        servers {
-          protocols h1 h2
-        }
+      https://rolder.net {
+        reverse_proxy * http://remnawave-backend:3000
       }
-
-      # Main site configuration
-      rolder.net {
-        # Reverse proxy to backend
-        reverse_proxy remnawave-backend:3000 {
-          # Health check
-          health_uri /health
-          health_interval 30s
-          health_timeout 5s
-
-          # Headers for proper proxying
-          header_up Host {upstream_hostport}
-          header_up X-Real-IP {remote_host}
-          header_up X-Forwarded-For {remote_host}
-          header_up X-Forwarded-Proto {scheme}
-        }
-
-        # Security headers
-        header {
-          # Remove server information
-          -Server
-
-          # Security headers
-          Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-          X-Content-Type-Options "nosniff"
-          X-Frame-Options "DENY"
-          X-XSS-Protection "1; mode=block"
-          Referrer-Policy "strict-origin-when-cross-origin"
-
-          # CSP (adjust as needed for your application)
-          Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' wss: ws:;"
-        }
-
-        # Enable compression (automatic)
-        encode gzip zstd
-
-        # Logging (optional)
-        log {
-          output file /var/log/caddy/access.log {
-            roll_size 100mb
-            roll_keep 5
-            roll_keep_for 720h
-          }
-          format json
-        }
-      }
-
-      # Catch-all for other domains (security)
       :443 {
-        respond "Not Found" 404
-      }
-
-      # HTTP redirect (automatic)
-      :80 {
-        redir https://{host}{uri} permanent
+        tls internal
+        respond 204
       }
     '';
     mode = "0644";
