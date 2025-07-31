@@ -136,7 +136,7 @@
     ];
     extraOptions = [
       "--network=remnawave-net"
-      # "--pull=always"
+      "--pull=always"
     ];
     autoStart = true;
   };
