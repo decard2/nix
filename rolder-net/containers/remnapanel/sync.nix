@@ -24,8 +24,17 @@
     };
 
     script = ''
+      CONFIG_FILE="${./configs/xray.json}"
+
+      # Check if config file exists
+      if [ ! -f "$CONFIG_FILE" ]; then
+        echo "Xray config file not found: $CONFIG_FILE"
+        echo "Skipping xray sync..."
+        exit 0
+      fi
+
       echo "Syncing xray configuration to Remnawave API..."
-      echo "Xray config path: ${./configs/xray.json}"
+      echo "Xray config path: $CONFIG_FILE"
 
       # Wait for API to be available
       for i in {1..30}; do
@@ -40,7 +49,7 @@
       if ${pkgs.curl}/bin/curl -X PUT "https://rolder.net/api/xray" \
         -H "Authorization: Bearer ${remnawave_api_token}" \
         -H "Content-Type: application/json" \
-        -d @${./configs/xray.json} \
+        -d @"$CONFIG_FILE" \
         --silent --show-error --fail; then
         echo "Xray configuration successfully synced to Remnawave API"
       else
@@ -68,8 +77,17 @@
     };
 
     script = ''
+      CONFIG_FILE="${./configs/hosts.json}"
+
+      # Check if config file exists
+      if [ ! -f "$CONFIG_FILE" ]; then
+        echo "Hosts config file not found: $CONFIG_FILE"
+        echo "Skipping hosts sync..."
+        exit 0
+      fi
+
       echo "Syncing hosts configuration to Remnawave API..."
-      echo "Hosts config path: ${./configs/hosts.json}"
+      echo "Hosts config path: $CONFIG_FILE"
 
       # Wait for API to be available
       for i in {1..30}; do
@@ -86,7 +104,7 @@
         -H "Content-Type: application/json")
 
       # Process each host from config
-      ${pkgs.jq}/bin/jq -c '.[]' ${./configs/hosts.json} | while read host; do
+      ${pkgs.jq}/bin/jq -c '.[]' "$CONFIG_FILE" | while read host; do
         ADDRESS=$(echo $host | ${pkgs.jq}/bin/jq -r '.address')
         PORT=$(echo $host | ${pkgs.jq}/bin/jq -r '.port')
         REMARK=$(echo $host | ${pkgs.jq}/bin/jq -r '.remark')
@@ -144,8 +162,17 @@
     };
 
     script = ''
+      CONFIG_FILE="${./configs/nodes.json}"
+
+      # Check if config file exists
+      if [ ! -f "$CONFIG_FILE" ]; then
+        echo "Nodes config file not found: $CONFIG_FILE"
+        echo "Skipping nodes sync..."
+        exit 0
+      fi
+
       echo "Syncing nodes configuration to Remnawave API..."
-      echo "Nodes config path: ${./configs/nodes.json}"
+      echo "Nodes config path: $CONFIG_FILE"
 
       # Wait for API to be available
       for i in {1..30}; do
@@ -162,7 +189,7 @@
         -H "Content-Type: application/json")
 
       # Process each node from config
-      ${pkgs.jq}/bin/jq -c '.[]' ${./configs/nodes.json} | while read node; do
+      ${pkgs.jq}/bin/jq -c '.[]' "$CONFIG_FILE" | while read node; do
         ADDRESS=$(echo $node | ${pkgs.jq}/bin/jq -r '.address')
         PORT=$(echo $node | ${pkgs.jq}/bin/jq -r '.port')
         NAME=$(echo $node | ${pkgs.jq}/bin/jq -r '.name')
@@ -220,8 +247,17 @@
     };
 
     script = ''
+      CONFIG_FILE="${./configs/users.json}"
+
+      # Check if config file exists
+      if [ ! -f "$CONFIG_FILE" ]; then
+        echo "Users config file not found: $CONFIG_FILE"
+        echo "Skipping users sync..."
+        exit 0
+      fi
+
       echo "Syncing users configuration to Remnawave API..."
-      echo "Users config path: ${./configs/users.json}"
+      echo "Users config path: $CONFIG_FILE"
 
       # Wait for API to be available
       for i in {1..30}; do
@@ -238,7 +274,7 @@
         -H "Content-Type: application/json")
 
       # Process each user from config
-      ${pkgs.jq}/bin/jq -c '.[]' ${./configs/users.json} | while read user; do
+      ${pkgs.jq}/bin/jq -c '.[]' "$CONFIG_FILE" | while read user; do
         USERNAME=$(echo $user | ${pkgs.jq}/bin/jq -r '.username')
 
         # Find existing user by username
@@ -294,8 +330,17 @@
     };
 
     script = ''
+      CONFIG_FILE="${./configs/additional-settings.json}"
+
+      # Check if config file exists
+      if [ ! -f "$CONFIG_FILE" ]; then
+        echo "Additional settings config file not found: $CONFIG_FILE"
+        echo "Skipping additional settings sync..."
+        exit 0
+      fi
+
       echo "Syncing additional settings to Remnawave API..."
-      echo "Additional settings config path: ${./configs/additional-settings.json}"
+      echo "Additional settings config path: $CONFIG_FILE"
 
       # Wait for API to be available
       for i in {1..30}; do
@@ -307,7 +352,7 @@
       done
 
       # Sync subscription settings
-      SUBSCRIPTION_SETTINGS=$(${pkgs.jq}/bin/jq -c '.subscriptionSettings' ${./configs/additional-settings.json})
+      SUBSCRIPTION_SETTINGS=$(${pkgs.jq}/bin/jq -c '.subscriptionSettings' "$CONFIG_FILE")
       if [ "$SUBSCRIPTION_SETTINGS" != "null" ]; then
         # Get current subscription settings to obtain UUID
         CURRENT_SETTINGS=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/subscription-settings" \
