@@ -85,9 +85,9 @@
           tls = {
             enabled = true;
             # Frankfurt
-            # server_name = "mail.chumbucket.cc";
+            # server_name = ""www.microsoft.com";
             # Bucharest
-            server_name = "north-point.ro";
+            server_name = "www.yahoo.com";
             utls = {
               enabled = true;
               fingerprint = "chrome";
