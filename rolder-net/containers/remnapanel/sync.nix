@@ -24,47 +24,27 @@
     };
 
     script = ''
-      CONFIG_URL="https://raw.githubusercontent.com/decard2/nix/main/rolder-net/containers/remnapanel/configs/xray.json"
-      CONFIG_FILE="/tmp/xray-config.json"
-
       echo "Syncing xray configuration to Remnawave API..."
-      echo "Downloading config from: $CONFIG_URL"
-
-      # Download config file
-      if ! ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 30 "$CONFIG_URL" -o "$CONFIG_FILE"; then
-        echo "Warning: Failed to download xray config from GitHub"
-        exit 1
-      fi
+      echo "Xray config path: ${./configs/xray.json}"
 
       # Wait for API to be available
-      echo "Waiting for Remnawave API to be ready..."
-      for i in {1..60}; do
-        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 \
-          -H "Authorization: Bearer ${remnawave_api_token}" \
-          http://127.0.0.1:3000/api/xray > /dev/null 2>&1; then
-          echo "API is ready!"
+      for i in {1..30}; do
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 5 https://rolder.net/api/system/health > /dev/null; then
           break
         fi
-        if [ $i -eq 60 ]; then
-          echo "Error: API is not available after 10 minutes, skipping sync"
-          rm -f "$CONFIG_FILE"
-          exit 0
-        fi
-        echo "Waiting for Remnawave API to be available... ($i/60)"
+        echo "Waiting for Remnawave API to be available... ($i/30)"
         sleep 10
       done
 
       # Sync xray configuration
-      if ${pkgs.curl}/bin/curl -X PUT "http://127.0.0.1:3000/api/xray" \
+      if ${pkgs.curl}/bin/curl -X PUT "https://rolder.net/api/xray" \
         -H "Authorization: Bearer ${remnawave_api_token}" \
         -H "Content-Type: application/json" \
-        -d @"$CONFIG_FILE" \
+        -d @${./configs/xray.json} \
         --silent --show-error --fail; then
         echo "Xray configuration successfully synced to Remnawave API"
-        rm -f "$CONFIG_FILE"
       else
         echo "Warning: Failed to sync xray configuration to Remnawave API"
-        rm -f "$CONFIG_FILE"
         exit 1
       fi
     '';
@@ -88,43 +68,25 @@
     };
 
     script = ''
-      CONFIG_URL="https://raw.githubusercontent.com/decard2/nix/main/rolder-net/containers/remnapanel/configs/hosts.json"
-      CONFIG_FILE="/tmp/hosts-config.json"
-
       echo "Syncing hosts configuration to Remnawave API..."
-      echo "Downloading config from: $CONFIG_URL"
-
-      # Download config file
-      if ! ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 30 "$CONFIG_URL" -o "$CONFIG_FILE"; then
-        echo "Warning: Failed to download hosts config from GitHub"
-        exit 1
-      fi
+      echo "Hosts config path: ${./configs/hosts.json}"
 
       # Wait for API to be available
-      echo "Waiting for Remnawave API to be ready..."
-      for i in {1..60}; do
-        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 \
-          -H "Authorization: Bearer ${remnawave_api_token}" \
-          http://127.0.0.1:3000/api/hosts > /dev/null 2>&1; then
-          echo "API is ready!"
+      for i in {1..30}; do
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 5 https://rolder.net/api/system/health > /dev/null; then
           break
         fi
-        if [ $i -eq 60 ]; then
-          echo "Error: API is not available after 10 minutes, skipping sync"
-          rm -f "$CONFIG_FILE"
-          exit 0
-        fi
-        echo "Waiting for Remnawave API to be available... ($i/60)"
+        echo "Waiting for Remnawave API to be available... ($i/30)"
         sleep 10
       done
 
       # Get existing hosts
-      EXISTING_HOSTS=$(${pkgs.curl}/bin/curl -s "http://127.0.0.1:3000/api/hosts" \
+      EXISTING_HOSTS=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/hosts" \
         -H "Authorization: Bearer ${remnawave_api_token}" \
         -H "Content-Type: application/json")
 
       # Process each host from config
-      ${pkgs.jq}/bin/jq -c '.[]' "$CONFIG_FILE" | while read host; do
+      ${pkgs.jq}/bin/jq -c '.[]' ${./configs/hosts.json} | while read host; do
         ADDRESS=$(echo $host | ${pkgs.jq}/bin/jq -r '.address')
         PORT=$(echo $host | ${pkgs.jq}/bin/jq -r '.port')
         REMARK=$(echo $host | ${pkgs.jq}/bin/jq -r '.remark')
@@ -135,7 +97,7 @@
         if [ ! -z "$EXISTING_UUID" ] && [ "$EXISTING_UUID" != "null" ]; then
           # Update existing host
           UPDATE_DATA=$(echo $host | ${pkgs.jq}/bin/jq ". + {\"uuid\": \"$EXISTING_UUID\"}")
-          if ${pkgs.curl}/bin/curl -X PATCH "http://127.0.0.1:3000/api/hosts" \
+          if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/hosts" \
             -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$UPDATE_DATA" \
@@ -147,7 +109,7 @@
           fi
         else
           # Create new host
-          if ${pkgs.curl}/bin/curl -X POST "http://127.0.0.1:3000/api/hosts" \
+          if ${pkgs.curl}/bin/curl -X POST "https://rolder.net/api/hosts" \
             -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$host" \
@@ -161,7 +123,6 @@
       done
 
       echo "Hosts configuration successfully synced to Remnawave API"
-      rm -f "$CONFIG_FILE"
     '';
   };
 
@@ -183,43 +144,25 @@
     };
 
     script = ''
-      CONFIG_URL="https://raw.githubusercontent.com/decard2/nix/main/rolder-net/containers/remnapanel/configs/nodes.json"
-      CONFIG_FILE="/tmp/nodes-config.json"
-
       echo "Syncing nodes configuration to Remnawave API..."
-      echo "Downloading config from: $CONFIG_URL"
-
-      # Download config file
-      if ! ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 30 "$CONFIG_URL" -o "$CONFIG_FILE"; then
-        echo "Warning: Failed to download nodes config from GitHub"
-        exit 1
-      fi
+      echo "Nodes config path: ${./configs/nodes.json}"
 
       # Wait for API to be available
-      echo "Waiting for Remnawave API to be ready..."
-      for i in {1..60}; do
-        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 \
-          -H "Authorization: Bearer ${remnawave_api_token}" \
-          http://127.0.0.1:3000/api/nodes > /dev/null 2>&1; then
-          echo "API is ready!"
+      for i in {1..30}; do
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 5 https://rolder.net/api/system/health > /dev/null; then
           break
         fi
-        if [ $i -eq 60 ]; then
-          echo "Error: API is not available after 10 minutes, skipping sync"
-          rm -f "$CONFIG_FILE"
-          exit 0
-        fi
-        echo "Waiting for Remnawave API to be available... ($i/60)"
+        echo "Waiting for Remnawave API to be available... ($i/30)"
         sleep 10
       done
 
       # Get existing nodes
-      EXISTING_NODES=$(${pkgs.curl}/bin/curl -s "http://127.0.0.1:3000/api/nodes" \
+      EXISTING_NODES=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/nodes" \
         -H "Authorization: Bearer ${remnawave_api_token}" \
         -H "Content-Type: application/json")
 
       # Process each node from config
-      ${pkgs.jq}/bin/jq -c '.[]' "$CONFIG_FILE" | while read node; do
+      ${pkgs.jq}/bin/jq -c '.[]' ${./configs/nodes.json} | while read node; do
         ADDRESS=$(echo $node | ${pkgs.jq}/bin/jq -r '.address')
         PORT=$(echo $node | ${pkgs.jq}/bin/jq -r '.port')
         NAME=$(echo $node | ${pkgs.jq}/bin/jq -r '.name')
@@ -230,7 +173,7 @@
         if [ ! -z "$EXISTING_UUID" ] && [ "$EXISTING_UUID" != "null" ]; then
           # Update existing node
           UPDATE_DATA=$(echo $node | ${pkgs.jq}/bin/jq ". + {\"uuid\": \"$EXISTING_UUID\"}")
-          if ${pkgs.curl}/bin/curl -X PATCH "http://127.0.0.1:3000/api/nodes" \
+          if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/nodes" \
             -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$UPDATE_DATA" \
@@ -242,7 +185,7 @@
           fi
         else
           # Create new node
-          if ${pkgs.curl}/bin/curl -X POST "http://127.0.0.1:3000/api/nodes" \
+          if ${pkgs.curl}/bin/curl -X POST "https://rolder.net/api/nodes" \
             -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$node" \
@@ -256,7 +199,6 @@
       done
 
       echo "Nodes configuration successfully synced to Remnawave API"
-      rm -f "$CONFIG_FILE"
     '';
   };
 
@@ -278,43 +220,25 @@
     };
 
     script = ''
-      CONFIG_URL="https://raw.githubusercontent.com/decard2/nix/main/rolder-net/containers/remnapanel/configs/users.json"
-      CONFIG_FILE="/tmp/users-config.json"
-
       echo "Syncing users configuration to Remnawave API..."
-      echo "Downloading config from: $CONFIG_URL"
-
-      # Download config file
-      if ! ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 30 "$CONFIG_URL" -o "$CONFIG_FILE"; then
-        echo "Warning: Failed to download users config from GitHub"
-        exit 1
-      fi
+      echo "Users config path: ${./configs/users.json}"
 
       # Wait for API to be available
-      echo "Waiting for Remnawave API to be ready..."
-      for i in {1..60}; do
-        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 \
-          -H "Authorization: Bearer ${remnawave_api_token}" \
-          http://127.0.0.1:3000/api/users > /dev/null 2>&1; then
-          echo "API is ready!"
+      for i in {1..30}; do
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 5 https://rolder.net/api/system/health > /dev/null; then
           break
         fi
-        if [ $i -eq 60 ]; then
-          echo "Error: API is not available after 10 minutes, skipping sync"
-          rm -f "$CONFIG_FILE"
-          exit 0
-        fi
-        echo "Waiting for Remnawave API to be available... ($i/60)"
+        echo "Waiting for Remnawave API to be available... ($i/30)"
         sleep 10
       done
 
       # Get existing users
-      EXISTING_USERS=$(${pkgs.curl}/bin/curl -s "http://127.0.0.1:3000/api/users" \
+      EXISTING_USERS=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/users" \
         -H "Authorization: Bearer ${remnawave_api_token}" \
         -H "Content-Type: application/json")
 
       # Process each user from config
-      ${pkgs.jq}/bin/jq -c '.[]' "$CONFIG_FILE" | while read user; do
+      ${pkgs.jq}/bin/jq -c '.[]' ${./configs/users.json} | while read user; do
         USERNAME=$(echo $user | ${pkgs.jq}/bin/jq -r '.username')
 
         # Find existing user by username
@@ -323,7 +247,7 @@
         if [ ! -z "$EXISTING_UUID" ] && [ "$EXISTING_UUID" != "null" ]; then
           # Update existing user
           UPDATE_DATA=$(echo $user | ${pkgs.jq}/bin/jq ". + {\"uuid\": \"$EXISTING_UUID\"}")
-          if ${pkgs.curl}/bin/curl -X PATCH "http://127.0.0.1:3000/api/users" \
+          if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/users" \
             -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$UPDATE_DATA" \
@@ -335,7 +259,7 @@
           fi
         else
           # Create new user
-          if ${pkgs.curl}/bin/curl -X POST "http://127.0.0.1:3000/api/users" \
+          if ${pkgs.curl}/bin/curl -X POST "https://rolder.net/api/users" \
             -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$user" \
@@ -349,7 +273,6 @@
       done
 
       echo "Users configuration successfully synced to Remnawave API"
-      rm -f "$CONFIG_FILE"
     '';
   };
 
@@ -371,41 +294,23 @@
     };
 
     script = ''
-      CONFIG_URL="https://raw.githubusercontent.com/decard2/nix/main/rolder-net/containers/remnapanel/configs/additional-settings.json"
-      CONFIG_FILE="/tmp/additional-settings-config.json"
-
       echo "Syncing additional settings to Remnawave API..."
-      echo "Downloading config from: $CONFIG_URL"
-
-      # Download config file
-      if ! ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 30 "$CONFIG_URL" -o "$CONFIG_FILE"; then
-        echo "Warning: Failed to download additional settings config from GitHub"
-        exit 1
-      fi
+      echo "Additional settings config path: ${./configs/additional-settings.json}"
 
       # Wait for API to be available
-      echo "Waiting for Remnawave API to be ready..."
-      for i in {1..60}; do
-        if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 \
-          -H "Authorization: Bearer ${remnawave_api_token}" \
-          http://127.0.0.1:3000/api/subscription-settings > /dev/null 2>&1; then
-          echo "API is ready!"
+      for i in {1..30}; do
+        if ${pkgs.curl}/bin/curl -s --connect-timeout 5 https://rolder.net/api/system/health > /dev/null; then
           break
         fi
-        if [ $i -eq 60 ]; then
-          echo "Error: API is not available after 10 minutes, skipping sync"
-          rm -f "$CONFIG_FILE"
-          exit 0
-        fi
-        echo "Waiting for Remnawave API to be available... ($i/60)"
+        echo "Waiting for Remnawave API to be available... ($i/30)"
         sleep 10
       done
 
       # Sync subscription settings
-      SUBSCRIPTION_SETTINGS=$(${pkgs.jq}/bin/jq -c '.subscriptionSettings' "$CONFIG_FILE")
+      SUBSCRIPTION_SETTINGS=$(${pkgs.jq}/bin/jq -c '.subscriptionSettings' ${./configs/additional-settings.json})
       if [ "$SUBSCRIPTION_SETTINGS" != "null" ]; then
         # Get current subscription settings to obtain UUID
-        CURRENT_SETTINGS=$(${pkgs.curl}/bin/curl -s "http://127.0.0.1:3000/api/subscription-settings" \
+        CURRENT_SETTINGS=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/subscription-settings" \
           -H "Authorization: Bearer ${remnawave_api_token}" \
           -H "Content-Type: application/json")
 
@@ -415,7 +320,7 @@
           # Add UUID to subscription settings
           SUBSCRIPTION_DATA=$(echo "$SUBSCRIPTION_SETTINGS" | ${pkgs.jq}/bin/jq ". + {\"uuid\": \"$SUBSCRIPTION_UUID\"}")
 
-          if ${pkgs.curl}/bin/curl -X PATCH "http://127.0.0.1:3000/api/subscription-settings" \
+          if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/subscription-settings" \
             -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$SUBSCRIPTION_DATA" \
@@ -432,7 +337,6 @@
       fi
 
       echo "Additional settings successfully synced to Remnawave API"
-      rm -f "$CONFIG_FILE"
     '';
   };
 }
