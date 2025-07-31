@@ -41,7 +41,7 @@
       for i in {1..60}; do
         if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 \
           -H "Authorization: Bearer ${remnawave_api_token}" \
-          https://rolder.net/api/xray > /dev/null 2>&1; then
+          http://127.0.0.1:3000/api/xray > /dev/null 2>&1; then
           echo "API is ready!"
           break
         fi
@@ -55,7 +55,7 @@
       done
 
       # Sync xray configuration
-      if ${pkgs.curl}/bin/curl -X PUT "https://rolder.net/api/xray" \
+      if ${pkgs.curl}/bin/curl -X PUT "http://127.0.0.1:3000/api/xray" \
         -H "Authorization: Bearer ${remnawave_api_token}" \
         -H "Content-Type: application/json" \
         -d @"$CONFIG_FILE" \
@@ -105,7 +105,7 @@
       for i in {1..60}; do
         if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 \
           -H "Authorization: Bearer ${remnawave_api_token}" \
-          https://rolder.net/api/hosts > /dev/null 2>&1; then
+          http://127.0.0.1:3000/api/hosts > /dev/null 2>&1; then
           echo "API is ready!"
           break
         fi
@@ -119,7 +119,7 @@
       done
 
       # Get existing hosts
-      EXISTING_HOSTS=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/hosts" \
+      EXISTING_HOSTS=$(${pkgs.curl}/bin/curl -s "http://127.0.0.1:3000/api/hosts" \
         -H "Authorization: Bearer ${remnawave_api_token}" \
         -H "Content-Type: application/json")
 
@@ -135,7 +135,7 @@
         if [ ! -z "$EXISTING_UUID" ] && [ "$EXISTING_UUID" != "null" ]; then
           # Update existing host
           UPDATE_DATA=$(echo $host | ${pkgs.jq}/bin/jq ". + {\"uuid\": \"$EXISTING_UUID\"}")
-          if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/hosts" \
+          if ${pkgs.curl}/bin/curl -X PATCH "http://127.0.0.1:3000/api/hosts" \
             -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$UPDATE_DATA" \
@@ -147,7 +147,7 @@
           fi
         else
           # Create new host
-          if ${pkgs.curl}/bin/curl -X POST "https://rolder.net/api/hosts" \
+          if ${pkgs.curl}/bin/curl -X POST "http://127.0.0.1:3000/api/hosts" \
             -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$host" \
@@ -200,7 +200,7 @@
       for i in {1..60}; do
         if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 \
           -H "Authorization: Bearer ${remnawave_api_token}" \
-          https://rolder.net/api/nodes > /dev/null 2>&1; then
+          http://127.0.0.1:3000/api/nodes > /dev/null 2>&1; then
           echo "API is ready!"
           break
         fi
@@ -214,7 +214,7 @@
       done
 
       # Get existing nodes
-      EXISTING_NODES=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/nodes" \
+      EXISTING_NODES=$(${pkgs.curl}/bin/curl -s "http://127.0.0.1:3000/api/nodes" \
         -H "Authorization: Bearer ${remnawave_api_token}" \
         -H "Content-Type: application/json")
 
@@ -230,7 +230,7 @@
         if [ ! -z "$EXISTING_UUID" ] && [ "$EXISTING_UUID" != "null" ]; then
           # Update existing node
           UPDATE_DATA=$(echo $node | ${pkgs.jq}/bin/jq ". + {\"uuid\": \"$EXISTING_UUID\"}")
-          if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/nodes" \
+          if ${pkgs.curl}/bin/curl -X PATCH "http://127.0.0.1:3000/api/nodes" \
             -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$UPDATE_DATA" \
@@ -242,7 +242,7 @@
           fi
         else
           # Create new node
-          if ${pkgs.curl}/bin/curl -X POST "https://rolder.net/api/nodes" \
+          if ${pkgs.curl}/bin/curl -X POST "http://127.0.0.1:3000/api/nodes" \
             -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$node" \
@@ -295,7 +295,7 @@
       for i in {1..60}; do
         if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 \
           -H "Authorization: Bearer ${remnawave_api_token}" \
-          https://rolder.net/api/users > /dev/null 2>&1; then
+          http://127.0.0.1:3000/api/users > /dev/null 2>&1; then
           echo "API is ready!"
           break
         fi
@@ -309,7 +309,7 @@
       done
 
       # Get existing users
-      EXISTING_USERS=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/users" \
+      EXISTING_USERS=$(${pkgs.curl}/bin/curl -s "http://127.0.0.1:3000/api/users" \
         -H "Authorization: Bearer ${remnawave_api_token}" \
         -H "Content-Type: application/json")
 
@@ -323,7 +323,7 @@
         if [ ! -z "$EXISTING_UUID" ] && [ "$EXISTING_UUID" != "null" ]; then
           # Update existing user
           UPDATE_DATA=$(echo $user | ${pkgs.jq}/bin/jq ". + {\"uuid\": \"$EXISTING_UUID\"}")
-          if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/users" \
+          if ${pkgs.curl}/bin/curl -X PATCH "http://127.0.0.1:3000/api/users" \
             -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$UPDATE_DATA" \
@@ -335,7 +335,7 @@
           fi
         else
           # Create new user
-          if ${pkgs.curl}/bin/curl -X POST "https://rolder.net/api/users" \
+          if ${pkgs.curl}/bin/curl -X POST "http://127.0.0.1:3000/api/users" \
             -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$user" \
@@ -388,7 +388,7 @@
       for i in {1..60}; do
         if ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 15 \
           -H "Authorization: Bearer ${remnawave_api_token}" \
-          https://rolder.net/api/subscription-settings > /dev/null 2>&1; then
+          http://127.0.0.1:3000/api/subscription-settings > /dev/null 2>&1; then
           echo "API is ready!"
           break
         fi
@@ -405,7 +405,7 @@
       SUBSCRIPTION_SETTINGS=$(${pkgs.jq}/bin/jq -c '.subscriptionSettings' "$CONFIG_FILE")
       if [ "$SUBSCRIPTION_SETTINGS" != "null" ]; then
         # Get current subscription settings to obtain UUID
-        CURRENT_SETTINGS=$(${pkgs.curl}/bin/curl -s "https://rolder.net/api/subscription-settings" \
+        CURRENT_SETTINGS=$(${pkgs.curl}/bin/curl -s "http://127.0.0.1:3000/api/subscription-settings" \
           -H "Authorization: Bearer ${remnawave_api_token}" \
           -H "Content-Type: application/json")
 
@@ -415,7 +415,7 @@
           # Add UUID to subscription settings
           SUBSCRIPTION_DATA=$(echo "$SUBSCRIPTION_SETTINGS" | ${pkgs.jq}/bin/jq ". + {\"uuid\": \"$SUBSCRIPTION_UUID\"}")
 
-          if ${pkgs.curl}/bin/curl -X PATCH "https://rolder.net/api/subscription-settings" \
+          if ${pkgs.curl}/bin/curl -X PATCH "http://127.0.0.1:3000/api/subscription-settings" \
             -H "Authorization: Bearer ${remnawave_api_token}" \
             -H "Content-Type: application/json" \
             -d "$SUBSCRIPTION_DATA" \
