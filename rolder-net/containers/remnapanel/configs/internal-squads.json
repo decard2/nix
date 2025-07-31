@@ -1,0 +1,10 @@
+[
+	{
+		"uuid": "088ae42a-45b4-4c18-a47b-6ac7dc5d3e71",
+		"name": "Default-Squad",
+		"inbounds": [
+			"f0d2c958-0049-4328-8f21-0cd48663ead9",
+			"33f826b0-5942-46b8-9b23-9576cd60a1d0"
+		]
+	}
+]
