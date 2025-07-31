@@ -24,17 +24,17 @@
     };
 
     script = ''
-      CONFIG_FILE="${./configs/xray.json}"
-
-      # Check if config file exists
-      if [ ! -f "$CONFIG_FILE" ]; then
-        echo "Xray config file not found: $CONFIG_FILE"
-        echo "Skipping xray sync..."
-        exit 0
-      fi
+      CONFIG_URL="https://raw.githubusercontent.com/decard2/nix/main/rolder-net/containers/remnapanel/configs/xray.json"
+      CONFIG_FILE="/tmp/xray-config.json"
 
       echo "Syncing xray configuration to Remnawave API..."
-      echo "Xray config path: $CONFIG_FILE"
+      echo "Downloading config from: $CONFIG_URL"
+
+      # Download config file
+      if ! ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 30 "$CONFIG_URL" -o "$CONFIG_FILE"; then
+        echo "Warning: Failed to download xray config from GitHub"
+        exit 1
+      fi
 
       # Wait for API to be available
       for i in {1..30}; do
@@ -52,8 +52,10 @@
         -d @"$CONFIG_FILE" \
         --silent --show-error --fail; then
         echo "Xray configuration successfully synced to Remnawave API"
+        rm -f "$CONFIG_FILE"
       else
         echo "Warning: Failed to sync xray configuration to Remnawave API"
+        rm -f "$CONFIG_FILE"
         exit 1
       fi
     '';
@@ -77,17 +79,17 @@
     };
 
     script = ''
-      CONFIG_FILE="${./configs/hosts.json}"
-
-      # Check if config file exists
-      if [ ! -f "$CONFIG_FILE" ]; then
-        echo "Hosts config file not found: $CONFIG_FILE"
-        echo "Skipping hosts sync..."
-        exit 0
-      fi
+      CONFIG_URL="https://raw.githubusercontent.com/decard2/nix/main/rolder-net/containers/remnapanel/configs/hosts.json"
+      CONFIG_FILE="/tmp/hosts-config.json"
 
       echo "Syncing hosts configuration to Remnawave API..."
-      echo "Hosts config path: $CONFIG_FILE"
+      echo "Downloading config from: $CONFIG_URL"
+
+      # Download config file
+      if ! ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 30 "$CONFIG_URL" -o "$CONFIG_FILE"; then
+        echo "Warning: Failed to download hosts config from GitHub"
+        exit 1
+      fi
 
       # Wait for API to be available
       for i in {1..30}; do
@@ -141,6 +143,7 @@
       done
 
       echo "Hosts configuration successfully synced to Remnawave API"
+      rm -f "$CONFIG_FILE"
     '';
   };
 
@@ -162,17 +165,17 @@
     };
 
     script = ''
-      CONFIG_FILE="${./configs/nodes.json}"
-
-      # Check if config file exists
-      if [ ! -f "$CONFIG_FILE" ]; then
-        echo "Nodes config file not found: $CONFIG_FILE"
-        echo "Skipping nodes sync..."
-        exit 0
-      fi
+      CONFIG_URL="https://raw.githubusercontent.com/decard2/nix/main/rolder-net/containers/remnapanel/configs/nodes.json"
+      CONFIG_FILE="/tmp/nodes-config.json"
 
       echo "Syncing nodes configuration to Remnawave API..."
-      echo "Nodes config path: $CONFIG_FILE"
+      echo "Downloading config from: $CONFIG_URL"
+
+      # Download config file
+      if ! ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 30 "$CONFIG_URL" -o "$CONFIG_FILE"; then
+        echo "Warning: Failed to download nodes config from GitHub"
+        exit 1
+      fi
 
       # Wait for API to be available
       for i in {1..30}; do
@@ -226,6 +229,7 @@
       done
 
       echo "Nodes configuration successfully synced to Remnawave API"
+      rm -f "$CONFIG_FILE"
     '';
   };
 
@@ -247,17 +251,17 @@
     };
 
     script = ''
-      CONFIG_FILE="${./configs/users.json}"
-
-      # Check if config file exists
-      if [ ! -f "$CONFIG_FILE" ]; then
-        echo "Users config file not found: $CONFIG_FILE"
-        echo "Skipping users sync..."
-        exit 0
-      fi
+      CONFIG_URL="https://raw.githubusercontent.com/decard2/nix/main/rolder-net/containers/remnapanel/configs/users.json"
+      CONFIG_FILE="/tmp/users-config.json"
 
       echo "Syncing users configuration to Remnawave API..."
-      echo "Users config path: $CONFIG_FILE"
+      echo "Downloading config from: $CONFIG_URL"
+
+      # Download config file
+      if ! ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 30 "$CONFIG_URL" -o "$CONFIG_FILE"; then
+        echo "Warning: Failed to download users config from GitHub"
+        exit 1
+      fi
 
       # Wait for API to be available
       for i in {1..30}; do
@@ -309,6 +313,7 @@
       done
 
       echo "Users configuration successfully synced to Remnawave API"
+      rm -f "$CONFIG_FILE"
     '';
   };
 
@@ -330,17 +335,17 @@
     };
 
     script = ''
-      CONFIG_FILE="${./configs/additional-settings.json}"
-
-      # Check if config file exists
-      if [ ! -f "$CONFIG_FILE" ]; then
-        echo "Additional settings config file not found: $CONFIG_FILE"
-        echo "Skipping additional settings sync..."
-        exit 0
-      fi
+      CONFIG_URL="https://raw.githubusercontent.com/decard2/nix/main/rolder-net/containers/remnapanel/configs/additional-settings.json"
+      CONFIG_FILE="/tmp/additional-settings-config.json"
 
       echo "Syncing additional settings to Remnawave API..."
-      echo "Additional settings config path: $CONFIG_FILE"
+      echo "Downloading config from: $CONFIG_URL"
+
+      # Download config file
+      if ! ${pkgs.curl}/bin/curl -s --connect-timeout 10 --max-time 30 "$CONFIG_URL" -o "$CONFIG_FILE"; then
+        echo "Warning: Failed to download additional settings config from GitHub"
+        exit 1
+      fi
 
       # Wait for API to be available
       for i in {1..30}; do
@@ -382,6 +387,7 @@
       fi
 
       echo "Additional settings successfully synced to Remnawave API"
+      rm -f "$CONFIG_FILE"
     '';
   };
 }
