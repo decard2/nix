@@ -87,7 +87,7 @@
             # Frankfurt
             # server_name = ""www.microsoft.com";
             # Bucharest
-            server_name = "www.yahoo.com";
+            server_name = "n2.rolder.net";
             utls = {
               enabled = true;
               fingerprint = "chrome";

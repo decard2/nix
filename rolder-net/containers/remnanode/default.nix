@@ -69,6 +69,7 @@
           }
         }
         auto_https disable_redirects
+        ocsp_stapling off
       }
 
       https://${hostConfig.nodeDomain} {
