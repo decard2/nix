@@ -100,13 +100,12 @@
       <!DOCTYPE html>
       <html>
       <head>
-          <title>Welcome</title>
+          <title>Soon...</title>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1">
       </head>
       <body>
-          <h1>Welcome to our service</h1>
-          <p>This is a simple web service.</p>
+          <h1>Soon...</h1>
       </body>
       </html>
     '';
