@@ -20,10 +20,10 @@
 				"security": "reality",
 				"realitySettings": {
 					"show": false,
-					"target": "mail.chumbucket.cc:443",
+					"target": "www.microsoft.com:443",
 					"shortIds": ["6a06f4ce3afb4d9f"],
 					"privateKey": "ysHHGFbqCv9RdXqyiYpNALUR6OTZ3hFwJ3KYbJEf8V4",
-					"serverNames": ["mail.chumbucket.cc"]
+					"serverNames": ["www.microsoft.com"]
 				}
 			}
 		},
@@ -44,10 +44,10 @@
 				"security": "reality",
 				"realitySettings": {
 					"show": false,
-					"target": "north-point.ro:443",
+					"target": "www.yahoo.com:443",
 					"shortIds": ["6a06f4ce3afb4d9f"],
 					"privateKey": "ysHHGFbqCv9RdXqyiYpNALUR6OTZ3hFwJ3KYbJEf8V4",
-					"serverNames": ["north-point.ro"]
+					"serverNames": ["www.yahoo.com"]
 				}
 			}
 		}

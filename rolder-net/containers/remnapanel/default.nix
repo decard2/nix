@@ -10,7 +10,9 @@
     "d /opt/remnawave 0755 root root -"
     "d /opt/remnawave/postgres_data 0755 root root -"
     "d /opt/remnawave/redis_data 0755 999 999 -"
-    "L /opt/remnawave/angie.conf - - - - /etc/angie.conf"
+    "d /opt/remnawave/caddy_data 0755 root root -"
+    "d /opt/remnawave/caddy_config 0755 root root -"
+    "L /opt/remnawave/Caddyfile - - - - /etc/Caddyfile"
   ];
 
   # Create network for containers
@@ -21,7 +23,7 @@
       "podman-remnawave-db.service"
       "podman-remnawave-redis.service"
       "podman-remnawave-backend.service"
-      "podman-remnawave-angie.service"
+      "podman-caddy.service"
     ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
@@ -30,21 +32,6 @@
     };
     script = ''
       ${pkgs.podman}/bin/podman network exists remnawave-net || ${pkgs.podman}/bin/podman network create remnawave-net
-    '';
-  };
-
-  # Create Docker volume for SSL certificates
-  systemd.services.create-angie-ssl-volume = {
-    description = "Create angie SSL volume";
-    after = [ "podman.service" ];
-    before = [ "podman-remnawave-angie.service" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-    };
-    script = ''
-      ${pkgs.podman}/bin/podman volume exists angie-ssl-data || ${pkgs.podman}/bin/podman volume create angie-ssl-data
     '';
   };
 
@@ -65,6 +52,7 @@
     ];
     extraOptions = [
       "--network=remnawave-net"
+      "--pull=always"
     ];
     autoStart = true;
   };
@@ -92,6 +80,7 @@
     ];
     extraOptions = [
       "--network=remnawave-net"
+      "--pull=always"
     ];
     autoStart = true;
   };
@@ -147,20 +136,22 @@
     ];
     extraOptions = [
       "--network=remnawave-net"
+      # "--pull=always"
     ];
     autoStart = true;
   };
 
-  # Angie reverse proxy container
-  virtualisation.oci-containers.containers.remnawave-angie = {
-    image = "docker.angie.software/angie:latest";
+  # Caddy reverse proxy container
+  virtualisation.oci-containers.containers.caddy = {
+    image = "caddy:2-alpine";
     ports = [
       "80:80"
       "443:443"
     ];
     volumes = [
-      "/opt/remnawave/angie.conf:/etc/angie/http.d/default.conf:ro"
-      "angie-ssl-data:/var/lib/angie/acme/"
+      "/opt/remnawave/Caddyfile:/etc/caddy/Caddyfile:ro"
+      "/opt/remnawave/caddy_data:/data"
+      "/opt/remnawave/caddy_config:/config"
     ];
     dependsOn = [
       "remnawave-backend"
@@ -169,97 +160,85 @@
     ];
     extraOptions = [
       "--network=remnawave-net"
+      "--pull=always"
     ];
     autoStart = true;
   };
 
-  # Create Angie configuration file
-  environment.etc."angie.conf" = {
+  # Create Caddy configuration file
+  environment.etc."Caddyfile" = {
     text = ''
-      upstream remnawave {
-          server remnawave-backend:3000;
+      # Global options
+      {
+        # Email for Let's Encrypt notifications
+        email mail@rolder.dev
+
+        # Use Let's Encrypt production environment
+        acme_ca https://acme-v02.api.letsencrypt.org/directory
+
+        # Enable admin API (optional, for management)
+        admin off
+
+        # Optimize for performance
+        servers {
+          protocols h1 h2
+        }
       }
 
-      # Connection header for WebSocket reverse proxy
-      map $http_upgrade $connection_upgrade {
-          default upgrade;
-          "" close;
-      }
+      # Main site configuration
+      rolder.net {
+        # Reverse proxy to backend
+        reverse_proxy remnawave-backend:3000 {
+          # Health check
+          health_uri /health
+          health_interval 30s
+          health_timeout 5s
 
-      resolver 1.1.1.1 1.0.0.1 8.8.8.8 8.8.4.4 208.67.222.222 208.67.220.220;
+          # Headers for proper proxying
+          header_up Host {upstream_hostport}
+          header_up X-Real-IP {remote_host}
+          header_up X-Forwarded-For {remote_host}
+          header_up X-Forwarded-Proto {scheme}
+        }
 
-      acme_client acme_le https://acme-v02.api.letsencrypt.org/directory;
+        # Security headers
+        header {
+          # Remove server information
+          -Server
 
-      server {
-          server_name rolder.net;
+          # Security headers
+          Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+          X-Content-Type-Options "nosniff"
+          X-Frame-Options "DENY"
+          X-XSS-Protection "1; mode=block"
+          Referrer-Policy "strict-origin-when-cross-origin"
 
-          listen 443 ssl reuseport;
-          listen [::]:443 ssl reuseport;
-          http2 on;
+          # CSP (adjust as needed for your application)
+          Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' wss: ws:;"
+        }
 
-          acme acme_le;
+        # Enable compression (automatic)
+        encode gzip zstd
 
-          # SSL Configuration (Mozilla Intermediate)
-          ssl_protocols TLSv1.2 TLSv1.3;
-          ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305;
-          ssl_session_timeout 1d;
-          ssl_session_cache shared:SSL:1m;
-          ssl_session_tickets off;
-          ssl_certificate $acme_cert_acme_le;
-          ssl_certificate_key $acme_cert_key_acme_le;
-
-          location / {
-              proxy_http_version 1.1;
-              proxy_pass http://remnawave;
-              proxy_set_header Host $host;
-              proxy_set_header Upgrade $http_upgrade;
-              proxy_set_header Connection $connection_upgrade;
-              proxy_set_header X-Real-IP $remote_addr;
-              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-              proxy_set_header X-Forwarded-Proto $scheme;
+        # Logging (optional)
+        log {
+          output file /var/log/caddy/access.log {
+            roll_size 100mb
+            roll_keep 5
+            roll_keep_for 720h
           }
-
-          # Gzip Compression
-          gzip on;
-          gzip_vary on;
-          gzip_proxied any;
-          gzip_comp_level 6;
-          gzip_buffers 16 8k;
-          gzip_http_version 1.1;
-          gzip_min_length 256;
-          gzip_types
-              application/atom+xml
-              application/geo+json
-              application/javascript
-              application/x-javascript
-              application/json
-              application/ld+json
-              application/manifest+json
-              application/rdf+xml
-              application/rss+xml
-              application/xhtml+xml
-              application/xml
-              font/eot
-              font/otf
-              font/ttf
-              image/svg+xml
-              text/css
-              text/javascript
-              text/plain
-              text/xml;
+          format json
+        }
       }
 
-      server {
-          listen 443 ssl default_server;
-          listen [::]:443 ssl default_server;
-          server_name _;
-
-          ssl_reject_handshake on;
+      # Catch-all for other domains (security)
+      :443 {
+        respond "Not Found" 404
       }
 
-      server {
-          listen 80;
-          return 444; # https://angie.software/angie/docs/configuration/acme/#http
+      # HTTP redirect (automatic)
+      :80 {
+        redir https://{host}{uri} permanent
       }
     '';
     mode = "0644";
