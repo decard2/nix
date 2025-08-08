@@ -8,6 +8,7 @@
   networking = {
     hostName = "emerald";
     wireless.iwd.enable = true;
+    firewall.trustedInterfaces = [ "virbr0" ];
   };
 
   services.sing-box = {
