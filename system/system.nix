@@ -210,7 +210,7 @@
           monitor=,preferred,auto,1
 
           # Запускаем ReGreet
-          exec-once = ${pkgs.greetd.regreet}/bin/regreet; hyprctl dispatch exit
+          exec-once = ${pkgs.regreet}/bin/regreet; hyprctl dispatch exit
 
           # Дополнительные настройки Hyprland для ReGreet
           misc {
