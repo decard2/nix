@@ -12,9 +12,6 @@
 
     flox.url = "github:flox/flox";
 
-    yandex-browser.url = "github:miuirussia/yandex-browser.nix";
-    yandex-browser.inputs.nixpkgs.follows = "nixpkgs";
-
     nixos-generators.url = "github:nix-community/nixos-generators";
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
   };
