@@ -25,7 +25,10 @@
 		},
 		"enabled_in_text_threads": false
 	},
-	"agent": { "model_parameters": [{ "temperature": 0 }] },
+	"agent": {
+		"use_modifier_to_send": true,
+		"model_parameters": [{ "temperature": 0 }]
+	},
 	"languages": {
 		"Nix": {
 			"language_servers": ["nixd", "!nil"],
