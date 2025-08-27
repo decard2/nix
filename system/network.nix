@@ -22,15 +22,15 @@
         servers = [
           {
             tag = "remote";
-            address = "tls://1.1.1.1";
-            address_resolver = "local";
+            type = "tls";
+            server = "1.1.1.1";
           }
           {
             tag = "local";
-            address = "77.88.8.8";
-            detour = "direct";
+            type = "local";
           }
         ];
+        strategy = "ipv4_only";
         rules = [
           {
             rule_set = [
@@ -48,9 +48,9 @@
               "break-wall"
             ];
             server = "remote";
+            client_subnet = "185.37.56.241/24";
           }
         ];
-        final = "local";
       };
 
       inbounds = [
@@ -223,6 +223,7 @@
             ];
           }
         ];
+        default_domain_resolver = "local";
         auto_detect_interface = true;
       };
 
