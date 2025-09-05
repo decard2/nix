@@ -34,21 +34,10 @@
         rules = [
           {
             rule_set = [
-              "geosite-telegram"
-              "geoip-telegram"
               "torrents"
               "torrent-clients"
             ];
             server = "local";
-          }
-          {
-            rule_set = [
-              "ru-bundle"
-              "discord-voice-ip-list"
-              "break-wall"
-            ];
-            server = "remote";
-            client_subnet = "185.37.56.241/24";
           }
         ];
       };
@@ -81,7 +70,9 @@
           # Bucharest
           # server = "45.67.34.30";
           # Stockholm
-          server = "34.51.201.70";
+          # server = "34.51.201.70";
+          # Helsinki
+          server = "34.88.147.134";
           server_port = 443;
           uuid = "98d48f50-bbe8-4d43-8268-304471947824";
           flow = "xtls-rprx-vision";
@@ -121,105 +112,15 @@
             rule_set = "torrent-clients";
             outbound = "direct";
           }
-          {
-            clash_mode = "Global";
-            outbound = "proxy";
-          }
-          {
-            rule_set = [
-              "geosite-telegram"
-              "geoip-telegram"
-            ];
-            outbound = "direct";
-          }
-          {
-            rule_set = [
-              "ru-bundle"
-              "discord-voice-ip-list"
-              "break-wall"
-            ];
-            outbound = "proxy";
-          }
         ];
 
         rule_set = [
           {
             type = "remote";
-            tag = "geosite-telegram";
-            format = "binary";
-            url = "https://github.com/MetaCubeX/meta-rules-dat/raw/sing/geo/geosite/telegram.srs";
-          }
-          {
-            type = "remote";
-            tag = "geoip-telegram";
-            format = "binary";
-            url = "https://github.com/MetaCubeX/meta-rules-dat/raw/sing/geo/geoip/telegram.srs";
-          }
-          {
-            type = "remote";
-            tag = "ru-bundle";
-            format = "binary";
-            url = "https://github.com/legiz-ru/sb-rule-sets/raw/main/ru-bundle.srs";
-          }
-          {
-            type = "remote";
-            tag = "discord-voice-ip-list";
-            format = "binary";
-            url = "https://github.com/legiz-ru/sb-rule-sets/raw/main/discord-voice-ip-list.srs";
-          }
-          {
-            type = "remote";
             tag = "torrent-clients";
             format = "binary";
             url = "https://raw.githubusercontent.com/legiz-ru/sb-rule-sets/main/torrent-clients.srs";
-          }
-          {
-            type = "inline";
-            tag = "break-wall";
-            rules = [
-              {
-                domain = [ "2ip.io" ];
-                domain_keyword = [
-                  "openai"
-                  "anthropic"
-                  "claude"
-                  "zed"
-                ];
-                domain_suffix = [
-                  "perplexity.ai"
-                  "chatgpt.com"
-                  "auth0.com"
-                  "client-api.arkoselabs.com"
-                  "events.statsigapi.net"
-                  "featuregates.org"
-                  "identrust.com"
-                  "intercom.io"
-                  "intercomcdn.com"
-                  "oaistatic.com"
-                  "oaiusercontent.com"
-                  "openai.com"
-                  "openaiapi-site.azureedge.net"
-                  "sentry.io"
-                  "stripe.com"
-                  "bard.google.com"
-                  "gemini.google.com"
-                  "makersuite.google.com"
-                  "anthropic.com"
-                  "statsig.anthropic.com"
-                  "console.anthropic.com"
-                  "api.anthropic.com"
-                  "claude.ai.com"
-                  "integrate.api.nvidia.com"
-                  "llm.zed.dev"
-                  "google-analytics.com"
-                  "googlesyndication.com"
-                  "gstatic.com"
-                  "doubleclick.net"
-                  "pushbr.com"
-                  "kino.pub"
-                ];
-              }
-            ];
+            download_detour = "proxy";
           }
           {
             type = "inline";
@@ -233,15 +134,13 @@
         ];
         default_domain_resolver = "local";
         auto_detect_interface = true;
+        final = "proxy";
       };
 
       experimental = {
         cache_file = {
           enabled = true;
           store_rdrc = true;
-        };
-        clash_api = {
-          default_mode = "Enhanced";
         };
       };
     };
