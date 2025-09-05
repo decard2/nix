@@ -211,6 +211,10 @@
                   "claude.ai.com"
                   "integrate.api.nvidia.com"
                   "llm.zed.dev"
+                  "google-analytics.com"
+                  "googlesyndication.com"
+                  "gstatic.com"
+                  "doubleclick.net"
                 ];
               }
             ];
