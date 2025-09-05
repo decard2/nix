@@ -11,7 +11,6 @@
 
   home.sessionVariables = {
     DEEPSEEK_API_KEY = "sk-45e9bf482af04a02a34f2c6e17a3c48b";
-    OPENROUTER_API_KEY = "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";
   };
 
   home.activation.installZed = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

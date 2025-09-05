@@ -15,22 +15,18 @@ in
 {
   imports = [
     ./hardware-common.nix
-  ] ++ (map (container: ./containers/${container}.nix) hostConfig.containers);
+  ]
+  ++ (map (container: ./containers/${container}.nix) hostConfig.containers);
 
   # Pass API token to all containers
   _module.args.remnawave_api_token = remnawave_api_token;
 
   # Network configuration
   networking.hostName = hostConfig.hostname;
-  networking.interfaces.ens3 = {
-    ipv4.addresses = [
-      {
-        address = hostConfig.serverIP;
-        prefixLength = 24;
-      }
-    ];
-  };
-  networking.defaultGateway = hostConfig.gateway;
+
+  # Use DHCP for all servers - simple and reliable
+  networking.useDHCP = lib.mkDefault true;
+
   networking.nameservers = [
     "1.1.1.1"
     "8.8.8.8"
@@ -39,12 +35,13 @@ in
   # Firewall configuration
   networking.firewall.enable = true;
   networking.firewall.allowedTCPPorts = [
+    2222 # Remna
     4444 # Custom SSH port
     443 # HTTPS
   ];
 
   # Time zone
-  time.timeZone = "Europe/Moscow";
+  # time.timeZone = "Europe/Moscow";
 
   # Users configuration
   users.users.rolder = {
@@ -53,7 +50,11 @@ in
       "wheel"
     ];
     hashedPassword = hostConfig.rolderPassword;
+    openssh.authorizedKeys.keys = hostConfig.sshKeys or [ ];
   };
+
+  # Google OS Login for GCP instances
+  security.googleOsLogin.enable = hostConfig.isGCP or false;
 
   # SSH - Enhanced Security
   services.openssh = {
@@ -64,19 +65,30 @@ in
       PermitRootLogin = "no";
       KbdInteractiveAuthentication = false;
       MaxAuthTries = 3;
-      AllowUsers = [ "rolder" ];
+      AllowUsers =
+        if (hostConfig.isGCP or false) then
+          [ "rolder" ] ++ [ "@google-sudoers" ] # Allow GCP OS Login users
+        else
+          [ "rolder" ];
     };
   };
 
-  # QEMU Guest agent for all VMs
-  services.qemuGuest.enable = true;
+  # Guest agent - different for GCP and regular VMs
+  services.qemuGuest.enable = !(hostConfig.isGCP or false);
 
   # Basic packages for all hosts
-  environment.systemPackages = with pkgs; [
-    git
-    curl
-    htop
-  ];
+  environment.systemPackages =
+    with pkgs;
+    [
+      git
+      curl
+      htop
+    ]
+    ++ lib.optionals (hostConfig.isGCP or false) [
+      # Google Cloud guest environment for GCP instances
+      google-guest-agent
+      google-guest-configs
+    ];
 
   # Enable containers support
   virtualisation.containers.enable = true;
