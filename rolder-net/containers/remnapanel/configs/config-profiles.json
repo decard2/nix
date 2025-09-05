@@ -54,6 +54,54 @@
 							"serverNames": ["www.yahoo.com"]
 						}
 					}
+				},
+				{
+					"tag": "Stockholm",
+					"port": 443,
+					"protocol": "vless",
+					"settings": {
+						"clients": [],
+						"decryption": "none"
+					},
+					"sniffing": {
+						"enabled": true,
+						"destOverride": ["http", "tls", "quic"]
+					},
+					"streamSettings": {
+						"network": "raw",
+						"security": "reality",
+						"realitySettings": {
+							"show": false,
+							"target": "www.microsoft.com:443",
+							"shortIds": ["6a06f4ce3afb4d9f"],
+							"privateKey": "ysHHGFbqCv9RdXqyiYpNALUR6OTZ3hFwJ3KYbJEf8V4",
+							"serverNames": ["www.microsoft.com"]
+						}
+					}
+				},
+				{
+					"tag": "Helsinki",
+					"port": 443,
+					"protocol": "vless",
+					"settings": {
+						"clients": [],
+						"decryption": "none"
+					},
+					"sniffing": {
+						"enabled": true,
+						"destOverride": ["http", "tls", "quic"]
+					},
+					"streamSettings": {
+						"network": "raw",
+						"security": "reality",
+						"realitySettings": {
+							"show": false,
+							"target": "www.microsoft.com:443",
+							"shortIds": ["6a06f4ce3afb4d9f"],
+							"privateKey": "ysHHGFbqCv9RdXqyiYpNALUR6OTZ3hFwJ3KYbJEf8V4",
+							"serverNames": ["www.microsoft.com"]
+						}
+					}
 				}
 			],
 			"outbounds": [

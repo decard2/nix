@@ -22,7 +22,7 @@ resource "google_compute_firewall" "example" {
   source_ranges = ["0.0.0.0/0"]
 }
 
-resource "google_compute_instance" "spot_vm_instance" {
+resource "google_compute_instance" "stockholm" {
   name = "stockholm"
   # Установка
   # machine_type = "e2-highcpu-4"
@@ -51,7 +51,41 @@ resource "google_compute_instance" "spot_vm_instance" {
   }
 
   network_interface {
-    # A default network is created for all GCP projects
+    network = "default"
+    access_config {
+    }
+  }
+}
+
+resource "google_compute_instance" "helsinki" {
+  name = "helsinki"
+  # Установка
+  # machine_type = "e2-highcpu-4"
+  # Работа
+  machine_type = "e2-custom-micro-1024"
+  zone         = "europe-north1-b"
+
+  # Для смены железа
+  allow_stopping_for_update = true
+
+  metadata = {
+    enable-oslogin = "true"
+  }
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-11"
+    }
+  }
+
+  scheduling {
+    preemptible                 = true
+    automatic_restart           = false
+    provisioning_model          = "SPOT"
+    instance_termination_action = "STOP"
+  }
+
+  network_interface {
     network = "default"
     access_config {
     }

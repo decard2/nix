@@ -67,6 +67,24 @@
           ];
         };
 
+        helsinki = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            hostConfig = {
+              hostname = "helsinki";
+              rolderPassword = "$6$5VyQ15pyF.cRI95q$CN.UM.kgGa6twTEHFn4fIz6NNVpMWYzbv9J/2UQzJaRN3zr7B74PfZFx7LBbKNUBw9DmR5ApMy.wbF/uMXboa/";
+              containers = [ "remnanode" ];
+              # Enable GCP features
+              isGCP = true;
+            };
+          };
+          modules = [
+            disko.nixosModules.disko
+            ./common.nix
+            ./disk-config.nix
+          ];
+        };
+
         panel = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = {
