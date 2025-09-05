@@ -1,9 +1,16 @@
+{ hostConfig, ... }:
+
+let
+  # Select disk device based on cloud provider
+  diskDevice = if (hostConfig.isGCP or false) then "/dev/sda" else "/dev/vda";
+in
+
 {
   disko.devices = {
     disk = {
       main = {
         type = "disk";
-        device = "/dev/vda";
+        device = diskDevice;
         content = {
           type = "gpt";
           partitions = {
