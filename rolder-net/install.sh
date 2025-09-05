@@ -29,14 +29,15 @@ show_help() {
     echo "  $0 frankfurt 37.221.125.150"
     echo "  $0 frankfurt 37.221.125.150 mypassword123"
     echo ""
-    echo "  # GCP OS Login with SSH key:"
+    echo "  # GCP with SSH key (initially for OS Login during install):"
     echo "  $0 -u admin_decard_rolder_dev -k ~/.ssh/rolder-gcp stockholm 34.51.201.70"
     echo ""
     echo "Notes:"
     echo "  - Password is only used for SSH connection during installation"
     echo "  - User password for installed system is configured in flake.nix"
     echo "  - Each hostname must have its own configuration in flake.nix"
-    echo "  - For GCP OS Login, use -k option and appropriate username format"
+    echo "  - For GCP, use -k option with OS Login username during installation only"
+    echo "  - After installation, SSH will work with regular 'rolder' user on port 4444"
 }
 
 # Parse arguments
@@ -139,14 +140,7 @@ echo "Config: $FLAKE_CONFIG"
 echo "Target: $TARGET_HOST:$PORT"
 echo ""
 
-# Check SSH key for password authentication only
-if [[ "$AUTH_METHOD" == "password" ]]; then
-    if [[ ! -f ~/.ssh/id_rsa && ! -f ~/.ssh/id_ed25519 ]]; then
-        echo -e "${RED}❌ No SSH key found. Please generate one first:${NC}"
-        echo "ssh-keygen -t ed25519 -C 'your_email@example.com'"
-        exit 1
-    fi
-fi
+# SSH keys not required for password authentication during installation
 
 # Clean up any existing SSH keys for this host
 echo -e "${YELLOW}Cleaning up existing SSH host keys...${NC}"
@@ -166,7 +160,6 @@ if [[ "$AUTH_METHOD" == "key" ]]; then
         echo "1. Server is accessible"
         echo "2. SSH key is correct and has proper permissions"
         echo "3. SSH service is running on port $PORT"
-        echo "4. OS Login is configured (for GCP)"
         echo ""
         echo -e "${YELLOW}Note: Using port $PORT for installation${NC}"
         echo -e "${YELLOW}After installation, SSH will be on port 4444${NC}"
@@ -214,12 +207,8 @@ if [[ "$AUTH_METHOD" == "key" ]]; then
         echo 'root:$TEMP_ROOT_PASSWORD' | sudo chpasswd
         echo 'Root password set'
 
-        # Copy SSH key to root's authorized_keys
-        sudo mkdir -p /root/.ssh
-        sudo chmod 700 /root/.ssh
-        cat ~/.ssh/authorized_keys | sudo tee /root/.ssh/authorized_keys > /dev/null
-        sudo chmod 600 /root/.ssh/authorized_keys
-        echo 'SSH keys copied to root'
+        # SSH keys not copied - using only temporary password for installation
+        echo 'Temporary root access configured'
 
         # Configure SSH for root access
         sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.backup
@@ -235,7 +224,7 @@ if [[ "$AUTH_METHOD" == "key" ]]; then
         # Test root connection
         echo 'Testing root access...'
     "; then
-        echo -e "${GREEN}✅ Temporary root access configured (password + SSH key)${NC}"
+        echo -e "${GREEN}✅ Temporary root access configured (password only)${NC}"
 
         # Test root connection with password
         echo -e "${YELLOW}Testing root connection...${NC}"
@@ -244,7 +233,7 @@ if [[ "$AUTH_METHOD" == "key" ]]; then
         if sshpass -e ssh $SSH_OPTIONS -p "$PORT" "root@$TARGET_IP" "echo 'Root access working'" 2>/dev/null; then
             echo -e "${GREEN}✅ Root password authentication working${NC}"
         else
-            echo -e "${YELLOW}⚠️  Root password auth failed, nixos-anywhere will try SSH keys${NC}"
+            echo -e "${YELLOW}⚠️  Root password auth failed${NC}"
         fi
 
         # Set variables for nixos-anywhere
@@ -295,34 +284,25 @@ if [[ $? -eq 0 ]]; then
     echo "Your server is now running NixOS!"
     echo "Hostname: $HOSTNAME"
 
-    if [[ "$AUTH_METHOD" == "key" ]]; then
-        echo ""
-        echo -e "${GREEN}Connection options:${NC}"
-        echo "1. Via Google OS Login (recommended):"
-        echo "   ssh -p 4444 -i ~/.ssh/rolder-gcp admin_decard_rolder_dev@$TARGET_IP"
-        echo ""
-        echo "2. Via rolder user (with your SSH key):"
-        echo "   ssh -p 4444 -i ~/.ssh/rolder-gcp rolder@$TARGET_IP"
-        echo ""
-        echo -e "${GREEN}Remote management:${NC}"
-        echo "NIX_SSHOPTS=\"-p 4444 -i ~/.ssh/rolder-gcp\" nixos-rebuild switch --flake .#$HOSTNAME --target-host admin_decard_rolder_dev@$TARGET_IP"
-    else
-        echo "You can connect with:"
-        echo "  ssh -p 4444 rolder@$TARGET_IP"
-        echo ""
-        echo -e "${YELLOW}Important:${NC}"
-        echo "- SSH password authentication is enabled"
-        echo "- Use the password configured in flake.nix"
-    fi
+    echo ""
+    echo -e "${GREEN}Connection:${NC}"
+    echo "ssh -p 4444 rolder@$TARGET_IP"
+    echo ""
+    echo -e "${GREEN}Remote management:${NC}"
+    echo "NIX_SSHOPTS=\"-p 4444\" nixos-rebuild switch --flake .#$HOSTNAME --target-host rolder@$TARGET_IP"
+    echo ""
+    echo -e "${YELLOW}Authentication:${NC}"
+    echo "- Use password configured in flake.nix (Htvyfdfht)"
 
     echo ""
     echo -e "${YELLOW}Important:${NC}"
     echo "- The system will reboot automatically"
-    echo "- Google OS Login is enabled for GCP features"
+    echo "- SSH is available on port 4444 only"
+    echo "- Password and key authentication are both enabled"
     echo ""
     echo -e "${GREEN}Next steps:${NC}"
     echo "1. Wait for reboot to complete (2-3 minutes)"
-    echo "2. Test the connection using one of the methods above"
+    echo "2. Test the connection using ssh -p 4444 rolder@$TARGET_IP"
 
 else
     echo -e "${RED}❌ Installation failed${NC}"
