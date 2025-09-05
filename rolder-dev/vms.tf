@@ -25,10 +25,13 @@ resource "google_compute_firewall" "example" {
 resource "google_compute_instance" "spot_vm_instance" {
   name = "stockholm"
   # Установка
-  machine_type = "e2-highcpu-4"
+  # machine_type = "e2-highcpu-4"
   # Работа
-  # machine_type = "e2-custom-micro-1024"
-  zone = "europe-north2-b"
+  machine_type = "e2-custom-micro-1024"
+  zone         = "europe-north2-b"
+
+  # Для смены железа
+  allow_stopping_for_update = true
 
   metadata = {
     enable-oslogin = "true"
