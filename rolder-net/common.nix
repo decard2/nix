@@ -25,7 +25,7 @@ in
   networking.hostName = hostConfig.hostname;
 
   # Use DHCP for all servers - simple and reliable
-  networking.useDHCP = lib.mkDefault true;
+  networking.useDHCP = true;
 
   networking.nameservers = [
     "1.1.1.1"
