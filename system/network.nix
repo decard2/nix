@@ -215,6 +215,8 @@
                   "googlesyndication.com"
                   "gstatic.com"
                   "doubleclick.net"
+                  "pushbr.com"
+                  "kino.pub"
                 ];
               }
             ];

@@ -116,10 +116,10 @@
       pulse.enable = true;
     };
 
-    logind = {
-      lidSwitch = "suspend";
-      lidSwitchExternalPower = "suspend";
-      lidSwitchDocked = "suspend";
+    logind.settings.Login = {
+      HandleLidSwitchDocked = "suspend";
+      HandleLidSwitchExternalPower = "suspend";
+      HandleLidSwitch = "suspend";
     };
 
     udev.extraRules = ''
