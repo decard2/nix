@@ -31,11 +31,6 @@
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
 
-  # Network interface configuration
-  # All VMs use ens3 interface by default in KVM/QEMU
-  # networking.useDHCP = lib.mkDefault false;
-  # networking.interfaces.ens3.useDHCP = lib.mkDefault false;
-
   # Platform configuration
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 

@@ -35,6 +35,7 @@ in
   # Firewall configuration
   networking.firewall.enable = true;
   networking.firewall.allowedTCPPorts = [
+    22 # Standard SSH port (for debugging)
     2222 # Remna
     4444 # Custom SSH port
     443 # HTTPS
@@ -53,24 +54,36 @@ in
     openssh.authorizedKeys.keys = hostConfig.sshKeys or [ ];
   };
 
-  # Google OS Login for GCP instances
-  security.googleOsLogin.enable = hostConfig.isGCP or false;
+  # Temporarily disable Google OS Login for debugging
+  # security.googleOsLogin.enable = hostConfig.isGCP or false;
+  security.googleOsLogin.enable = false;
 
-  # SSH - Enhanced Security
+  # SSH - Simplified for debugging
   services.openssh = {
     enable = true;
-    ports = [ 4444 ]; # Custom SSH port
+    ports = [
+      22
+      4444
+    ];
     settings = {
       PasswordAuthentication = true;
       PermitRootLogin = "no";
-      KbdInteractiveAuthentication = false;
-      MaxAuthTries = 3;
-      AllowUsers =
-        if (hostConfig.isGCP or false) then
-          [ "rolder" ] ++ [ "@google-sudoers" ] # Allow GCP OS Login users
-        else
-          [ "rolder" ];
+      PubkeyAuthentication = true;
+      MaxAuthTries = 5;
+      LogLevel = "INFO";
+      UsePAM = true;
+      # Disable Google OS Login integration temporarily
+      AuthorizedKeysCommand = lib.mkForce "";
+      AuthorizedKeysCommandUser = lib.mkForce "";
     };
+    # Minimal config for debugging
+    extraConfig = ''
+      # Explicit settings for rolder user
+      Match User rolder
+        PasswordAuthentication yes
+        PubkeyAuthentication yes
+        AllowUsers rolder
+    '';
   };
 
   # Guest agent - different for GCP and regular VMs
