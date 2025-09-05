@@ -79,16 +79,18 @@
           # Frankfurt
           # server = "37.221.125.150";
           # Bucharest
-          server = "45.67.34.30";
+          # server = "45.67.34.30";
+          # Stockholm
+          server = "34.51.201.70";
           server_port = 443;
           uuid = "98d48f50-bbe8-4d43-8268-304471947824";
           flow = "xtls-rprx-vision";
           tls = {
             enabled = true;
-            # Frankfurt
-            # server_name = "www.microsoft.com";
+            # Frankfurt/Stockholm
+            server_name = "www.microsoft.com";
             # Bucharest
-            server_name = "www.yahoo.com";
+            # server_name = "www.yahoo.com";
             utls = {
               enabled = true;
               fingerprint = "chrome";

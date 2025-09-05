@@ -24,8 +24,26 @@ in
   # Network configuration
   networking.hostName = hostConfig.hostname;
 
-  # Use DHCP for all servers - simple and reliable
-  networking.useDHCP = true;
+  # Network configuration - DHCP for GCP, static for others
+  networking.useDHCP = hostConfig.isGCP or false;
+
+  # Static IP configuration for non-GCP servers
+  networking.interfaces = lib.mkIf (!(hostConfig.isGCP or false) && (hostConfig ? serverIP)) {
+    ens3 = {
+      ipv4.addresses = [
+        {
+          address = hostConfig.serverIP;
+          prefixLength = 24;
+        }
+      ];
+    };
+  };
+
+  # Default gateway for non-GCP servers
+  networking.defaultGateway = lib.mkIf (!(hostConfig.isGCP or false) && (hostConfig ? gateway)) {
+    address = hostConfig.gateway;
+    interface = "ens3";
+  };
 
   networking.nameservers = [
     "1.1.1.1"
@@ -50,7 +68,6 @@ in
       "wheel"
     ];
     hashedPassword = hostConfig.rolderPassword;
-    openssh.authorizedKeys.keys = hostConfig.sshKeys or [ ];
   };
 
   # SSH - Simple configuration

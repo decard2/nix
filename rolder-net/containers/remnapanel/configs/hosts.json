@@ -18,5 +18,25 @@
 		"address": "45.67.34.30",
 		"port": 443,
 		"isDisabled": false
+	},
+	{
+		"inbound": {
+			"configProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
+			"configProfileInboundUuid": "4ab96b48-5f81-45c2-9f6e-03952509d60f"
+		},
+		"remark": "🇸🇪 Стокгольм",
+		"address": "34.51.201.70",
+		"port": 443,
+		"isDisabled": false
+	},
+	{
+		"inbound": {
+			"configProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
+			"configProfileInboundUuid": "7d1728cb-50c4-4c4b-a34c-be13b4cd04aa"
+		},
+		"remark": "🇫🇮 Хельсинки",
+		"address": "34.88.147.134",
+		"port": 443,
+		"isDisabled": false
 	}
 ]
