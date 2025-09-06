@@ -72,10 +72,10 @@
 						"security": "reality",
 						"realitySettings": {
 							"show": false,
-							"target": "www.microsoft.com:443",
+							"target": "127.0.0.1:9443",
 							"shortIds": ["6a06f4ce3afb4d9f"],
 							"privateKey": "ysHHGFbqCv9RdXqyiYpNALUR6OTZ3hFwJ3KYbJEf8V4",
-							"serverNames": ["www.microsoft.com"]
+							"serverNames": ["sw.rolder.net"]
 						}
 					}
 				},
