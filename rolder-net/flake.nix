@@ -85,15 +85,16 @@
           ];
         };
 
-        panel = nixpkgs.lib.nixosSystem {
+        remnapanel = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = {
             hostConfig = {
-              hostname = "panel";
-              serverIP = "91.207.183.149";
-              gateway = "91.207.183.1";
+              hostname = "remnapanel";
+              # serverIP = "91.207.183.149";
+              # gateway = "91.207.183.1";
               rolderPassword = "$6$5VyQ15pyF.cRI95q$CN.UM.kgGa6twTEHFn4fIz6NNVpMWYzbv9J/2UQzJaRN3zr7B74PfZFx7LBbKNUBw9DmR5ApMy.wbF/uMXboa/"; # Htvyfdfht
               containers = [ "remnapanel" ];
+              isGCP = true;
             };
           };
           modules = [

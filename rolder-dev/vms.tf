@@ -10,8 +10,8 @@ resource "google_os_login_ssh_public_key" "default" {
   key  = file("~/.ssh/rolder-gcp.pub")
 }
 
-resource "google_compute_firewall" "example" {
-  name    = "stockholm"
+resource "google_compute_firewall" "remna" {
+  name    = "remna"
   network = "default"
 
   allow {
@@ -22,12 +22,47 @@ resource "google_compute_firewall" "example" {
   source_ranges = ["0.0.0.0/0"]
 }
 
+resource "google_compute_instance" "remnapanel" {
+  name = "remnapanel"
+  # Установка
+  # machine_type = "e2-highcpu-4"
+  # Работа
+  machine_type = "e2-small"
+  zone         = "europe-north1-b"
+
+  # Для смены железа
+  allow_stopping_for_update = true
+
+  metadata = {
+    enable-oslogin = "true"
+  }
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-12"
+    }
+  }
+
+  scheduling {
+    preemptible                 = true
+    automatic_restart           = false
+    provisioning_model          = "SPOT"
+    instance_termination_action = "STOP"
+  }
+
+  network_interface {
+    network = "default"
+    access_config {
+    }
+  }
+}
+
 resource "google_compute_instance" "stockholm" {
   name = "stockholm"
   # Установка
   # machine_type = "e2-highcpu-4"
   # Работа
-  machine_type = "e2-custom-micro-1024"
+  machine_type = "e2-micro"
   zone         = "europe-north2-b"
 
   # Для смены железа
@@ -62,7 +97,7 @@ resource "google_compute_instance" "helsinki" {
   # Установка
   # machine_type = "e2-highcpu-4"
   # Работа
-  machine_type = "e2-custom-micro-1024"
+  machine_type = "e2-micro"
   zone         = "europe-north1-b"
 
   # Для смены железа
