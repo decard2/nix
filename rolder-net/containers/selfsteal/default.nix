@@ -1,6 +1,7 @@
 # Selfsteal module - Caddy для маскировки Reality трафика
 {
   hostConfig,
+  selfsteal-templates,
   ...
 }:
 
@@ -51,8 +52,6 @@
               output file /var/log/caddy/access.log {
                   roll_size 10MB
                   roll_keep 5
-                  roll_keep_for 720h
-                  roll_compression gzip
               }
               level ERROR
               format json
@@ -67,8 +66,6 @@
               output file /var/log/caddy/access.log {
                   roll_size 10MB
                   roll_keep 5
-                  roll_keep_for 720h
-                  roll_compression gzip
               }
               level ERROR
           }
@@ -83,9 +80,33 @@
     mode = "0644";
   };
 
-  # Создание базового HTML
-  environment.etc."selfsteal/html/index.html" = {
-    text = ''
+  # Копирование шаблона из GitHub
+  systemd.services.create-selfsteal-template = {
+    description = "Copy selfsteal template files";
+    wantedBy = [ "multi-user.target" ];
+    before = [ "podman-caddy-selfsteal.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+            # Создание Caddyfile симлинка
+            ln -sf /etc/selfsteal/Caddyfile /opt/selfsteal/Caddyfile
+
+            # Копирование шаблона ${hostConfig.selfstealTemplate or "10gag"}
+            template_path="${selfsteal-templates}/sni-templates/${
+              hostConfig.selfstealTemplate or "10gag"
+            }"
+
+            if [ -d "$template_path" ]; then
+              echo "Copying template from $template_path"
+              cp -r "$template_path"/* /opt/selfsteal/html/
+              chmod -R 644 /opt/selfsteal/html/*
+              find /opt/selfsteal/html -type d -exec chmod 755 {} \;
+              echo "Template ${hostConfig.selfstealTemplate or "10gag"} copied successfully"
+            else
+              echo "Template not found at $template_path, creating fallback"
+              cat > /opt/selfsteal/html/index.html << 'EOF'
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -137,22 +158,9 @@
           </div>
       </body>
       </html>
-    '';
-    mode = "0644";
-  };
-
-  # Создание симлинков в /opt/selfsteal
-  systemd.services.create-selfsteal-symlinks = {
-    description = "Create selfsteal symlinks";
-    wantedBy = [ "multi-user.target" ];
-    before = [ "podman-caddy-selfsteal.service" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-    };
-    script = ''
-      ln -sf /etc/selfsteal/Caddyfile /opt/selfsteal/Caddyfile
-      ln -sf /etc/selfsteal/html /opt/selfsteal/html
+      EOF
+              chmod 644 /opt/selfsteal/html/index.html
+            fi
     '';
   };
 }
