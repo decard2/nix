@@ -21,7 +21,7 @@
 	},
 	{
 		"name": "Stockholm",
-		"address": "34.51.201.70",
+		"address": "sw.rolder.net",
 		"port": 2222,
 		"countryCode": "SE",
 		"configProfile": {
@@ -31,7 +31,7 @@
 	},
 	{
 		"name": "Helsinki",
-		"address": "34.88.147.134",
+		"address": "fi.rolder.net",
 		"port": 2222,
 		"countryCode": "FI",
 		"configProfile": {
