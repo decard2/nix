@@ -65,23 +65,19 @@
         {
           tag = "proxy";
           type = "vless";
-          # Frankfurt
-          # server = "37.221.125.150";
-          # Bucharest
-          # server = "45.67.34.30";
           # Stockholm
-          # server = "34.51.201.70";
+          # server = "sw.rolder.net";
           # Helsinki
-          server = "34.88.147.134";
+          server = "fi.rolder.net";
           server_port = 443;
           uuid = "98d48f50-bbe8-4d43-8268-304471947824";
           flow = "xtls-rprx-vision";
           tls = {
             enabled = true;
-            # Frankfurt/Stockholm
-            server_name = "www.microsoft.com";
-            # Bucharest
-            # server_name = "www.yahoo.com";
+            # Stockholm
+            # server_name = "sw.rolder.net";
+            # Stockholm
+            server_name = "fi.rolder.net";
             utls = {
               enabled = true;
               fingerprint = "chrome";
