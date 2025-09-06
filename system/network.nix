@@ -76,7 +76,7 @@
             enabled = true;
             # Stockholm
             # server_name = "sw.rolder.net";
-            # Stockholm
+            # Helsinki
             server_name = "fi.rolder.net";
             utls = {
               enabled = true;
