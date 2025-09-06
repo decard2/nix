@@ -7,10 +7,19 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    selfsteal-templates = {
+      url = "github:DigneZzZ/remnawave-scripts";
+      flake = false;
+    };
   };
 
   outputs =
-    { nixpkgs, disko, ... }:
+    {
+      nixpkgs,
+      disko,
+      selfsteal-templates,
+      ...
+    }:
     {
       nixosConfigurations = {
         frankfurt = nixpkgs.lib.nixosSystem {
@@ -60,9 +69,11 @@
                 "selfsteal"
               ];
               selfstealDomain = "sw.rolder.net";
+              selfstealTemplate = "10gag";
               # Enable GCP features
               isGCP = true;
             };
+            inherit selfsteal-templates;
           };
           modules = [
             disko.nixosModules.disko

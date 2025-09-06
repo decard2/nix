@@ -39,7 +39,24 @@
     "root": {
       "inputs": {
         "disko": "disko",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "selfsteal-templates": "selfsteal-templates"
+      }
+    },
+    "selfsteal-templates": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1756502879,
+        "narHash": "sha256-KlnHy1gLDhz3caMkgsskI5HiaxCJlFR/EllwQGMRAdE=",
+        "owner": "DigneZzZ",
+        "repo": "remnawave-scripts",
+        "rev": "46102469bdee278c47d21de110b2ecd6269fb530",
+        "type": "github"
+      },
+      "original": {
+        "owner": "DigneZzZ",
+        "repo": "remnawave-scripts",
+        "type": "github"
       }
     }
   },
