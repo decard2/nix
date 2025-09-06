@@ -70,7 +70,6 @@
               ];
               selfstealDomain = "sw.rolder.net";
               selfstealTemplate = "10gag";
-              # Enable GCP features
               isGCP = true;
             };
             inherit selfsteal-templates;
@@ -88,10 +87,15 @@
             hostConfig = {
               hostname = "helsinki";
               rolderPassword = "$6$5VyQ15pyF.cRI95q$CN.UM.kgGa6twTEHFn4fIz6NNVpMWYzbv9J/2UQzJaRN3zr7B74PfZFx7LBbKNUBw9DmR5ApMy.wbF/uMXboa/";
-              containers = [ "remnanode" ];
-              # Enable GCP features
+              containers = [
+                "remnanode"
+                "selfsteal"
+              ];
+              selfstealDomain = "fi.rolder.net";
+              selfstealTemplate = "games-site";
               isGCP = true;
             };
+            inherit selfsteal-templates;
           };
           modules = [
             disko.nixosModules.disko
@@ -105,8 +109,6 @@
           specialArgs = {
             hostConfig = {
               hostname = "remnapanel";
-              # serverIP = "91.207.183.149";
-              # gateway = "91.207.183.1";
               rolderPassword = "$6$5VyQ15pyF.cRI95q$CN.UM.kgGa6twTEHFn4fIz6NNVpMWYzbv9J/2UQzJaRN3zr7B74PfZFx7LBbKNUBw9DmR5ApMy.wbF/uMXboa/"; # Htvyfdfht
               containers = [ "remnapanel" ];
               isGCP = true;
