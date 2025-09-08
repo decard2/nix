@@ -38,7 +38,7 @@
         "decard" = {
           host = "decard";
           hostname = "github.com";
-          identityFile = "~/.ssh/id_ed25519";
+          identityFile = "~/.ssh/decard-github";
           extraOptions = {
             AddKeysToAgent = "yes";
             StrictHostKeyChecking = "yes";
