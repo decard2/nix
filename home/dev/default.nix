@@ -46,7 +46,8 @@
         };
         # rolderdevs
         "rolderdevs" = {
-          host = "github.com";
+          host = "rolderdevs";
+          hostname = "github.com";
           identityFile = "~/.ssh/rolderdev-github";
           extraOptions = {
             AddKeysToAgent = "yes";
