@@ -34,8 +34,7 @@
         rules = [
           {
             rule_set = [
-              "torrents"
-              "torrent-clients"
+              "direct"
             ];
             server = "local";
           }
@@ -105,25 +104,21 @@
             outbound = "direct";
           }
           {
-            rule_set = "torrent-clients";
+            rule_set = "direct";
             outbound = "direct";
           }
         ];
 
         rule_set = [
           {
-            type = "remote";
-            tag = "torrent-clients";
-            format = "binary";
-            url = "https://raw.githubusercontent.com/legiz-ru/sb-rule-sets/main/torrent-clients.srs";
-            download_detour = "proxy";
-          }
-          {
             type = "inline";
-            tag = "torrents";
+            tag = "direct";
             rules = [
               {
                 source_port = [ 51413 ];
+              }
+              {
+                domain_suffix = [ "reddit.com" ];
               }
             ];
           }

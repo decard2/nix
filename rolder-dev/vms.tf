@@ -28,7 +28,7 @@ resource "google_compute_instance" "remnapanel" {
   # machine_type = "e2-highcpu-4"
   # Работа
   machine_type = "e2-small"
-  zone         = "europe-north1-b"
+  zone         = "us-west4-b"
 
   # Для смены железа
   allow_stopping_for_update = true
@@ -97,7 +97,7 @@ resource "google_compute_instance" "helsinki" {
   # Установка
   # machine_type = "e2-highcpu-4"
   # Работа
-  machine_type = "e2-micro"
+  machine_type = "f1-micro"
   zone         = "europe-north1-b"
 
   # Для смены железа
