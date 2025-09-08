@@ -23,6 +23,10 @@
       enable = true;
       userName = "decard";
       userEmail = "mail@decard.space";
+      extraConfig = {
+        init.defaultBranch = "main";
+        safe.directory = "/home/decard/nix";
+      };
     };
 
     ssh = {
@@ -30,12 +34,23 @@
       enableDefaultConfig = false;
 
       matchBlocks = {
-        "github.com" = {
-          host = "github.com";
+        # dayreon github
+        "decard" = {
+          host = "decard";
+          hostname = "github.com";
           identityFile = "~/.ssh/id_ed25519";
           extraOptions = {
             AddKeysToAgent = "yes";
-            StrictHostKeyChecking = "no";
+            StrictHostKeyChecking = "yes";
+          };
+        };
+        # rolderdevs
+        "rolderdevs" = {
+          host = "github.com";
+          identityFile = "~/.ssh/rolderdev-github";
+          extraOptions = {
+            AddKeysToAgent = "yes";
+            StrictHostKeyChecking = "yes";
           };
         };
       };
