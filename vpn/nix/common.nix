@@ -58,8 +58,11 @@ in
     443 # HTTPS
   ];
 
-  # Time zone
-  # time.timeZone = "Europe/Moscow";
+  # Kernel sysctl parameters for network optimization
+  boot.kernel.sysctl = {
+    "net.core.rmem_max" = 7500000;
+    "net.core.wmem_max" = 7500000;
+  };
 
   # Users configuration
   users.users.rolder = {
