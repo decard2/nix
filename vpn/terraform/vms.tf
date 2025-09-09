@@ -1,7 +1,3 @@
-provider "google" {
-  project = "rolder-471208"
-}
-
 data "google_client_openid_userinfo" "me" {
 }
 
@@ -23,12 +19,9 @@ resource "google_compute_firewall" "remna" {
 }
 
 resource "google_compute_instance" "remnapanel" {
-  name = "remnapanel"
-  # Установка
-  # machine_type = "e2-highcpu-4"
-  # Работа
+  name         = "remnapanel"
   machine_type = "e2-small"
-  zone         = "us-west4-b"
+  zone         = "europe-north2-c"
 
   # Для смены железа
   allow_stopping_for_update = true
@@ -41,13 +34,6 @@ resource "google_compute_instance" "remnapanel" {
     initialize_params {
       image = "debian-cloud/debian-12"
     }
-  }
-
-  scheduling {
-    preemptible                 = true
-    automatic_restart           = false
-    provisioning_model          = "SPOT"
-    instance_termination_action = "STOP"
   }
 
   network_interface {
@@ -63,7 +49,7 @@ resource "google_compute_instance" "stockholm" {
   # machine_type = "e2-highcpu-4"
   # Работа
   machine_type = "e2-micro"
-  zone         = "europe-north2-b"
+  zone         = "europe-north2-c"
 
   # Для смены железа
   allow_stopping_for_update = true
@@ -76,13 +62,6 @@ resource "google_compute_instance" "stockholm" {
     initialize_params {
       image = "debian-cloud/debian-11"
     }
-  }
-
-  scheduling {
-    preemptible                 = true
-    automatic_restart           = false
-    provisioning_model          = "SPOT"
-    instance_termination_action = "STOP"
   }
 
   network_interface {
@@ -98,7 +77,7 @@ resource "google_compute_instance" "helsinki" {
   # machine_type = "e2-highcpu-4"
   # Работа
   machine_type = "f1-micro"
-  zone         = "europe-north1-b"
+  zone         = "europe-north1-c"
 
   # Для смены железа
   allow_stopping_for_update = true
@@ -111,13 +90,6 @@ resource "google_compute_instance" "helsinki" {
     initialize_params {
       image = "debian-cloud/debian-11"
     }
-  }
-
-  scheduling {
-    preemptible                 = true
-    automatic_restart           = false
-    provisioning_model          = "SPOT"
-    instance_termination_action = "STOP"
   }
 
   network_interface {
