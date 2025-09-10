@@ -36,7 +36,6 @@
       matchBlocks = {
         # dayreon github
         "decard" = {
-          host = "decard";
           hostname = "github.com";
           identityFile = "~/.ssh/decard-github";
           extraOptions = {
@@ -46,7 +45,6 @@
         };
         # rolderdevs
         "rolderdevs" = {
-          host = "rolderdevs";
           hostname = "github.com";
           identityFile = "~/.ssh/rolderdev-github";
           extraOptions = {
