@@ -10,7 +10,7 @@
   ];
 
   home.sessionVariables = {
-    DEEPSEEK_API_KEY = "sk-45e9bf482af04a02a34f2c6e17a3c48b";
+    GEMINI_API_KEY = "AIzaSyBZy8bL2qP6rVIEh8vxayqxxQhg_sxYbyI";
   };
 
   home.activation.installZed = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
