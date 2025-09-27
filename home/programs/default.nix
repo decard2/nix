@@ -2,7 +2,7 @@
 {
   imports = [
     ./kitty.nix
-    ./chromium.nix
+    ./chrome.nix
     ./virt-manager.nix
   ];
 

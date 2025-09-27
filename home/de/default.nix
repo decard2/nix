@@ -26,6 +26,7 @@
     wl-clipboard
     hyprcursor
     wlsunset
+    hyprsunset
     hyprpolkitagent
     yofi
     papirus-icon-theme
