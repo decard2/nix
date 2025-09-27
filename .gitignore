@@ -15,4 +15,4 @@ devenv.local.nix
 .pre-commit-config.yaml
 
 .terraform
-*backup*
+vpn/*backup*

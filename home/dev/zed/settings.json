@@ -7,7 +7,8 @@
 		"helm": true,
 		"git-firefly": true,
 		"fish": true,
-		"toml": true
+		"toml": true,
+		"terraform": true
 	},
 	"ui_font_size": 18,
 	"buffer_font_size": 18,

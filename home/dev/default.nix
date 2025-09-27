@@ -14,6 +14,7 @@
     lazygit
     inputs.flox.packages.${pkgs.system}.flox
     devenv
+    devbox
   ];
 
   programs = {
