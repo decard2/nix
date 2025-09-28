@@ -33,6 +33,7 @@
     ssh = {
       enable = true;
       enableDefaultConfig = false;
+      addKeysToAgent = "yes";
 
       matchBlocks = {
         # dayreon github
