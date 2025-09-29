@@ -46,7 +46,7 @@
   pu = "pnpm update";
 
   # Moon
-  m = "moon";
+  m = "moonF";
 
   # Cargo
   c = "cargo";
@@ -83,7 +83,7 @@
   hun = "helm uninstall";
 
   # Kubectl
-  k = "kubectl";
+  k = "kubectlF";
   kex = "kubectl exec -ti";
   kn = "kubectl get nodes";
 
