@@ -5,7 +5,6 @@
       commandLineArgs = [
         "--ozone-platform=wayland"
         "--enable-widevine"
-        "--enable-features=VaapiVideoDecoder,Vulkan,DefaultANGLEVulkan,VulkanFromANGLE"
       ];
     })
   ];
