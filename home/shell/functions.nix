@@ -91,4 +91,12 @@
       echo "🎉 Уборка завершена! Система сияет чистотой!"
     '';
   };
+
+  # Алиасы
+  moonF = {
+    body = "command sudo systemctl stop sing-box && moon $argv && sudo systemctl start sing-box";
+  };
+  kubectlF = {
+    body = "command sudo systemctl stop sing-box && kubectl $argv && sudo systemctl start sing-box";
+  };
 }
