@@ -17,6 +17,9 @@
 
 ```bash
 ./install.sh HOSTNAME TARGET_IP [PASSWORD]
+
+# Для GCP
+./install.sh -k ~/.ssh/rolder-net-gcp -u roldernet_gmail_com remnapanel 34.51.236.162
 ```
 
 #### Параметры
@@ -51,7 +54,7 @@ ssh -p 4444 rolder@TARGET_IP
 sudo nixos-rebuild switch --refresh --flake github:decard2/nix?dir=rolder-net#hostname
 
 # Удаленно из локальной директории
-cd rolder-net
+cd ~/nix/vpn/nix
 NIX_SSHOPTS="-p 4444" nixos-rebuild switch --refresh --flake .#hostname --target-host rolder@TARGET_IP --ask-sudo-password
 
 # Удаленно из GitHub
