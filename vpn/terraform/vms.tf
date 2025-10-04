@@ -3,7 +3,9 @@ data "google_client_openid_userinfo" "me" {
 
 resource "google_os_login_ssh_public_key" "default" {
   user = data.google_client_openid_userinfo.me.email
-  key  = file("~/.ssh/rolder-gcp.pub")
+  #key  = file("~/.ssh/rolder-gcp.pub")
+  key     = file("~/.ssh/rolder-net-gcp.pub")
+  project = "rolder-474107"
 }
 
 resource "google_compute_firewall" "remna" {
@@ -77,7 +79,7 @@ resource "google_compute_instance" "helsinki" {
   # machine_type = "e2-highcpu-4"
   # Работа
   machine_type = "f1-micro"
-  zone         = "europe-north1-c"
+  zone         = "europe-north1-a"
 
   # Для смены железа
   allow_stopping_for_update = true

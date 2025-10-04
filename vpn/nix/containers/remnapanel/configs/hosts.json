@@ -2,26 +2,6 @@
 	{
 		"inbound": {
 			"configProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
-			"configProfileInboundUuid": "f0d2c958-0049-4328-8f21-0cd48663ead9"
-		},
-		"remark": "🇩🇪 Франкфурт",
-		"address": "37.221.125.150",
-		"port": 443,
-		"isDisabled": true
-	},
-	{
-		"inbound": {
-			"configProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
-			"configProfileInboundUuid": "33f826b0-5942-46b8-9b23-9576cd60a1d0"
-		},
-		"remark": "🇷🇴 Бухарест",
-		"address": "45.67.34.30",
-		"port": 443,
-		"isDisabled": true
-	},
-	{
-		"inbound": {
-			"configProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
 			"configProfileInboundUuid": "4ab96b48-5f81-45c2-9f6e-03952509d60f"
 		},
 		"remark": "🇸🇪 Стокгольм",

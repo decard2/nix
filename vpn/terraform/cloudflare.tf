@@ -2,15 +2,15 @@ locals {
   services = {
     "helsinki" = {
       name = "fi"
-      ip   = "35.228.180.111"
+      ip   = "35.228.119.26"
     }
     "stockholm" = {
       name = "sw"
-      ip   = "34.51.167.238"
+      ip   = "34.51.151.3"
     }
     "panel" = {
       name = "@"
-      ip   = "34.51.199.201"
+      ip   = "34.51.236.162"
     }
   }
 }
