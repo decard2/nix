@@ -179,8 +179,10 @@
     mode = "0644";
   };
 
-  # Import sync services
+  # Import sync and restore services
   imports = [
     ./sync.nix
+    ./backup.nix
+    ./restore.nix
   ];
 }
