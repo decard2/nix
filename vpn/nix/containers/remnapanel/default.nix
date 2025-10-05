@@ -179,10 +179,20 @@
     mode = "0644";
   };
 
+  # Yandex Object Storage backup configuration
+  services.remnawave-yandex-backup = {
+    enable = true;
+    accessKeyId = "YCAJEUtCSf7usR67z0sE-WrXG";
+    secretAccessKey = "YCMQe284zQc8F40GFRJUqhToZPWEURCmpCbwdQH8";
+    bucketName = "rolder-backups";
+    folderPath = "rolder-net";
+  };
+
   # Import sync and restore services
   imports = [
     ./sync.nix
     ./backup.nix
     ./restore.nix
+    ./yandex-backup.nix
   ];
 }
