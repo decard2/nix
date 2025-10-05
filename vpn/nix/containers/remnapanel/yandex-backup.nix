@@ -63,6 +63,65 @@ let
 
     echo "$(date): Cleanup completed"
   '';
+
+  # Скрипт для скачивания бекапов из облака
+  downloadFromYandexScript = pkgs.writeShellScript "yandex-backup-download" ''
+    set -euo pipefail
+
+    BACKUP_DIR="${backupDir}"
+    BUCKET_NAME="${cfg.bucketName}"
+    FOLDER_PATH="${cfg.folderPath}"
+    REMOTE_PATH="yandex:$BUCKET_NAME/$FOLDER_PATH"
+
+    # Количество бекапов для скачивания (по умолчанию 1)
+    COUNT=''${1:-1}
+
+    if [ "$COUNT" -le 0 ]; then
+      echo "ERROR: Count must be a positive number"
+      exit 1
+    fi
+
+    echo "$(date): Downloading $COUNT latest backup(s) from Yandex Object Storage..."
+
+    ${pkgs.coreutils}/bin/mkdir -p "$BACKUP_DIR"
+
+    # Получаем список файлов, сортируем по времени, берем нужное количество
+    TEMP_LIST=$(${pkgs.coreutils}/bin/mktemp)
+    ${pkgs.rclone}/bin/rclone lsf \
+      "$REMOTE_PATH" \
+      --config "${rcloneConfigFile}" \
+      --include "remnawave_*.dump" | \
+    ${pkgs.coreutils}/bin/sort -r | \
+    ${pkgs.coreutils}/bin/head -n "$COUNT" > "$TEMP_LIST"
+
+    if [ ! -s "$TEMP_LIST" ]; then
+      echo "No backup files found in cloud storage"
+      rm -f "$TEMP_LIST"
+      exit 1
+    fi
+
+    echo "Files to download:"
+    ${pkgs.coreutils}/bin/cat "$TEMP_LIST"
+
+    # Скачиваем файлы по списку
+    while read -r filename; do
+      echo "Downloading: $filename"
+      ${pkgs.rclone}/bin/rclone copyto \
+        "$REMOTE_PATH/$filename" \
+        "$BACKUP_DIR/$filename" \
+        --config "${rcloneConfigFile}" \
+        --transfers 2 \
+        --retries 3
+    done < "$TEMP_LIST"
+
+    rm -f "$TEMP_LIST"
+
+    echo "$(date): Download completed"
+
+    # Показываем что скачали
+    echo "Downloaded backups:"
+    ls -lht "$BACKUP_DIR"/remnawave_*.dump 2>/dev/null || echo "No backups found"
+  '';
 in
 {
   options.services.remnawave-yandex-backup = {
@@ -95,6 +154,7 @@ in
     environment.systemPackages = [
       pkgs.rclone
       (pkgs.writeShellScriptBin "remnawave-sync-yandex" ''exec ${syncToYandexScript} "$@"'')
+      (pkgs.writeShellScriptBin "remnawave-download-yandex" ''exec ${downloadFromYandexScript} "$@"'')
     ];
 
     # Создаем конфигурацию rclone
