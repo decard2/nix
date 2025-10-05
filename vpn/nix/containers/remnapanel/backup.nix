@@ -67,7 +67,7 @@ in
     wantedBy = [ "timers.target" ];
 
     timerConfig = {
-      OnCalendar = "daily";
+      OnCalendar = "*-*-* 22:00:00"; # 1:00 MSK (22:00 UTC)
       Persistent = true;
       RandomizedDelaySec = "15m";
     };
