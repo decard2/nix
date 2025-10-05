@@ -61,7 +61,7 @@ let
 
     # Останавливаем backend контейнер
     echo "Stopping backend container..."
-    ${pkgs.podman}/bin/podman stop remnawave-backend || true
+    ${pkgs.systemd}/bin/systemctl stop podman-remnawave-backend.service || true
 
     # Копируем бекап в контейнер БД
     echo "Copying backup file to database container..."
@@ -89,7 +89,7 @@ let
 
     # Запускаем backend обратно
     echo "Starting backend container..."
-    ${pkgs.podman}/bin/podman start remnawave-backend
+    ${pkgs.systemd}/bin/systemctl start podman-remnawave-backend.service
 
     echo ""
     echo "Database restored successfully!"
