@@ -13,6 +13,10 @@
   ns = "nix shell";
   nr = "nix run";
 
+  ### VPN ###
+  vs = "sudo systemctl start sing-box";
+  vk = "sudo systemctl stop sing-box";
+
   ### Разработка ###
   g = "lazygit";
   dr = "deployRoodl";
