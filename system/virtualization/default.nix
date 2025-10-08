@@ -29,10 +29,6 @@
       enable = true;
       qemu = {
         package = pkgs.qemu_kvm;
-        ovmf = {
-          enable = true;
-          packages = [ pkgs.OVMFFull.fd ];
-        };
         swtpm.enable = true;
         verbatimConfig = ''
           virtiofsd="${pkgs.qemu}/libexec/virtiofsd"
