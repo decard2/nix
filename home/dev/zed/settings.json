@@ -12,7 +12,7 @@
 	},
 	"ui_font_size": 18,
 	"buffer_font_size": 18,
-	"agent_font_size": 18,
+	"agent_buffer_font_size": 14,
 	"theme": {
 		"mode": "system",
 		"light": "One Light",
@@ -40,21 +40,57 @@
 				}
 			}
 		},
-		"JSON": { "formatter": { "language_server": { "name": "biome" } } },
-		"JSONC": { "formatter": { "language_server": { "name": "biome" } } },
-		"JavaScript": { "formatter": { "language_server": { "name": "biome" } } },
-		"TypeScript": { "formatter": { "language_server": { "name": "biome" } } },
-		"TSX": { "formatter": { "language_server": { "name": "biome" } } },
+		"JSON": {
+			"formatter": [
+				{ "language_server": { "name": "biome" } },
+				{ "code_action": "source.organizeImports.biome" },
+				{ "code_action": "source.fixAll.biome" }
+			]
+		},
+		"JSONC": {
+			"formatter": [
+				{ "language_server": { "name": "biome" } },
+				{ "code_action": "source.organizeImports.biome" },
+				{ "code_action": "source.fixAll.biome" }
+			]
+		},
+		"JavaScript": {
+			"formatter": [
+				{ "language_server": { "name": "biome" } },
+				{ "code_action": "source.organizeImports.biome" },
+				{ "code_action": "source.fixAll.biome" }
+			]
+		},
+		"TypeScript": {
+			"formatter": [
+				{ "language_server": { "name": "biome" } },
+				{ "code_action": "source.organizeImports.biome" },
+				{ "code_action": "source.fixAll.biome" }
+			]
+		},
+		"TSX": {
+			"formatter": [
+				{ "language_server": { "name": "biome" } },
+				{ "code_action": "source.organizeImports.biome" },
+				{ "code_action": "source.fixAll.biome" }
+			]
+		},
 		"Astro": {
 			"language_servers": ["astro-language-server", "..."],
-			"formatter": ["prettier", { "language_server": { "name": "biome" } }]
+			"formatter": [
+				{ "language_server": { "name": "biome" } },
+				{ "code_action": "source.organizeImports.biome" },
+				{ "code_action": "source.fixAll.biome" }
+			]
 		},
-		"CSS": { "formatter": { "language_server": { "name": "biome" } } },
+		"CSS": {
+			"formatter": [
+				{ "language_server": { "name": "biome" } },
+				{ "code_action": "source.organizeImports.biome" },
+				{ "code_action": "source.fixAll.biome" }
+			]
+		},
 		"Markdown": { "format_on_save": "on" }
-	},
-	"code_actions_on_format": {
-		"source.fixAll.biome": true,
-		"source.organizeImports.biome": true
 	},
 	"file_types": {
 		"Helm": [
