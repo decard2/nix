@@ -8,6 +8,11 @@ resource "google_os_login_ssh_public_key" "default" {
   project = "rolder-474107"
 }
 
+resource "google_compute_project_default_network_tier" "project-tier" {
+  project      = "rolder-474107"
+  network_tier = "STANDARD"
+}
+
 resource "google_compute_firewall" "remna" {
   name    = "remna"
   network = "default"
@@ -41,6 +46,7 @@ resource "google_compute_instance" "remnapanel" {
   network_interface {
     network = "default"
     access_config {
+      network_tier = "STANDARD"
     }
   }
 }
@@ -69,6 +75,7 @@ resource "google_compute_instance" "stockholm" {
   network_interface {
     network = "default"
     access_config {
+      network_tier = "STANDARD"
     }
   }
 }
@@ -97,6 +104,7 @@ resource "google_compute_instance" "helsinki" {
   network_interface {
     network = "default"
     access_config {
+      network_tier = "STANDARD"
     }
   }
 }
