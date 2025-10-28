@@ -22,8 +22,10 @@
 
     git = {
       enable = true;
-      userName = "decard";
-      userEmail = "mail@decard.space";
+      settings = {
+        user.name = "decard";
+        user.email = "mail@decard.space";
+      };
       extraConfig = {
         init.defaultBranch = "main";
         safe.directory = "/home/decard/nix";
@@ -44,7 +46,6 @@
             StrictHostKeyChecking = "yes";
           };
         };
-        # rolderdevs
         "rolderdevs" = {
           hostname = "github.com";
           identityFile = "~/.ssh/rolderdev-github";
