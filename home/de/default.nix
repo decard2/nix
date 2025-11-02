@@ -12,7 +12,7 @@
   dconf.enable = true;
 
   home.packages = with pkgs; [
-    qt6ct
+    qt6Packages.qt6ct
     bibata-cursors
     xfce.thunar
     file-roller
