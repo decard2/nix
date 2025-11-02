@@ -12,7 +12,7 @@
 
   home.packages = with pkgs; [
     lazygit
-    inputs.flox.packages.${pkgs.system}.flox
+    inputs.flox.packages.${pkgs.stdenv.hostPlatform.system}.flox
     devenv
     devbox
   ];
@@ -25,8 +25,6 @@
       settings = {
         user.name = "decard";
         user.email = "mail@decard.space";
-      };
-      extraConfig = {
         init.defaultBranch = "main";
         safe.directory = "/home/decard/nix";
       };
