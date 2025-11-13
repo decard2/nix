@@ -4,6 +4,7 @@
     ./kitty.nix
     ./chrome.nix
     ./virt-manager.nix
+    ./steam.nix
   ];
 
   home.packages = with pkgs; [
