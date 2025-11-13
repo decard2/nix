@@ -8,5 +8,6 @@
     ./nix-ld.nix
     ./virtualization
     ./services
+    ./steam.nix
   ];
 }
