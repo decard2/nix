@@ -4,15 +4,15 @@
 		"status": "ACTIVE",
 		"trafficLimitBytes": 536870912000,
 		"trafficLimitStrategy": "MONTH",
-		"expireAt": "2100-01-01T00:00:00.000Z",
-		"activeInternalSquads": ["088ae42a-45b4-4c18-a47b-6ac7dc5d3e71"]
+		"expireAt": "2099-07-31T09:03:00.000Z",
+		"activeInternalSquads": ["b4d91ab3-10ad-456d-ac2e-e53a00debafd"]
 	},
 	{
 		"username": "decard_mobile",
 		"status": "ACTIVE",
 		"trafficLimitBytes": 536870912000,
 		"trafficLimitStrategy": "MONTH",
-		"expireAt": "2100-01-01T00:00:00.000Z",
+		"expireAt": "2099-07-31T09:03:00.000Z",
 		"activeInternalSquads": ["088ae42a-45b4-4c18-a47b-6ac7dc5d3e71"]
 	},
 	{
@@ -20,11 +20,19 @@
 		"status": "ACTIVE",
 		"trafficLimitBytes": 536870912000,
 		"trafficLimitStrategy": "MONTH",
-		"expireAt": "2100-01-01T00:00:00.000Z",
+		"expireAt": "2099-07-31T09:03:00.000Z",
 		"activeInternalSquads": ["088ae42a-45b4-4c18-a47b-6ac7dc5d3e71"]
 	},
 	{
 		"username": "vovka_",
+		"status": "ACTIVE",
+		"trafficLimitBytes": 322122547200,
+		"trafficLimitStrategy": "MONTH",
+		"expireAt": "2099-07-31T09:03:00.000Z",
+		"activeInternalSquads": ["088ae42a-45b4-4c18-a47b-6ac7dc5d3e71"]
+	},
+	{
+		"username": "iakov_",
 		"status": "ACTIVE",
 		"trafficLimitBytes": 322122547200,
 		"trafficLimitStrategy": "MONTH",
