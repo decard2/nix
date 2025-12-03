@@ -18,6 +18,7 @@
 		"light": "One Light",
 		"dark": "One Dark"
 	},
+	"colorize_brackets": true,
 	"edit_predictions": {
 		"mode": "subtle",
 		"copilot": {
