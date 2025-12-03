@@ -38,5 +38,13 @@
 		"trafficLimitStrategy": "MONTH",
 		"expireAt": "2099-07-31T09:03:00.000Z",
 		"activeInternalSquads": ["088ae42a-45b4-4c18-a47b-6ac7dc5d3e71"]
+	},
+	{
+		"username": "vezdexod",
+		"status": "ACTIVE",
+		"trafficLimitBytes": 322122547200,
+		"trafficLimitStrategy": "MONTH",
+		"expireAt": "2099-07-31T09:03:00.000Z",
+		"activeInternalSquads": ["088ae42a-45b4-4c18-a47b-6ac7dc5d3e71"]
 	}
 ]
