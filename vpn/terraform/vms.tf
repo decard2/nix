@@ -104,7 +104,7 @@ resource "google_compute_instance" "helsinki" {
   network_interface {
     network = "default"
     access_config {
-      network_tier = "PREMIUM"
+      network_tier = "STANDARD"
     }
   }
 }
