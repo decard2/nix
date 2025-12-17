@@ -3,7 +3,6 @@
 		"html": true,
 		"nix": true,
 		"biome": true,
-		"astro": true,
 		"helm": true,
 		"git-firefly": true,
 		"fish": true,
@@ -18,7 +17,6 @@
 		"light": "One Light",
 		"dark": "One Dark"
 	},
-	"colorize_brackets": true,
 	"edit_predictions": {
 		"mode": "subtle",
 		"copilot": {
@@ -70,14 +68,6 @@
 			]
 		},
 		"TSX": {
-			"formatter": [
-				{ "language_server": { "name": "biome" } },
-				{ "code_action": "source.organizeImports.biome" },
-				{ "code_action": "source.fixAll.biome" }
-			]
-		},
-		"Astro": {
-			"language_servers": ["astro-language-server", "..."],
 			"formatter": [
 				{ "language_server": { "name": "biome" } },
 				{ "code_action": "source.organizeImports.biome" },

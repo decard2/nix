@@ -8,5 +8,6 @@
     intel-media-driver
     vpl-gpu-rt
     mesa
+    bluetuith
   ];
 }

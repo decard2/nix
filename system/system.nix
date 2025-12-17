@@ -215,6 +215,9 @@
     nvidiaBusId = "PCI:1:0:0";
   };
 
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+
   services.greetd = {
     enable = true;
     settings = {
