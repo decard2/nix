@@ -67,7 +67,7 @@
       RemainAfterExit = true;
     };
     script = ''
-      echo "SSL_CERT=$(cat /opt/remnanode/node-certificate.txt)" > /opt/remnanode/node-certificate.env
+      echo "SECRET_KEY=$(cat /opt/remnanode/node-certificate.txt)" > /opt/remnanode/node-certificate.env
       echo "Node environment file created successfully"
     '';
   };

@@ -11,7 +11,7 @@
       "--pull=always"
     ];
     environment = {
-      APP_PORT = "2222";
+      NODE_PORT = "2222";
     };
     environmentFiles = [
       "/opt/remnanode/node-certificate.env"
