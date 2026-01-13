@@ -14,7 +14,7 @@
   home.packages = with pkgs; [
     qt6Packages.qt6ct
     bibata-cursors
-    xfce.thunar
+    thunar
     file-roller
     alsa-lib
     playerctl

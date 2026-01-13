@@ -222,7 +222,7 @@
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.dbus}/bin/dbus-run-session ${pkgs.hyprland}/bin/Hyprland --config ${pkgs.writeText "hyprland-greeter.conf" ''
+        command = "${pkgs.dbus}/bin/dbus-run-session ${pkgs.hyprland}/bin/start-hyprland -- --config ${pkgs.writeText "hyprland-greeter.conf" ''
           # Автоопределение всех мониторов
           monitor=,preferred,auto,1
 

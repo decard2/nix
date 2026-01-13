@@ -2,7 +2,7 @@ locals {
   services = {
     "helsinki" = {
       name = "fi"
-      ip   = "35.217.51.119"
+      ip   = "34.88.241.59"
     }
     "stockholm" = {
       name = "sw"

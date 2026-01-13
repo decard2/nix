@@ -40,6 +40,7 @@ resource "google_compute_instance" "remnapanel" {
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-12"
+      size  = 20
     }
   }
 
@@ -104,7 +105,7 @@ resource "google_compute_instance" "helsinki" {
   network_interface {
     network = "default"
     access_config {
-      network_tier = "STANDARD"
+      network_tier = "PREMIUM"
     }
   }
 }
