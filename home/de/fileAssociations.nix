@@ -8,6 +8,8 @@
       "application/x-gnome-saved-search" = "thunar.desktop";
 
       "application/json" = "dev.zed.Zed.desktop";
+      "text/javascript" = "dev.zed.Zed.desktop";
+      "text/markdown" = "dev.zed.Zed.desktop";
 
       "x-scheme-handler/tg" = "org.telegram.desktop.desktop";
       "x-scheme-handler/tonsite" = "org.telegram.desktop.desktop";

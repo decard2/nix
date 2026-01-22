@@ -6,7 +6,7 @@ locals {
     }
     "stockholm" = {
       name = "sw"
-      ip   = "34.2.52.207"
+      ip   = "34.2.48.139"
     }
     "panel" = {
       name = "@"
