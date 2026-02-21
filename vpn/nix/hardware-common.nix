@@ -32,7 +32,7 @@
   boot.extraModulePackages = [ ];
 
   # Platform configuration
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  nixpkgs.stdenv.hostPlatform = lib.mkDefault "x86_64-linux";
 
   # Console configuration for VirtIO
   boot.kernelParams = [

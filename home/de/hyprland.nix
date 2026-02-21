@@ -74,6 +74,7 @@
       # 6. Автозапуск
       exec-once = [
         "uwsm app -- hyprcursor"
+        "[workspace special:term silent] uwsm app -- kitty"
         "[workspace special:term1 silent] uwsm app -- kitty"
         "[workspace special:term2 silent] uwsm app -- kitty"
         "[workspace special:term3 silent] uwsm app -- kitty"
@@ -102,9 +103,10 @@
         "SUPER_SHIFT, Q, exec, uwsm app -- virsh -c qemu:///system shutdown win11"
 
         # Скретчпады
-        "CTRL, grave, togglespecialworkspace, term1"
-        "CTRL, 1, togglespecialworkspace, term2"
-        "CTRL, 2, togglespecialworkspace, term3"
+        "CTRL, grave, togglespecialworkspace, term"
+        "CTRL, 1, togglespecialworkspace, term1"
+        "CTRL, 2, togglespecialworkspace, term2"
+        "CTRL, 3, togglespecialworkspace, term3"
         "SUPER, grave, togglespecialworkspace, btop"
         "SUPER, A, togglespecialworkspace, telegram"
         "SUPER, M, togglespecialworkspace, tidal"
