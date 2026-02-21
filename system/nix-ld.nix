@@ -7,7 +7,7 @@
         alsa-lib
         wayland
         vulkan-loader
-        xorg.xkeyboardconfig
+        xkeyboardconfig
       ];
     };
   };

@@ -10,7 +10,11 @@ locals {
     }
     "panel" = {
       name = "@"
-      ip   = "34.2.58.108"
+      ip   = "34.2.52.207"
+    }
+    "sibeerskaya" = {
+      name = "sibeerskaya"
+      ip   = "35.217.45.57"
     }
   }
 }

@@ -19,7 +19,7 @@ resource "google_compute_firewall" "remna" {
 
   allow {
     protocol = "tcp"
-    ports    = ["2222", "4444", "443"]
+    ports    = ["2222", "4444", "443", "3000"]
   }
 
   source_ranges = ["0.0.0.0/0"]
@@ -106,6 +106,32 @@ resource "google_compute_instance" "helsinki" {
     network = "default"
     access_config {
       network_tier = "PREMIUM"
+    }
+  }
+}
+
+resource "google_compute_instance" "sibeerskaya" {
+  name         = "sibeerskaya"
+  machine_type = "e2-standard-2"
+  zone         = "europe-north1-a"
+
+  # Для смены железа
+  allow_stopping_for_update = true
+
+  metadata = {
+    enable-oslogin = "true"
+  }
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-13"
+    }
+  }
+
+  network_interface {
+    network = "default"
+    access_config {
+      network_tier = "STANDARD"
     }
   }
 }

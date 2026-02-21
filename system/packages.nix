@@ -2,7 +2,7 @@
 {
   environment.systemPackages = with pkgs; [
     libxkbcommon
-    xorg.xkeyboardconfig
+    xkeyboardconfig
     lsof
     intel-vaapi-driver
     intel-media-driver
