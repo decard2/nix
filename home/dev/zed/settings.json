@@ -34,17 +34,8 @@
 			"provider": "zed.dev",
 			"model": "claude-sonnet-4-5"
 		},
-		"always_allow_tool_actions": true,
 		"use_modifier_to_send": true,
 		"model_parameters": [{ "temperature": 0 }]
-	},
-	"context_servers": {
-		"mcp-server-github": {
-			"enabled": true,
-			"settings": {
-				"github_personal_access_token": "REDACTED"
-			}
-		}
 	},
 	"languages": {
 		"Nix": {
