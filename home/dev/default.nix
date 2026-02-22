@@ -11,10 +11,9 @@
   ];
 
   home.packages = with pkgs; [
-    lazygit
     inputs.flox.packages.${pkgs.stdenv.hostPlatform.system}.flox
-    devenv
     devbox
+    gh
   ];
 
   programs = {
@@ -35,18 +34,8 @@
       enableDefaultConfig = false;
 
       matchBlocks = {
-        # dayreon github
-        "decard" = {
-          hostname = "github.com";
+        "github.com" = {
           identityFile = "~/.ssh/decard-github";
-          extraOptions = {
-            AddKeysToAgent = "yes";
-            StrictHostKeyChecking = "yes";
-          };
-        };
-        "rolderdevs" = {
-          hostname = "github.com";
-          identityFile = "~/.ssh/rolderdev-github";
           extraOptions = {
             AddKeysToAgent = "yes";
             StrictHostKeyChecking = "yes";
