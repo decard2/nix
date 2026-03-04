@@ -3,6 +3,7 @@
 {
   lib,
   modulesPath,
+  hostConfig,
   ...
 }:
 
@@ -42,7 +43,8 @@
     "consoleblank=0"
   ];
 
-  # Boot loader - GRUB for BIOS Legacy boot
+  # Boot loader - GRUB BIOS для всех cloud VMs (GCP, Gcore используют SeaBIOS/BIOS)
+  # device не задаём явно - disko настраивает его через EF02 партицию
   boot.loader.grub.enable = true;
   # Device configuration handled by disko
 }

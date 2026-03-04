@@ -24,8 +24,8 @@ in
   # Network configuration
   networking.hostName = hostConfig.hostname;
 
-  # Network configuration - DHCP for GCP, static for others
-  networking.useDHCP = hostConfig.isGCP or false;
+  # Network configuration - DHCP for cloud VMs, static for others
+  networking.useDHCP = hostConfig.useDHCP or (hostConfig.isGCP or false);
 
   # Static IP configuration for non-GCP servers
   networking.interfaces = lib.mkIf (!(hostConfig.isGCP or false) && (hostConfig ? serverIP)) {
@@ -85,8 +85,8 @@ in
     };
   };
 
-  # Guest agent - different for GCP and regular VMs
-  services.qemuGuest.enable = !(hostConfig.isGCP or false);
+  # QEMU guest agent только для не-облачных ВМ
+  services.qemuGuest.enable = !(hostConfig.isGCP or false) && !(hostConfig.useDHCP or false);
 
   # Basic packages for all hosts
   environment.systemPackages =
@@ -97,7 +97,6 @@ in
       htop
     ]
     ++ lib.optionals (hostConfig.isGCP or false) [
-      # Google Cloud guest environment for GCP instances
       google-guest-agent
       google-guest-configs
     ];

@@ -8,7 +8,7 @@
 			},
 			"inbounds": [
 				{
-					"tag": "Stockholm",
+					"tag": "Warsaw",
 					"port": 443,
 					"protocol": "vless",
 					"settings": {
@@ -27,7 +27,7 @@
 							"target": "127.0.0.1:9443",
 							"shortIds": ["6a06f4ce3afb4d9f"],
 							"privateKey": "ysHHGFbqCv9RdXqyiYpNALUR6OTZ3hFwJ3KYbJEf8V4",
-							"serverNames": ["sw.rolder.net"]
+							"serverNames": ["pl.rolder.net"]
 						}
 					}
 				},
@@ -52,6 +52,30 @@
 							"shortIds": ["6a06f4ce3afb4d9f"],
 							"privateKey": "ysHHGFbqCv9RdXqyiYpNALUR6OTZ3hFwJ3KYbJEf8V4",
 							"serverNames": ["fi.rolder.net"]
+						}
+					}
+				},
+				{
+					"tag": "Helsinki Gcore",
+					"port": 443,
+					"protocol": "vless",
+					"settings": {
+						"clients": [],
+						"decryption": "none"
+					},
+					"sniffing": {
+						"enabled": true,
+						"destOverride": ["http", "tls", "quic"]
+					},
+					"streamSettings": {
+						"network": "raw",
+						"security": "reality",
+						"realitySettings": {
+							"show": false,
+							"target": "127.0.0.1:9443",
+							"shortIds": ["6a06f4ce3afb4d9f"],
+							"privateKey": "ysHHGFbqCv9RdXqyiYpNALUR6OTZ3hFwJ3KYbJEf8V4",
+							"serverNames": ["fi2.rolder.net"]
 						}
 					}
 				}

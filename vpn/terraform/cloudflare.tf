@@ -2,19 +2,23 @@ locals {
   services = {
     "helsinki" = {
       name = "fi"
-      ip   = "34.88.241.59"
+      ip   = google_compute_instance.helsinki.network_interface[0].access_config[0].nat_ip
     }
-    "stockholm" = {
-      name = "sw"
-      ip   = "34.2.48.139"
+    "warsaw" = {
+      name = "pl"
+      ip   = google_compute_instance.warsaw.network_interface[0].access_config[0].nat_ip
     }
     "panel" = {
       name = "@"
-      ip   = "34.2.52.207"
+      ip   = google_compute_instance.remnapanel.network_interface[0].access_config[0].nat_ip
     }
     "sibeerskaya" = {
       name = "sibeerskaya"
-      ip   = "35.217.45.57"
+      ip   = google_compute_instance.sibeerskaya.network_interface[0].access_config[0].nat_ip
+    }
+    "helsinkiGcore" = {
+      name = "fi2"
+      ip   = gcore_instancev2.helsinkiGcore.addresses[0].net[0].addr
     }
   }
 }

@@ -1,12 +1,12 @@
 [
 	{
-		"name": "Stockholm",
-		"address": "sw.rolder.net",
+		"name": "Warsaw",
+		"address": "pl.rolder.net",
 		"port": 2222,
-		"countryCode": "SE",
+		"countryCode": "PL",
 		"configProfile": {
 			"activeConfigProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
-			"activeInbounds": ["4ab96b48-5f81-45c2-9f6e-03952509d60f"]
+			"activeInbounds": ["9ca7aa4c-38ac-4169-b02a-d5d2cbf91fa7"]
 		}
 	},
 	{
@@ -17,6 +17,16 @@
 		"configProfile": {
 			"activeConfigProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
 			"activeInbounds": ["7d1728cb-50c4-4c4b-a34c-be13b4cd04aa"]
+		}
+	},
+	{
+		"name": "Helsinki Gcore",
+		"address": "fi2.rolder.net",
+		"port": 2222,
+		"countryCode": "FI",
+		"configProfile": {
+			"activeConfigProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
+			"activeInbounds": ["b7ca34d3-9fd1-4666-b826-ae4dd63d9b54"]
 		}
 	}
 ]

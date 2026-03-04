@@ -1,8 +1,8 @@
 { hostConfig, ... }:
 
 let
-  # Select disk device based on cloud provider
-  diskDevice = if (hostConfig.isGCP or false) then "/dev/sda" else "/dev/vda";
+  diskDevice = hostConfig.diskDevice or (if (hostConfig.isGCP or false) then "/dev/sda" else "/dev/vda");
+  useEFI = hostConfig.useEFI or false;
 in
 
 {
@@ -14,7 +14,15 @@ in
         content = {
           type = "gpt";
           partitions = {
-            boot = {
+            boot = if useEFI then {
+              size = "512M";
+              type = "EF00";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+              };
+            } else {
               size = "1M";
               type = "EF02"; # BIOS boot partition
             };
@@ -35,6 +43,4 @@ in
       };
     };
   };
-
-  # Let disko handle bootloader configuration automatically
 }

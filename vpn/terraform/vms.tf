@@ -52,13 +52,13 @@ resource "google_compute_instance" "remnapanel" {
   }
 }
 
-resource "google_compute_instance" "stockholm" {
-  name = "stockholm"
+resource "google_compute_instance" "warsaw" {
+  name = "warsaw"
   # Установка
   # machine_type = "e2-highcpu-4"
   # Работа
   machine_type = "e2-micro"
-  zone         = "europe-north2-c"
+  zone         = "europe-central2-a"
 
   # Для смены железа
   allow_stopping_for_update = true
@@ -69,7 +69,7 @@ resource "google_compute_instance" "stockholm" {
 
   boot_disk {
     initialize_params {
-      image = "debian-cloud/debian-11"
+      image = "debian-cloud/debian-12"
     }
   }
 

@@ -169,8 +169,11 @@
         PORT=$(echo $host | ${pkgs.jq}/bin/jq -r '.port')
         REMARK=$(echo $host | ${pkgs.jq}/bin/jq -r '.remark')
 
-        # Find existing host by address+port
+        # Find existing host by address+port, fallback to remark
         EXISTING_UUID=$(echo "$EXISTING_HOSTS" | ${pkgs.jq}/bin/jq -r ".response[] | select(.address == \"$ADDRESS\" and .port == $PORT) | .uuid")
+        if [ -z "$EXISTING_UUID" ] || [ "$EXISTING_UUID" = "null" ]; then
+          EXISTING_UUID=$(echo "$EXISTING_HOSTS" | ${pkgs.jq}/bin/jq -r ".response[] | select(.remark == \"$REMARK\") | .uuid" | head -1)
+        fi
 
         if [ ! -z "$EXISTING_UUID" ] && [ "$EXISTING_UUID" != "null" ]; then
           # Update existing host
@@ -246,8 +249,11 @@
         PORT=$(echo $node | ${pkgs.jq}/bin/jq -r '.port')
         NAME=$(echo $node | ${pkgs.jq}/bin/jq -r '.name')
 
-        # Find existing node by address+port
+        # Find existing node by address+port, fallback to name
         EXISTING_UUID=$(echo "$EXISTING_NODES" | ${pkgs.jq}/bin/jq -r ".response[] | select(.address == \"$ADDRESS\" and .port == $PORT) | .uuid")
+        if [ -z "$EXISTING_UUID" ] || [ "$EXISTING_UUID" = "null" ]; then
+          EXISTING_UUID=$(echo "$EXISTING_NODES" | ${pkgs.jq}/bin/jq -r ".response[] | select(.name == \"$NAME\") | .uuid")
+        fi
 
         if [ ! -z "$EXISTING_UUID" ] && [ "$EXISTING_UUID" != "null" ]; then
           # Update existing node

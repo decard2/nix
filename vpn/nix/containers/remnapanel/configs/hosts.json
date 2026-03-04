@@ -2,10 +2,10 @@
 	{
 		"inbound": {
 			"configProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
-			"configProfileInboundUuid": "4ab96b48-5f81-45c2-9f6e-03952509d60f"
+			"configProfileInboundUuid": "9ca7aa4c-38ac-4169-b02a-d5d2cbf91fa7"
 		},
-		"remark": "🇸🇪 Стокгольм",
-		"address": "sw.rolder.net",
+		"remark": "🇵🇱 Варшава",
+		"address": "pl.rolder.net",
 		"port": 443,
 		"isDisabled": false
 	},
@@ -16,6 +16,16 @@
 		},
 		"remark": "🇫🇮 Хельсинки",
 		"address": "fi.rolder.net",
+		"port": 443,
+		"isDisabled": false
+	},
+	{
+		"inbound": {
+			"configProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
+			"configProfileInboundUuid": "b7ca34d3-9fd1-4666-b826-ae4dd63d9b54"
+		},
+		"remark": "🇫🇮 Хельсинки (Gcore)",
+		"address": "fi2.rolder.net",
 		"port": 443,
 		"isDisabled": false
 	}
