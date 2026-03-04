@@ -93,6 +93,31 @@
           ];
         };
 
+        frankfurtGcore = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            hostConfig = {
+              hostname = "frankfurtGcore";
+              rolderPassword = "$6$5VyQ15pyF.cRI95q$CN.UM.kgGa6twTEHFn4fIz6NNVpMWYzbv9J/2UQzJaRN3zr7B74PfZFx7LBbKNUBw9DmR5ApMy.wbF/uMXboa/";
+              containers = [
+                "remnanode"
+                "selfsteal"
+              ];
+              selfstealDomain = "de.rolder.net";
+              selfstealTemplate = "games-site";
+              useDHCP = true;
+              isGCP = false;
+              diskDevice = "/dev/sda";
+            };
+            inherit selfsteal-templates;
+          };
+          modules = [
+            disko.nixosModules.disko
+            ./common.nix
+            ./disk-config.nix
+          ];
+        };
+
         remnapanel = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = {

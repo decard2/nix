@@ -20,6 +20,10 @@ locals {
       name = "fi2"
       ip   = gcore_instancev2.helsinkiGcore.addresses[0].net[0].addr
     }
+    "frankfurtGcore" = {
+      name = "de"
+      ip   = gcore_instancev2.frankfurtGcore.addresses[0].net[0].addr
+    }
   }
 }
 

@@ -28,5 +28,15 @@
 		"address": "fi2.rolder.net",
 		"port": 443,
 		"isDisabled": false
+	},
+	{
+		"inbound": {
+			"configProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
+			"configProfileInboundUuid": "eda3e8eb-180e-4bfd-b1a1-e4b738363f0d"
+		},
+		"remark": "🇩🇪 Франкфурт (Gcore)",
+		"address": "de.rolder.net",
+		"port": 443,
+		"isDisabled": false
 	}
 ]
