@@ -475,13 +475,13 @@ Expected: plan showing UPDATE for all existing entities, no CREATE or DELETE.
 **Step 1: Deploy**
 
 ```bash
-NIX_SSHOPTS="-p 4444 -i ~/.ssh/rolder-net-gcp" nixos-rebuild switch --refresh --flake /home/decard/nix/vpn/nix#remnapanel --target-host rolder@34.51.236.162 --sudo
+NIX_SSHOPTS="-p 4444 -i ~/.ssh/rolder-net-gcp" nixos-rebuild switch --refresh --flake /home/decard/nix/vpn/nix#remnapanel --target-host rolder@34.2.52.207 --sudo
 ```
 
 **Step 2: Verify old services are gone and new one is active**
 
 ```bash
-ssh -p 4444 -i ~/.ssh/rolder-net-gcp rolder@34.51.236.162 "systemctl status remnawave-sync; systemctl status remnawave-config-profiles-sync 2>&1 || true"
+ssh -p 4444 -i ~/.ssh/rolder-net-gcp rolder@34.2.52.207 "systemctl status remnawave-sync; systemctl status remnawave-config-profiles-sync 2>&1 || true"
 ```
 
 Expected: `remnawave-sync` active/succeeded, old services not found.
@@ -489,7 +489,7 @@ Expected: `remnawave-sync` active/succeeded, old services not found.
 **Step 3: Check journal logs**
 
 ```bash
-ssh -p 4444 -i ~/.ssh/rolder-net-gcp rolder@34.51.236.162 "journalctl -u remnawave-sync --no-pager -n 50"
+ssh -p 4444 -i ~/.ssh/rolder-net-gcp rolder@34.2.52.207 "journalctl -u remnawave-sync --no-pager -n 50"
 ```
 
 **Step 4: Verify panel data is intact**
