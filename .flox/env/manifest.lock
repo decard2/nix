@@ -1,0 +1,640 @@
+{
+  "lockfile-version": 1,
+  "manifest": {
+    "version": 1,
+    "install": {
+      "dig": {
+        "pkg-path": "dig"
+      },
+      "google-cloud-sdk": {
+        "pkg-path": "google-cloud-sdk"
+      },
+      "nodejs": {
+        "pkg-path": "nodejs"
+      },
+      "opentofu": {
+        "pkg-path": "opentofu"
+      },
+      "python3": {
+        "pkg-path": "python3"
+      }
+    },
+    "hook": {},
+    "profile": {},
+    "options": {}
+  },
+  "packages": [
+    {
+      "attr_path": "dig",
+      "broken": false,
+      "derivation": "/nix/store/0y5rhw3mvxx3x81hyn3fxgwnkwdkwck9-bind-9.20.18.drv",
+      "description": "Domain name server",
+      "install_id": "dig",
+      "license": "MPL-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "bind-9.20.18",
+      "pname": "dig",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T04:39:37.518466Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "9.20.18",
+      "outputs_to_install": [
+        "out",
+        "host",
+        "dnsutils"
+      ],
+      "outputs": {
+        "dev": "/nix/store/kvswkdlnixk1j4z4c209si171wgv69w1-bind-9.20.18-dev",
+        "dnsutils": "/nix/store/n9cmbw4igk58jr270sw2qc7c8zb7v1f2-bind-9.20.18-dnsutils",
+        "host": "/nix/store/1pwwxkvqzzf8j2ciicrvi49fvx56xbff-bind-9.20.18-host",
+        "lib": "/nix/store/am7cr74a1hdm6n65w0y14hqskh6wljzw-bind-9.20.18-lib",
+        "man": "/nix/store/n88c91qcay60rj4zc6b2r1my1cpya5l7-bind-9.20.18-man",
+        "out": "/nix/store/6iv8a4rwh8r3a60m4bbj7yh4a1jpllas-bind-9.20.18"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "dig",
+      "broken": false,
+      "derivation": "/nix/store/lq18l4h13rga4qh98bqmrpdx5ipg72m8-bind-9.20.18.drv",
+      "description": "Domain name server",
+      "install_id": "dig",
+      "license": "MPL-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "bind-9.20.18",
+      "pname": "dig",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T05:09:49.210986Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "9.20.18",
+      "outputs_to_install": [
+        "out",
+        "host",
+        "dnsutils"
+      ],
+      "outputs": {
+        "dev": "/nix/store/69h3l05apblpp132n70xf6kl210n2z1q-bind-9.20.18-dev",
+        "dnsutils": "/nix/store/l2nhnmj4b04slkvyi3az6cm6kxnb6wv0-bind-9.20.18-dnsutils",
+        "host": "/nix/store/0kiibydr37zr6n12nwwy3qwdpn190n67-bind-9.20.18-host",
+        "lib": "/nix/store/ddi2rx57865g6aw3vcw0c7pl6swf7687-bind-9.20.18-lib",
+        "man": "/nix/store/irvkn0jl0w9i3cc8qkhwb4lrjnq7jv8q-bind-9.20.18-man",
+        "out": "/nix/store/dmrwa6b7qmyp2vv7i2dp3w9cvqsdaf6i-bind-9.20.18"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "dig",
+      "broken": false,
+      "derivation": "/nix/store/j7vpbi9x6igs8nqgyx59h9q4yf6bmkfy-bind-9.20.18.drv",
+      "description": "Domain name server",
+      "install_id": "dig",
+      "license": "MPL-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "bind-9.20.18",
+      "pname": "dig",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T05:38:32.528979Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "9.20.18",
+      "outputs_to_install": [
+        "out",
+        "host",
+        "dnsutils"
+      ],
+      "outputs": {
+        "dev": "/nix/store/nz44cqm1zkc3a0da27c14b0v91vbl2n7-bind-9.20.18-dev",
+        "dnsutils": "/nix/store/xcvldmzp4mpixwsy73s93ip11alacdhv-bind-9.20.18-dnsutils",
+        "host": "/nix/store/xnz47ifp59x2809ragr022s0v9syh6m7-bind-9.20.18-host",
+        "lib": "/nix/store/i34h33qfbcc69sc2s30mnybxfbw41q3c-bind-9.20.18-lib",
+        "man": "/nix/store/jipvj2vmg37i8gr1n2m3mk1dwd7nd7nn-bind-9.20.18-man",
+        "out": "/nix/store/xslg9yb7qwzb8vaq4hys1i4r9dcbvbgf-bind-9.20.18"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "dig",
+      "broken": false,
+      "derivation": "/nix/store/m9grp9inbnw5ljg6rrlim56izgiph6am-bind-9.20.18.drv",
+      "description": "Domain name server",
+      "install_id": "dig",
+      "license": "MPL-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "bind-9.20.18",
+      "pname": "dig",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T06:12:09.699201Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "9.20.18",
+      "outputs_to_install": [
+        "out",
+        "host",
+        "dnsutils"
+      ],
+      "outputs": {
+        "dev": "/nix/store/9s1ixxh5bjzf59gfd9ij8kwcqczzb1d8-bind-9.20.18-dev",
+        "dnsutils": "/nix/store/nv6fm9zi43v6jm3iplbg3pi9prh6a50z-bind-9.20.18-dnsutils",
+        "host": "/nix/store/bh16gd74f9ad5qlkdpl6r4nrg2aj9jas-bind-9.20.18-host",
+        "lib": "/nix/store/2gcssva9dravmzl9wl5lgkadnsq7a3qi-bind-9.20.18-lib",
+        "man": "/nix/store/awqlwlf9hagrpy6v6470lx61gh2j3938-bind-9.20.18-man",
+        "out": "/nix/store/s3c57w9i6xvnah0n7mc4jsm4mv37p9kz-bind-9.20.18"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "google-cloud-sdk",
+      "broken": false,
+      "derivation": "/nix/store/r43p0mqgrlbcd6s6a78z0ilcnwjnqx1h-google-cloud-sdk-552.0.0.drv",
+      "description": "Tools for the google cloud platform",
+      "install_id": "google-cloud-sdk",
+      "license": "Unspecified free software license",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "google-cloud-sdk-552.0.0",
+      "pname": "google-cloud-sdk",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T04:39:38.372674Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "552.0.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/f6pq9rkqjf6xjh8si46wmc5f09qp1f80-google-cloud-sdk-552.0.0"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "google-cloud-sdk",
+      "broken": false,
+      "derivation": "/nix/store/bfwp6h6fpv0vmmm5zx4239g9xqirw2ar-google-cloud-sdk-552.0.0.drv",
+      "description": "Tools for the google cloud platform",
+      "install_id": "google-cloud-sdk",
+      "license": "Unspecified free software license",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "google-cloud-sdk-552.0.0",
+      "pname": "google-cloud-sdk",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T05:09:50.840421Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "552.0.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/zrvrfcjc6kpfdix90bndz9yfwjm8k5jh-google-cloud-sdk-552.0.0"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "google-cloud-sdk",
+      "broken": false,
+      "derivation": "/nix/store/cxaifd9dr4djbvi0dfjn8pdkarjx1han-google-cloud-sdk-552.0.0.drv",
+      "description": "Tools for the google cloud platform",
+      "install_id": "google-cloud-sdk",
+      "license": "Unspecified free software license",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "google-cloud-sdk-552.0.0",
+      "pname": "google-cloud-sdk",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T05:38:33.334028Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "552.0.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/kq57afqk51b3h7jl6vdiahxmjcg44hij-google-cloud-sdk-552.0.0"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "google-cloud-sdk",
+      "broken": false,
+      "derivation": "/nix/store/n6zsrdarcqb6b7p84a9nwwps17nghk6x-google-cloud-sdk-552.0.0.drv",
+      "description": "Tools for the google cloud platform",
+      "install_id": "google-cloud-sdk",
+      "license": "Unspecified free software license",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "google-cloud-sdk-552.0.0",
+      "pname": "google-cloud-sdk",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T06:12:11.482054Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "552.0.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/cy8ax1v94c10a5rlgk1d7fnqpn7bcp06-google-cloud-sdk-552.0.0"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/4r8pl1c0vr0wmvng3jpnajgd37cnxfcl-nodejs-24.13.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "nodejs-24.13.0",
+      "pname": "nodejs",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T04:40:00.635660Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "24.13.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/cx0jd5mwhn7ihryyv0qp9d33f8s1iwb7-nodejs-24.13.0"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/pnwyrkhq53vm22yf620im61d2hmwdg0j-nodejs-24.13.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "nodejs-24.13.0",
+      "pname": "nodejs",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T05:10:25.911735Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "24.13.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/8dsjz52869ygjd6xdvibgk3ysl3fg6zp-nodejs-24.13.0"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/0ymmyc8xzrbn2psvx4phljpqzs8r9z72-nodejs-24.13.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "nodejs-24.13.0",
+      "pname": "nodejs",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T05:38:55.701067Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "24.13.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/i9bak02hsrywwba0apxdn7ldvkf9jl6a-nodejs-24.13.0"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "nodejs",
+      "broken": false,
+      "derivation": "/nix/store/nmzkrbm7lr655sc0xnl4yjch1lgc5jqh-nodejs-24.13.0.drv",
+      "description": "Event-driven I/O framework for the V8 JavaScript engine",
+      "install_id": "nodejs",
+      "license": "MIT",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "nodejs-24.13.0",
+      "pname": "nodejs",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T06:12:49.719999Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "24.13.0",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/sy0c7j0npsq33d9zhnnzvjnzc52f4y0p-nodejs-24.13.0"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "opentofu",
+      "broken": false,
+      "derivation": "/nix/store/6v8kvc5qspxgval2kfxa3y1a7qrcgp51-opentofu-1.11.5.drv",
+      "description": "Tool for building, changing, and versioning infrastructure",
+      "install_id": "opentofu",
+      "license": "MPL-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "opentofu-1.11.5",
+      "pname": "opentofu",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T04:40:05.577330Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.11.5",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/s2g1cswgbidrzb1d7ahf4pl1zbq9l0rf-opentofu-1.11.5"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "opentofu",
+      "broken": false,
+      "derivation": "/nix/store/j2m4yha9awrvzbj3hr802cgc1mc5jpl9-opentofu-1.11.5.drv",
+      "description": "Tool for building, changing, and versioning infrastructure",
+      "install_id": "opentofu",
+      "license": "MPL-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "opentofu-1.11.5",
+      "pname": "opentofu",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T05:10:32.719680Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.11.5",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/4qgrm5rsys5fi0ln11wl69l6g8fqvl4z-opentofu-1.11.5"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "opentofu",
+      "broken": false,
+      "derivation": "/nix/store/7xzavw50m31svcfmgx5apg89345j384v-opentofu-1.11.5.drv",
+      "description": "Tool for building, changing, and versioning infrastructure",
+      "install_id": "opentofu",
+      "license": "MPL-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "opentofu-1.11.5",
+      "pname": "opentofu",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T05:39:00.573204Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.11.5",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/0wrpandhxd6agrrchpbxj13ymypgi42k-opentofu-1.11.5"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "opentofu",
+      "broken": false,
+      "derivation": "/nix/store/bs009a7v6zp7yg924g92492g8ya8w6y1-opentofu-1.11.5.drv",
+      "description": "Tool for building, changing, and versioning infrastructure",
+      "install_id": "opentofu",
+      "license": "MPL-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "opentofu-1.11.5",
+      "pname": "opentofu",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T06:12:57.120588Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "1.11.5",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/fvm7h2ipqq5m47rsg7d4bpynaxywsb9y-opentofu-1.11.5"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "python3",
+      "broken": false,
+      "derivation": "/nix/store/fms25q7h0jbh4qiz9r22dy04xijhy3jl-python3-3.13.12.drv",
+      "description": "High-level dynamically-typed programming language",
+      "install_id": "python3",
+      "license": "Python-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "python3-3.13.12",
+      "pname": "python3",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T04:40:15.969414Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "3.13.12",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/h2y0a3x6hgznqq54rjszbi2x0rdnlgvb-python3-3.13.12"
+      },
+      "system": "aarch64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "python3",
+      "broken": false,
+      "derivation": "/nix/store/ifnyjfsqcax38z5aa3rqhzd05xyrym31-python3-3.13.12.drv",
+      "description": "High-level dynamically-typed programming language",
+      "install_id": "python3",
+      "license": "Python-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "python3-3.13.12",
+      "pname": "python3",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T05:10:47.173481Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "3.13.12",
+      "outputs_to_install": [
+        "out",
+        "out"
+      ],
+      "outputs": {
+        "debug": "/nix/store/09i7jzzkrzl2hd2dlxgl8r2rxb7v0b72-python3-3.13.12-debug",
+        "out": "/nix/store/jbxc3f1gbnnx5wwhby9z56w95k44n0sw-python3-3.13.12"
+      },
+      "system": "aarch64-linux",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "python3",
+      "broken": false,
+      "derivation": "/nix/store/nalmx4ha3bi8lcd2wcmg7h0hqvbgxph0-python3-3.13.12.drv",
+      "description": "High-level dynamically-typed programming language",
+      "install_id": "python3",
+      "license": "Python-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "python3-3.13.12",
+      "pname": "python3",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T05:39:11.031998Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "3.13.12",
+      "outputs_to_install": [
+        "out"
+      ],
+      "outputs": {
+        "out": "/nix/store/6lx7vd1lf0dsx5prsc915h0ibr1i7mci-python3-3.13.12"
+      },
+      "system": "x86_64-darwin",
+      "group": "toplevel",
+      "priority": 5
+    },
+    {
+      "attr_path": "python3",
+      "broken": false,
+      "derivation": "/nix/store/9pawqhbvyyhzhdd2jnrjy0dlj7l3hzr6-python3-3.13.12.drv",
+      "description": "High-level dynamically-typed programming language",
+      "install_id": "python3",
+      "license": "Python-2.0",
+      "locked_url": "https://github.com/flox/nixpkgs?rev=8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "name": "python3-3.13.12",
+      "pname": "python3",
+      "rev": "8c809a146a140c5c8806f13399592dbcb1bb5dc4",
+      "rev_count": 957538,
+      "rev_date": "2026-03-03T12:59:14Z",
+      "scrape_date": "2026-03-04T06:13:13.050105Z",
+      "stabilities": [
+        "unstable"
+      ],
+      "unfree": false,
+      "version": "3.13.12",
+      "outputs_to_install": [
+        "out",
+        "out"
+      ],
+      "outputs": {
+        "debug": "/nix/store/9bwcfcgqklihjs89b0qfjlpl4wlbflkd-python3-3.13.12-debug",
+        "out": "/nix/store/m1fw8l8y9ycxh5dzispbb7cwl6rra14l-python3-3.13.12"
+      },
+      "system": "x86_64-linux",
+      "group": "toplevel",
+      "priority": 5
+    }
+  ]
+}
