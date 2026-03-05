@@ -110,13 +110,13 @@ resource "google_compute_instance" "helsinki" {
   }
 }
 
-resource "google_compute_instance" "frankfurt" {
-  name = "frankfurt"
+resource "google_compute_instance" "helsinkiStandard" {
+  name = "helsinki-standard"
   # Установка
   # machine_type = "e2-standard-2"
   # Работа
   machine_type = "e2-micro"
-  zone         = "europe-west3-a"
+  zone         = "europe-north1-b"
 
   # Для смены железа
   allow_stopping_for_update = true

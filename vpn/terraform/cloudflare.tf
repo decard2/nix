@@ -16,13 +16,9 @@ locals {
       name = "sibeerskaya"
       ip   = google_compute_instance.sibeerskaya.network_interface[0].access_config[0].nat_ip
     }
-    "helsinkiGcore" = {
+    "helsinkiStandard" = {
       name = "fi2"
-      ip   = gcore_instancev2.helsinkiGcore.addresses[0].net[0].addr
-    }
-    "frankfurt" = {
-      name = "de"
-      ip   = google_compute_instance.frankfurt.network_interface[0].access_config[0].nat_ip
+      ip   = google_compute_instance.helsinkiStandard.network_interface[0].access_config[0].nat_ip
     }
   }
 }

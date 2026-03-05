@@ -68,42 +68,17 @@
           ];
         };
 
-        helsinkiGcore = nixpkgs.lib.nixosSystem {
+        helsinkiStandard = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = {
             hostConfig = {
-              hostname = "helsinkiGcore";
+              hostname = "helsinkiStandard";
               rolderPassword = "$6$5VyQ15pyF.cRI95q$CN.UM.kgGa6twTEHFn4fIz6NNVpMWYzbv9J/2UQzJaRN3zr7B74PfZFx7LBbKNUBw9DmR5ApMy.wbF/uMXboa/";
               containers = [
                 "remnanode"
                 "selfsteal"
               ];
               selfstealDomain = "fi2.rolder.net";
-              selfstealTemplate = "games-site";
-              useDHCP = true;
-              isGCP = false;
-              diskDevice = "/dev/sda";
-            };
-            inherit selfsteal-templates;
-          };
-          modules = [
-            disko.nixosModules.disko
-            ./common.nix
-            ./disk-config.nix
-          ];
-        };
-
-        frankfurt = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            hostConfig = {
-              hostname = "frankfurt";
-              rolderPassword = "$6$5VyQ15pyF.cRI95q$CN.UM.kgGa6twTEHFn4fIz6NNVpMWYzbv9J/2UQzJaRN3zr7B74PfZFx7LBbKNUBw9DmR5ApMy.wbF/uMXboa/";
-              containers = [
-                "remnanode"
-                "selfsteal"
-              ];
-              selfstealDomain = "de.rolder.net";
               selfstealTemplate = "games-site";
               isGCP = true;
             };
