@@ -42,7 +42,10 @@ class RemnawaveAPI:
                     return True
             except requests.ConnectionError:
                 pass
-            print(f"Health check attempt {attempt}/{max_attempts} failed, retrying in {interval}s ...")
+            print(
+                f"Health check attempt {attempt}/{max_attempts}"
+                f" failed, retrying in {interval}s ..."
+            )
             time.sleep(interval)
         print("ERROR: API did not become healthy in time.")
         return False
@@ -72,6 +75,20 @@ class RemnawaveAPI:
 # Entity definitions
 # ---------------------------------------------------------------------------
 
+def _config_profile_fields(item):
+    return {
+        "uuid": item["uuid"],
+        "config": item["config"],
+    }
+
+
+def _internal_squad_fields(item, uuid):
+    return {
+        "uuid": uuid,
+        "inbounds": item["inbounds"],
+    }
+
+
 ENTITIES = [
     {
         "name": "config-profiles",
@@ -80,7 +97,7 @@ ENTITIES = [
         "key": "uuid",
         "list_path": None,
         "ops": ["update"],
-        "update_fields": lambda item: {"uuid": item["uuid"], "config": item["config"]},
+        "update_fields": _config_profile_fields,
     },
     {
         "name": "internal-squads",
@@ -89,7 +106,7 @@ ENTITIES = [
         "key": "uuid",
         "list_path": "response.internalSquads",
         "ops": ["update"],
-        "update_fields": lambda item, uuid: {"uuid": uuid, "inbounds": item["inbounds"]},
+        "update_fields": _internal_squad_fields,
     },
     {
         "name": "nodes",
@@ -135,7 +152,12 @@ def resolve_path(data: dict, path: str):
 # ---------------------------------------------------------------------------
 
 
-def reconcile(api: RemnawaveAPI, entity: dict, desired: list, dry_run: bool) -> dict:
+def reconcile(
+    api: RemnawaveAPI,
+    entity: dict,
+    desired: list,
+    dry_run: bool,
+) -> dict:
     """Reconcile a single entity type against the API.
 
     Returns a stats dict with keys created, updated, deleted.
@@ -211,7 +233,11 @@ def reconcile(api: RemnawaveAPI, entity: dict, desired: list, dry_run: bool) -> 
 # ---------------------------------------------------------------------------
 
 
-def sync_subscription_settings(api: RemnawaveAPI, settings: dict, dry_run: bool) -> dict:
+def sync_subscription_settings(
+    api: RemnawaveAPI,
+    settings: dict,
+    dry_run: bool,
+) -> dict:
     """Sync subscription settings from the provided dict."""
     if "subscriptionSettings" not in settings:
         return {"created": 0, "updated": 0, "deleted": 0}
@@ -257,9 +283,21 @@ def backup_database() -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Remnawave reconcile tool")
     mode = parser.add_mutually_exclusive_group(required=True)
-    mode.add_argument("--dry-run", action="store_true", help="Print planned changes without applying")
-    mode.add_argument("--apply", action="store_true", help="Apply changes to the API")
-    parser.add_argument("--no-backup", action="store_true", help="Skip database backup before apply")
+    mode.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print planned changes without applying",
+    )
+    mode.add_argument(
+        "--apply",
+        action="store_true",
+        help="Apply changes to the API",
+    )
+    parser.add_argument(
+        "--no-backup",
+        action="store_true",
+        help="Skip database backup before apply",
+    )
     args = parser.parse_args()
 
     dry_run = args.dry_run
