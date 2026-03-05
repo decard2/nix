@@ -22,6 +22,7 @@
       "/opt/selfsteal/Caddyfile:/etc/caddy/Caddyfile:ro"
       "/opt/selfsteal/html:/var/www/html:ro"
       "/opt/selfsteal/logs:/var/log/caddy"
+      "/opt/selfsteal/data:/data"
     ];
     autoStart = true;
   };
@@ -31,6 +32,7 @@
     "d /opt/selfsteal 0755 root root -"
     "d /opt/selfsteal/html 0755 root root -"
     "d /opt/selfsteal/logs 0755 root root -"
+    "d /opt/selfsteal/data 0755 root root -"
   ];
 
   # Создание Caddyfile

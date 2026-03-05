@@ -13,7 +13,7 @@ locals {
       ip   = google_compute_instance.sibeerskaya.network_interface[0].access_config[0].nat_ip
     }
     "helsinkiStandard" = {
-      name = "fi2"
+      name = "fistandard"
       ip   = google_compute_instance.helsinkiStandard.network_interface[0].access_config[0].nat_ip
     }
   }

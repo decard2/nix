@@ -11,7 +11,7 @@
 	},
 	{
 		"name": "Helsinki Standard",
-		"address": "fi2.rolder.net",
+		"address": "fistandard.rolder.net",
 		"port": 2222,
 		"countryCode": "FI",
 		"configProfile": {

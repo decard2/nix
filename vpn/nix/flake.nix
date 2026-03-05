@@ -55,7 +55,7 @@ helsinki = nixpkgs.lib.nixosSystem {
                 "remnanode"
                 "selfsteal"
               ];
-              selfstealDomain = "fi2.rolder.net";
+              selfstealDomain = "fistandard.rolder.net";
               selfstealTemplate = "games-site";
               isGCP = true;
             };
