@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Personal NixOS flake configuration managing:
 - **emerald** — main workstation (Intel CPU, NVIDIA GPU, Hyprland desktop)
-- **VPN infrastructure** — Remnawave VPN on GCP (panel + Stockholm/Helsinki nodes), defined in `vpn/`
+- **VPN infrastructure** — Remnawave VPN on GCP (panel + Helsinki nodes), defined in `vpn/`
 
 Language: Nix. User language: Russian.
 
@@ -20,20 +20,28 @@ sudo nixos-rebuild switch --flake .#emerald
 nix build
 
 # Deploy VPN server remotely
-NIX_SSHOPTS="-p 4444" nixos-rebuild switch --refresh --flake .#hostname --target-host rolder@TARGET_IP --ask-sudo-password
+NIX_SSHOPTS="-p 4444 -i ~/.ssh/rolder-net-gcp" nixos-rebuild switch --refresh --flake ./vpn/nix#hostname --target-host rolder@IP --sudo
 
 # Install VPN server from scratch
-./vpn/nix/install.sh -k ~/.ssh/rolder-net-gcp -u roldernet_gmail_com remnapanel 34.51.236.162
+./vpn/nix/install.sh -k ~/.ssh/rolder-net-gcp -u root HOSTNAME IP
 
 # Format with nixfmt
 nixfmt <file.nix>
+
+# Remnawave sync — dry-run (safe, read-only)
+REMNAWAVE_API_TOKEN="<token>" REMNAWAVE_CONFIGS_DIR="vpn/nix/containers/remnapanel/configs" \
+  nix-shell -p python3 python3Packages.requests --run "python3 vpn/nix/containers/remnapanel/sync.py --dry-run"
+
+# Remnawave sync — apply (makes changes, auto-backups DB)
+REMNAWAVE_API_TOKEN="<token>" REMNAWAVE_CONFIGS_DIR="vpn/nix/containers/remnapanel/configs" \
+  nix-shell -p python3 python3Packages.requests --run "python3 vpn/nix/containers/remnapanel/sync.py --apply --no-backup"
 ```
 
 ## Architecture
 
 Two independent flakes:
 - **Root `flake.nix`** — workstation config (`nixosConfigurations.emerald` + ISO package)
-- **`vpn/nix/flake.nix`** — VPN servers (`stockholm`, `helsinki`, `remnapanel`)
+- **`vpn/nix/flake.nix`** — VPN servers (`helsinki`, `helsinkiStandard`, `remnapanel`)
 
 ### Workstation structure
 
@@ -60,10 +68,45 @@ home/             # Home Manager user config
 
 ```
 vpn/nix/
-  common.nix          # Shared base (SSH on 4444, firewall, rolder user)
-  containers/         # Docker containers (remnapanel, remnanode, selfsteal)
+  common.nix          # Shared base (SSH on 4444, firewall, rolder user, API token)
+  containers/
+    remnapanel/
+      default.nix     # Docker containers (postgres, redis, backend, caddy)
+      sync.nix        # Systemd service wrapping sync.py
+      sync.py         # Python reconcile script (desired state from JSON → API)
+      backup.nix      # PostgreSQL backup (daily + before sync)
+      restore.nix     # Restore from backup
+      yandex-backup.nix # Offsite backup to Yandex S3
+      configs/        # JSON source of truth for all Remnawave entities
+    remnanode/        # VPN node containers
+    selfsteal/        # Reality selfsteal caddy
 vpn/terraform/        # GCP infrastructure provisioning
 ```
+
+### Remnawave declarative sync
+
+JSON files in `vpn/nix/containers/remnapanel/configs/` are the **single source of truth**. The Python script `sync.py` reconciles them with the Remnawave API.
+
+**Entities and key fields:**
+
+| File | Entity | Key field | Operations |
+|------|--------|-----------|------------|
+| `config-profiles.json` | config-profiles | `uuid` | update only |
+| `internal-squads.json` | internal-squads | `uuid` | update only |
+| `nodes.json` | nodes | `name` | create, update, delete |
+| `hosts.json` | hosts | `remark` | create, update, delete |
+| `users.json` | users | `username` | create, update, delete |
+| `additional-settings.json` | subscription-settings | (singleton) | update only |
+
+**How it works:**
+- Runs as `remnawave-sync.service` (systemd oneshot) on every `nixos-rebuild switch`
+- Before apply: auto-backups PostgreSQL via `remnawave-db-backup.service`
+- Reconcile order: profiles → squads → nodes + hosts → users → settings
+- Objects in API but not in JSON are **deleted** (for nodes, hosts, users)
+- `--dry-run` shows plan without changes, `--apply` executes
+- **Never edit the panel manually** — JSON files are the source of truth
+
+**To add/modify/remove a user:** edit `configs/users.json`, then deploy or run sync manually.
 
 ### Key patterns
 
@@ -78,3 +121,4 @@ vpn/terraform/        # GCP infrastructure provisioning
 - Use attribute sets over positional arguments
 - Format with `nixfmt`
 - Modularize to avoid duplication
+- JSON config files must be valid strict JSON (no trailing commas — Python's json module is strict)
