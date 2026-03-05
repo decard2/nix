@@ -1,15 +1,5 @@
 [
 	{
-		"name": "Warsaw",
-		"address": "pl.rolder.net",
-		"port": 2222,
-		"countryCode": "PL",
-		"configProfile": {
-			"activeConfigProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
-			"activeInbounds": ["9ca7aa4c-38ac-4169-b02a-d5d2cbf91fa7"]
-		}
-	},
-	{
 		"name": "Helsinki Premium",
 		"address": "fi.rolder.net",
 		"port": 2222,

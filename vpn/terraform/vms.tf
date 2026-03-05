@@ -52,35 +52,6 @@ resource "google_compute_instance" "remnapanel" {
   }
 }
 
-resource "google_compute_instance" "warsaw" {
-  name = "warsaw"
-  # Установка
-  # machine_type = "e2-highcpu-4"
-  # Работа
-  machine_type = "e2-micro"
-  zone         = "europe-central2-a"
-
-  # Для смены железа
-  allow_stopping_for_update = true
-
-  metadata = {
-    enable-oslogin = "true"
-  }
-
-  boot_disk {
-    initialize_params {
-      image = "debian-cloud/debian-12"
-    }
-  }
-
-  network_interface {
-    network = "default"
-    access_config {
-      network_tier = "STANDARD"
-    }
-  }
-}
-
 resource "google_compute_instance" "helsinki" {
   name = "helsinki"
   # Установка

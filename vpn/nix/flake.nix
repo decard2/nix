@@ -22,30 +22,7 @@
     }:
     {
       nixosConfigurations = {
-        warsaw = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = {
-            hostConfig = {
-              hostname = "warsaw";
-              rolderPassword = "$6$5VyQ15pyF.cRI95q$CN.UM.kgGa6twTEHFn4fIz6NNVpMWYzbv9J/2UQzJaRN3zr7B74PfZFx7LBbKNUBw9DmR5ApMy.wbF/uMXboa/";
-              containers = [
-                "remnanode"
-                "selfsteal"
-              ];
-              selfstealDomain = "pl.rolder.net";
-              selfstealTemplate = "10gag";
-              isGCP = true;
-            };
-            inherit selfsteal-templates;
-          };
-          modules = [
-            disko.nixosModules.disko
-            ./common.nix
-            ./disk-config.nix
-          ];
-        };
-
-        helsinki = nixpkgs.lib.nixosSystem {
+helsinki = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           specialArgs = {
             hostConfig = {

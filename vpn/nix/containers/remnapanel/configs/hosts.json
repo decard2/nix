@@ -2,16 +2,6 @@
 	{
 		"inbound": {
 			"configProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
-			"configProfileInboundUuid": "9ca7aa4c-38ac-4169-b02a-d5d2cbf91fa7"
-		},
-		"remark": "🇵🇱 Варшава",
-		"address": "pl.rolder.net",
-		"port": 443,
-		"isDisabled": false
-	},
-	{
-		"inbound": {
-			"configProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
 			"configProfileInboundUuid": "7d1728cb-50c4-4c4b-a34c-be13b4cd04aa"
 		},
 		"remark": "🇫🇮 Хельсинки Премиум",

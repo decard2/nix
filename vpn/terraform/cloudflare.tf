@@ -4,11 +4,7 @@ locals {
       name = "fi"
       ip   = google_compute_instance.helsinki.network_interface[0].access_config[0].nat_ip
     }
-    "warsaw" = {
-      name = "pl"
-      ip   = google_compute_instance.warsaw.network_interface[0].access_config[0].nat_ip
-    }
-    "panel" = {
+"panel" = {
       name = "@"
       ip   = google_compute_instance.remnapanel.network_interface[0].access_config[0].nat_ip
     }
