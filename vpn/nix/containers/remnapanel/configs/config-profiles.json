@@ -4,7 +4,9 @@
 		"name": "Default-Profile",
 		"config": {
 			"log": {
-				"loglevel": "none"
+				"loglevel": "warning",
+				"access": "/var/log/supervisor/xray_access.log",
+				"error": "/var/log/supervisor/xray_error.log"
 			},
 			"inbounds": [
 				{
@@ -80,7 +82,7 @@
 					}
 				},
 				{
-					"tag": "Frankfurt Gcore",
+					"tag": "Frankfurt",
 					"port": 443,
 					"protocol": "vless",
 					"settings": {

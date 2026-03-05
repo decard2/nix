@@ -63,6 +63,8 @@ in
     "net.core.rmem_max" = 7500000;
     "net.core.wmem_max" = 7500000;
     "net.ipv4.ping_group_range" = "0 2000000";
+    "net.ipv4.ip_forward" = 1;
+    "net.ipv6.conf.all.forwarding" = 1;
   };
 
   # Users configuration

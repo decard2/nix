@@ -110,6 +110,35 @@ resource "google_compute_instance" "helsinki" {
   }
 }
 
+resource "google_compute_instance" "frankfurt" {
+  name = "frankfurt"
+  # Установка
+  # machine_type = "e2-standard-2"
+  # Работа
+  machine_type = "e2-micro"
+  zone         = "europe-west3-a"
+
+  # Для смены железа
+  allow_stopping_for_update = true
+
+  metadata = {
+    enable-oslogin = "true"
+  }
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-12"
+    }
+  }
+
+  network_interface {
+    network = "default"
+    access_config {
+      network_tier = "STANDARD"
+    }
+  }
+}
+
 resource "google_compute_instance" "sibeerskaya" {
   name         = "sibeerskaya"
   machine_type = "e2-standard-2"

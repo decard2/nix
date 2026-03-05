@@ -30,13 +30,14 @@
 		}
 	},
 	{
-		"name": "Frankfurt Gcore",
+		"name": "Frankfurt",
 		"address": "de.rolder.net",
 		"port": 2222,
 		"countryCode": "DE",
+		"isDisabled": false,
 		"configProfile": {
 			"activeConfigProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
-			"activeInbounds": ["eda3e8eb-180e-4bfd-b1a1-e4b738363f0d"]
+			"activeInbounds": ["2296fc1f-b08b-44c0-a7ec-3a2668356e88"]
 		}
 	}
 ]

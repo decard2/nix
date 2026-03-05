@@ -35,7 +35,7 @@
 
       matchBlocks = {
         "github.com" = {
-          identityFile = "~/.ssh/decard-github";
+          identityFile = "~/.ssh/decard2-github";
           extraOptions = {
             AddKeysToAgent = "yes";
             StrictHostKeyChecking = "yes";
