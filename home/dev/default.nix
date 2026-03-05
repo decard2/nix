@@ -12,7 +12,6 @@
 
   home.packages = with pkgs; [
     inputs.flox.packages.${pkgs.stdenv.hostPlatform.system}.flox
-    devbox
     gh
   ];
 
