@@ -289,20 +289,17 @@ if [[ $? -eq 0 ]]; then
     echo "ssh -p 4444 rolder@$TARGET_IP"
     echo ""
     echo -e "${GREEN}Remote management:${NC}"
-    echo "NIX_SSHOPTS=\"-p 4444\" nixos-rebuild switch --flake .#$HOSTNAME --target-host rolder@$TARGET_IP"
+    echo "NIX_SSHOPTS=\"-p 4444 -i ~/.ssh/rolder-net-gcp\" nixos-rebuild switch --flake .#$HOSTNAME --target-host rolder@$TARGET_IP --sudo"
     echo ""
-    echo -e "${YELLOW}Authentication:${NC}"
-    echo "- Use password configured in flake.nix (Htvyfdfht)"
-
     echo ""
     echo -e "${YELLOW}Important:${NC}"
     echo "- The system will reboot automatically"
     echo "- SSH is available on port 4444 only"
-    echo "- Password and key authentication are both enabled"
+    echo "- SSH key authentication only (no password)"
     echo ""
     echo -e "${GREEN}Next steps:${NC}"
     echo "1. Wait for reboot to complete (2-3 minutes)"
-    echo "2. Test the connection using ssh -p 4444 rolder@$TARGET_IP"
+    echo "2. Test the connection: ssh -p 4444 -i ~/.ssh/rolder-net-gcp rolder@$TARGET_IP"
 
 else
     echo -e "${RED}❌ Installation failed${NC}"

@@ -73,7 +73,9 @@ in
     extraGroups = [
       "wheel"
     ];
-    hashedPassword = hostConfig.rolderPassword;
+    openssh.authorizedKeys.keys = [
+      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDGiqtKA7OrwjvXrF6MdVgIIaxv1JyHybilCsLqNDwaIDMa5r5SUrt6T3efWEIaJj70cIVJwPbgBagGQaWoeg+JkFgndMG2oC1QH5S+GENxThuHB/ON3b+aXtO/BMJDIYHg+AkgV+uSdHrg9F/BDPSTY5he8bwbLAoGWcBTzWxCi4fRisjEBJJPnOAy4SzjbEOdfroLAHPw+XKt16r+c4nAE5zcgPH0eu1sW/52r2pkgiRREXct3c68Gy/uxE7vDhjwn37AidzJ33j4kmStjcUYOCRN9LcG0aOm3kDFx8rVvic0cxeHuYNUZpGyiA3sctQhgw/a74OJtprYvWPAxKqbyK5K6Cq4Hd/vd9ig6e6fWlyqG1kWUvnhEg90KpLxuTaakQaPPqoLKz2TY9gbdB8dHXJF2cKLkqjqPowylgAn5p5KJPaArblYnkoayBDkWxnQnvRA2I4WqRP1/5jY+qjAe9AVT4C+SfGaPf3QOHTrlJUqws+yw9mRPPhk5v7rdTM= roldernet@gmail.com"
+    ];
   };
 
   # SSH - Simple configuration
@@ -81,11 +83,13 @@ in
     enable = true;
     ports = [ 4444 ];
     settings = {
-      PasswordAuthentication = true;
+      PasswordAuthentication = false;
       PermitRootLogin = "no";
       PubkeyAuthentication = true;
     };
   };
+
+  security.sudo.wheelNeedsPassword = false;
 
   # QEMU guest agent только для не-облачных ВМ
   services.qemuGuest.enable = !(hostConfig.isGCP or false) && !(hostConfig.useDHCP or false);

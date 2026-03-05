@@ -27,7 +27,6 @@ helsinki = nixpkgs.lib.nixosSystem {
           specialArgs = {
             hostConfig = {
               hostname = "helsinki";
-              rolderPassword = "$6$5VyQ15pyF.cRI95q$CN.UM.kgGa6twTEHFn4fIz6NNVpMWYzbv9J/2UQzJaRN3zr7B74PfZFx7LBbKNUBw9DmR5ApMy.wbF/uMXboa/";
               containers = [
                 "remnanode"
                 "selfsteal"
@@ -50,7 +49,6 @@ helsinki = nixpkgs.lib.nixosSystem {
           specialArgs = {
             hostConfig = {
               hostname = "helsinkiStandard";
-              rolderPassword = "$6$5VyQ15pyF.cRI95q$CN.UM.kgGa6twTEHFn4fIz6NNVpMWYzbv9J/2UQzJaRN3zr7B74PfZFx7LBbKNUBw9DmR5ApMy.wbF/uMXboa/";
               containers = [
                 "remnanode"
                 "selfsteal"
@@ -73,7 +71,6 @@ helsinki = nixpkgs.lib.nixosSystem {
           specialArgs = {
             hostConfig = {
               hostname = "remnapanel";
-              rolderPassword = "$6$5VyQ15pyF.cRI95q$CN.UM.kgGa6twTEHFn4fIz6NNVpMWYzbv9J/2UQzJaRN3zr7B74PfZFx7LBbKNUBw9DmR5ApMy.wbF/uMXboa/"; # Htvyfdfht
               containers = [ "remnapanel" ];
               isGCP = true;
             };
