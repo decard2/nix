@@ -31,7 +31,26 @@
     nix-direnv.enable = true;
     stdlib = ''
       use_flox() {
-        eval "$(flox activate)"
+        local is_remote=0
+        for arg in "$@"; do
+          case "$arg" in
+            -r|-r=*|--remote|--remote=*) is_remote=1 ;;
+          esac
+        done
+
+        if [[ "$is_remote" == "0" && ! -d ".flox" ]]; then
+          printf "direnv(use_flox): .flox directory not found\n" >&2
+          printf "direnv(use_flox): Did you run 'flox init' in this directory?\n" >&2
+          return 1
+        fi
+
+        direnv_load flox activate "$@" -- "$direnv" dump
+
+        if [[ $# == 0 ]]; then
+          watch_dir ".flox/env/"
+          watch_file ".flox/env.json"
+          watch_file ".flox/env.lock"
+        fi
       }
     '';
     config = {

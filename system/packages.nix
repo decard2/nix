@@ -9,5 +9,6 @@
     vpl-gpu-rt
     mesa
     bluetuith
+    sox
   ];
 }

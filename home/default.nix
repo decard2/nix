@@ -22,7 +22,7 @@
   home.packages = with pkgs; [
     unzip
     btop
-    neofetch
+    fastfetch
     nvd
     sshpass
   ];
