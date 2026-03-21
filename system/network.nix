@@ -9,6 +9,9 @@
     hostName = "emerald";
     wireless.iwd.enable = true;
     firewall.trustedInterfaces = [ "virbr0" ];
+    localCommands = ''
+      ip rule add ipproto icmp lookup main preference 100 2>/dev/null || true
+    '';
   };
 
   services.sing-box = {
@@ -53,6 +56,7 @@
           auto_route = true;
           auto_redirect = true;
           strict_route = true;
+          exclude_interface = [ "docker0" ];
         }
       ];
 
@@ -109,10 +113,6 @@
           }
           {
             port = [ 123 ];
-            action = "bypass";
-          }
-          {
-            protocol = "icmp";
             action = "bypass";
           }
           {
