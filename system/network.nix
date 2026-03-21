@@ -104,6 +104,22 @@
             outbound = "direct";
           }
           {
+            ip_is_private = true;
+            action = "bypass";
+          }
+          {
+            port = [ 123 ];
+            action = "bypass";
+          }
+          {
+            protocol = "icmp";
+            action = "bypass";
+          }
+          {
+            source_port = [ 51413 ];
+            action = "bypass";
+          }
+          {
             rule_set = "direct";
             outbound = "direct";
           }
@@ -114,9 +130,6 @@
             type = "inline";
             tag = "direct";
             rules = [
-              {
-                source_port = [ 51413 ];
-              }
               {
                 domain_suffix = [ "reddit.com" ];
               }

@@ -155,6 +155,12 @@
   # ====================
   time.timeZone = "Asia/Irkutsk";
 
+  networking.timeServers = [
+    "time.google.com"
+    "time.cloudflare.com"
+    "time.apple.com"
+  ];
+
   console = {
     font = "ter-v32n";
     packages = with pkgs; [ terminus_font ];
