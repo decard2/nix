@@ -116,8 +116,8 @@
             action = "bypass";
           }
           {
-            source_port = [ 51413 ];
-            action = "bypass";
+            process_name = [ "transmission-daemon" ];
+            outbound = "direct";
           }
           {
             rule_set = "direct";
