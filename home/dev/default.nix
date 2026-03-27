@@ -41,6 +41,11 @@
             StrictHostKeyChecking = "yes";
           };
         };
+        "rolder.net *.rolder.net" = {
+          identityFile = "~/.ssh/rolder-net-gcp";
+          port = 4444;
+          user = "rolder";
+        };
       };
     };
   };

@@ -11,6 +11,7 @@
     firewall.trustedInterfaces = [ "virbr0" ];
     localCommands = ''
       ip rule add ipproto icmp lookup main preference 100 2>/dev/null || true
+      ip rule add ipproto udp dport 123 lookup main preference 99 2>/dev/null || true
     '';
   };
 
@@ -109,11 +110,7 @@
           }
           {
             ip_is_private = true;
-            action = "bypass";
-          }
-          {
-            port = [ 123 ];
-            action = "bypass";
+            outbound = "direct";
           }
           {
             process_name = [ "transmission-daemon" ];
