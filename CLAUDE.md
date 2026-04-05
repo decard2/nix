@@ -19,8 +19,10 @@ sudo nixos-rebuild switch --flake .#emerald
 # Build bootable ISO
 nix build
 
-# Deploy VPN server remotely
-NIX_SSHOPTS="-p 4444 -i ~/.ssh/rolder-net-gcp" nixos-rebuild switch --refresh --flake ./vpn/nix#hostname --target-host rolder@IP --sudo
+# Deploy VPN server remotely (SSH config handles port 4444 and key automatically)
+nixos-rebuild switch --refresh --flake ./vpn/nix#remnapanel --target-host rolder@rolder.net --sudo
+nixos-rebuild switch --refresh --flake ./vpn/nix#helsinki --target-host rolder@fi.rolder.net --sudo
+nixos-rebuild switch --refresh --flake ./vpn/nix#helsinkiStandard --target-host rolder@fistandard.rolder.net --sudo
 
 # Install VPN server from scratch
 ./vpn/nix/install.sh -k ~/.ssh/rolder-net-gcp -u root HOSTNAME IP
