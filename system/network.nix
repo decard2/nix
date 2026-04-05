@@ -8,7 +8,7 @@
   networking = {
     hostName = "emerald";
     wireless.iwd.enable = true;
-    firewall.trustedInterfaces = [ "virbr0" ];
+    firewall.trustedInterfaces = [ "virbr0" "wgd+" ];
     localCommands = ''
       ip rule add ipproto icmp lookup main preference 100 2>/dev/null || true
       ip rule add ipproto udp dport 123 lookup main preference 99 2>/dev/null || true

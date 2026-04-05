@@ -59,7 +59,7 @@
 
   # Valkey (Redis) container for Remnawave Panel
   virtualisation.oci-containers.containers.remnawave-redis = {
-    image = "valkey/valkey:8.0.2-alpine";
+    image = "valkey/valkey:9-alpine";
     volumes = [
       "/opt/remnawave/redis_data:/data"
     ];
@@ -122,6 +122,9 @@
       # Webhook configuration
       WEBHOOK_SECRET_HEADER = "29ca08a3c94d183a7519e3b46fdbec1a5977f64d4322971d1983c7ca23d82a3615b4423960d36bd8dd93bd1fc8bf59ccd3480bc01b37c277b69638a3e7209efc";
       WEBHOOK_URL = "https://rolder.net/wh";
+
+      # Panel domain (for notification links)
+      PANEL_DOMAIN = "rolder.net";
 
       # Telegram
       IS_TELEGRAM_NOTIFICATIONS_ENABLED = "false";

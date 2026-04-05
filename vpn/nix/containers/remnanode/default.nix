@@ -9,6 +9,7 @@
     extraOptions = [
       "--network=host"
       "--pull=always"
+      "--cap-add=NET_ADMIN"
     ];
     environment = {
       NODE_PORT = "2222";

@@ -98,6 +98,13 @@
       extraConfig = ''
         Defaults timestamp_timeout=1440
       '';
+      extraRules = [{
+        users = [ "decard" ];
+        commands = [{
+          command = "/nix/store/*/bin/wg-quick *";
+          options = [ "NOPASSWD" ];
+        }];
+      }];
     };
   };
 
