@@ -4,6 +4,7 @@
 		"address": "fi.rolder.net",
 		"port": 2222,
 		"countryCode": "FI",
+		"activePlugin": "Torrent Blocker",
 		"configProfile": {
 			"activeConfigProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
 			"activeInbounds": ["7d1728cb-50c4-4c4b-a34c-be13b4cd04aa"]
@@ -14,6 +15,7 @@
 		"address": "fistandard.rolder.net",
 		"port": 2222,
 		"countryCode": "FI",
+		"activePlugin": "Torrent Blocker",
 		"configProfile": {
 			"activeConfigProfileUuid": "fe69a68a-936b-4cd3-8659-f4c65ffa6a69",
 			"activeInbounds": ["5c7550a4-dbab-4337-8cfe-fcb75fa8a685"]

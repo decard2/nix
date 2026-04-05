@@ -1,0 +1,28 @@
+[
+	{
+		"name": "Torrent Blocker",
+		"pluginConfig": {
+			"torrentBlocker": {
+				"enabled": true,
+				"blockDuration": 3600,
+				"ignoreLists": {
+					"ip": []
+				}
+			},
+			"ingressFilter": {
+				"enabled": false,
+				"blockedIps": []
+			},
+			"egressFilter": {
+				"enabled": false,
+				"blockedIps": [],
+				"blockedPorts": []
+			},
+			"connectionDrop": {
+				"enabled": false,
+				"whitelistIps": []
+			},
+			"sharedLists": []
+		}
+	}
+]

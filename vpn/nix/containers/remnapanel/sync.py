@@ -56,12 +56,20 @@ class RemnawaveAPI:
         return resp.json()
 
     def post(self, endpoint: str, data: dict) -> dict:
-        resp = self.session.post(f"{self.base_url}{endpoint}", json=data)
+        resp = self.session.post(
+            f"{self.base_url}{endpoint}", json=data
+        )
+        if not resp.ok:
+            print(f"  POST {endpoint} failed: {resp.text}")
         resp.raise_for_status()
         return resp.json()
 
     def patch(self, endpoint: str, data: dict) -> dict:
-        resp = self.session.patch(f"{self.base_url}{endpoint}", json=data)
+        resp = self.session.patch(
+            f"{self.base_url}{endpoint}", json=data
+        )
+        if not resp.ok:
+            print(f"  PATCH {endpoint} failed: {resp.text}")
         resp.raise_for_status()
         return resp.json()
 
@@ -229,6 +237,94 @@ def reconcile(
 
 
 # ---------------------------------------------------------------------------
+# Node plugins
+# ---------------------------------------------------------------------------
+
+
+def reconcile_node_plugins(
+    api: RemnawaveAPI,
+    desired: list,
+    dry_run: bool,
+) -> tuple:
+    """Reconcile node plugins. Returns (stats, name_to_uuid map)."""
+    stats = {"created": 0, "updated": 0, "deleted": 0}
+
+    data = api.get("/node-plugins")
+    existing_list = resolve_path(data, "response.nodePlugins")
+    existing_by_name = {p["name"]: p for p in existing_list}
+    desired_by_name = {p["name"]: p for p in desired}
+
+    # Create
+    for name, item in desired_by_name.items():
+        if name not in existing_by_name:
+            if dry_run:
+                print(f"  [dry-run] CREATE node-plugin name={name}")
+            else:
+                result = api.post("/node-plugins", {"name": name})
+                uuid = resolve_path(result, "response.uuid")
+                if "pluginConfig" in item:
+                    api.patch(
+                        "/node-plugins",
+                        {"uuid": uuid, "pluginConfig": item["pluginConfig"]},
+                    )
+                print(f"  Created node-plugin name={name}")
+            stats["created"] += 1
+
+    # Update
+    for name, item in desired_by_name.items():
+        if name in existing_by_name:
+            uuid = existing_by_name[name]["uuid"]
+            payload = {"uuid": uuid, "name": name}
+            if "pluginConfig" in item:
+                payload["pluginConfig"] = item["pluginConfig"]
+            if dry_run:
+                print(f"  [dry-run] UPDATE node-plugin name={name}")
+            else:
+                api.patch("/node-plugins", payload)
+                print(f"  Updated node-plugin name={name}")
+            stats["updated"] += 1
+
+    # Delete
+    for name, existing in existing_by_name.items():
+        if name not in desired_by_name:
+            uuid = existing["uuid"]
+            if dry_run:
+                print(f"  [dry-run] DELETE node-plugin name={name}")
+            else:
+                api.delete(f"/node-plugins/{uuid}")
+                print(f"  Deleted node-plugin name={name}")
+            stats["deleted"] += 1
+
+    # Build name → uuid map
+    if not dry_run:
+        data = api.get("/node-plugins")
+        refreshed = resolve_path(data, "response.nodePlugins")
+        name_to_uuid = {
+            p["name"]: p["uuid"] for p in refreshed
+        }
+    else:
+        name_to_uuid = {p["name"]: p["uuid"] for p in existing_list}
+
+    return stats, name_to_uuid
+
+
+def resolve_node_plugins(desired_nodes: list, plugin_map: dict) -> list:
+    """Replace activePlugin name with activePluginUuid in node definitions."""
+    for node in desired_nodes:
+        plugin_name = node.pop("activePlugin", None)
+        if plugin_name:
+            uuid = plugin_map.get(plugin_name)
+            if uuid:
+                node["activePluginUuid"] = uuid
+            else:
+                print(
+                    f"  WARNING: plugin '{plugin_name}' not found"
+                    f" for node '{node.get('name')}'"
+                )
+    return desired_nodes
+
+
+# ---------------------------------------------------------------------------
 # Subscription settings
 # ---------------------------------------------------------------------------
 
@@ -321,8 +417,20 @@ def main() -> None:
     if args.apply and not args.no_backup:
         backup_database()
 
-    # Reconcile entities
+    # Reconcile node plugins (before nodes, since nodes reference plugins)
     summary = {}
+    plugin_map = {}
+    plugins_path = os.path.join(configs_dir, "node-plugins.json")
+    if os.path.exists(plugins_path):
+        print("\n--- node-plugins ---")
+        with open(plugins_path) as f:
+            desired_plugins = json.load(f)
+        plugin_stats, plugin_map = reconcile_node_plugins(
+            api, desired_plugins, dry_run
+        )
+        summary["node-plugins"] = plugin_stats
+
+    # Reconcile entities
     for entity in ENTITIES:
         filepath = os.path.join(configs_dir, entity["file"])
         if not os.path.exists(filepath):
@@ -331,6 +439,10 @@ def main() -> None:
 
         with open(filepath) as f:
             desired = json.load(f)
+
+        # Resolve plugin references for nodes
+        if entity["name"] == "nodes" and plugin_map:
+            resolve_node_plugins(desired, plugin_map)
 
         print(f"\n--- {entity['name']} ---")
         stats = reconcile(api, entity, desired, dry_run)

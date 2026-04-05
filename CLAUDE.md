@@ -93,6 +93,7 @@ JSON files in `vpn/nix/containers/remnapanel/configs/` are the **single source o
 
 | File | Entity | Key field | Operations |
 |------|--------|-----------|------------|
+| `node-plugins.json` | node-plugins | `name` | create, update, delete |
 | `config-profiles.json` | config-profiles | `uuid` | update only |
 | `internal-squads.json` | internal-squads | `uuid` | update only |
 | `nodes.json` | nodes | `name` | create, update, delete |
@@ -103,7 +104,8 @@ JSON files in `vpn/nix/containers/remnapanel/configs/` are the **single source o
 **How it works:**
 - Runs as `remnawave-sync.service` (systemd oneshot) on every `nixos-rebuild switch`
 - Before apply: auto-backups PostgreSQL via `remnawave-db-backup.service`
-- Reconcile order: profiles → squads → nodes + hosts → users → settings
+- Reconcile order: **plugins** → profiles → squads → nodes + hosts → users → settings
+- Nodes reference plugins by name via `activePlugin` field — resolved to `activePluginUuid` at sync time
 - Objects in API but not in JSON are **deleted** (for nodes, hosts, users)
 - `--dry-run` shows plan without changes, `--apply` executes
 - **Never edit the panel manually** — JSON files are the source of truth
