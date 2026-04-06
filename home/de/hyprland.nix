@@ -87,6 +87,7 @@
         # Слой 4 — Приложения стретчпад
         "[workspace special:decardos silent] uwsm app -- kitty -d ~/nix -e claude"
         "[workspace special:telegram silent] uwsm app -- Telegram"
+        "hyprctl dispatch workspace 1"
       ];
 
       # Мышь
