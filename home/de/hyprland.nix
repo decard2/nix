@@ -131,7 +131,7 @@
         "CTRL, 2, togglespecialworkspace, c-2"
         "CTRL, 3, togglespecialworkspace, c-3"
 
-        # === Слой 4 — SUPER+CAPS — Claude Code ===
+        # === Слой 4 — SUPER+CAPS — Claude Code DecardOS ===
         "SUPER, Caps_Lock, togglespecialworkspace, claude"
 
         # Telegram
