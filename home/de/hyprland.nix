@@ -21,7 +21,7 @@
         "3,monitor:DP-2"
         "4,monitor:DP-2"
         "5,monitor:DP-2"
-        "9,monitor:eDP-1,default:true"
+        "9,monitor:eDP-1"
       ];
 
       # Внешний вид
@@ -70,7 +70,7 @@
         "uwsm app -- hyprcursor"
         "uwsm app -- ~/nix/home/scripts/autoHyprsunset.fish"
         # Слой 1 — Приложения
-        "[workspace 1 silent] uwsm app -- zed"
+        "sleep 2 && hyprctl dispatch exec \"[workspace 1 silent] uwsm app -- ~/.local/zed.app/libexec/zed-editor\""
         "[workspace 2 silent] uwsm app -- google-chrome-stable"
         # Слой 2 — SUPER терминалы
         "[workspace special:s-grave silent] uwsm app -- kitty"
@@ -137,7 +137,7 @@
         "CTRL, 3, togglespecialworkspace, c-3"
 
         # === Слой 4 — SUPER+CAPS — Claude Code DecardOS ===
-        "SUPER_SHIFT, TAB, togglespecialworkspace, decardos"
+        "ALT, F1, togglespecialworkspace, decardos"
 
         # Telegram
         "SUPER, A, togglespecialworkspace, telegram"
