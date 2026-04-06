@@ -69,25 +69,25 @@
       exec-once = [
         "uwsm app -- hyprcursor"
         "uwsm app -- ~/nix/home/scripts/autoHyprsunset.fish"
-        # Слой 1 — Приложения
-        "[workspace 1 silent] uwsm app -- zeditor"
+        # Приложения
         "[workspace 2 silent] uwsm app -- google-chrome-stable"
-        # Слой 2 — SUPER терминалы
+        # btop — воркспейс 9, левый монитор (стационарный)
+        "[workspace 9 silent] uwsm app -- kitty -e btop"
+        # SUPER терминалы
         "[workspace special:s-grave silent] uwsm app -- kitty"
         "[workspace special:s-1 silent] uwsm app -- kitty"
         "[workspace special:s-2 silent] uwsm app -- kitty"
         "[workspace special:s-3 silent] uwsm app -- kitty"
-        # Слой 3 — CTRL терминалы
+        # CTRL терминалы
         "[workspace special:c-grave silent] uwsm app -- kitty"
         "[workspace special:c-1 silent] uwsm app -- kitty"
         "[workspace special:c-2 silent] uwsm app -- kitty"
         "[workspace special:c-3 silent] uwsm app -- kitty"
-        # btop — воркспейс 9, левый монитор (стационарный)
-        "[workspace 9 silent] uwsm app -- kitty -e btop"
-        # Слой 4 — Приложения стретчпад
+        # Приложения скретчпад
         "[workspace special:decardos silent] uwsm app -- kitty -d ~/nix -e claude"
         "[workspace special:telegram silent] uwsm app -- Telegram"
-        "hyprctl dispatch workspace 1"
+        # Zed последним — без silent, забирает фокус на workspace 1
+        "[workspace 1] uwsm app -- zeditor"
       ];
 
       # Мышь
