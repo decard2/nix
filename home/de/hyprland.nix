@@ -68,6 +68,10 @@
       # Автозапуск
       exec-once = [
         "uwsm app -- hyprcursor"
+        "uwsm app -- ~/nix/home/scripts/autoHyprsunset.fish"
+        # Слой 1 — Приложения
+        "[workspace 1 silent] uwsm app -- zed"
+        "[workspace 2 silent] uwsm app -- google-chrome-stable"
         # Слой 2 — SUPER терминалы
         "[workspace special:s-grave silent] uwsm app -- kitty"
         "[workspace special:s-1 silent] uwsm app -- kitty"
@@ -78,13 +82,11 @@
         "[workspace special:c-1 silent] uwsm app -- kitty"
         "[workspace special:c-2 silent] uwsm app -- kitty"
         "[workspace special:c-3 silent] uwsm app -- kitty"
-        # btop — воркспейс 5, левый монитор (стационарный)
-        "[workspace 5 silent] uwsm app -- kitty -e btop"
-        # Слой 4 — Claude Code
-        "[workspace special:claude silent] uwsm app -- kitty -d ~/nix -e claude"
-        # Telegram
+        # btop — воркспейс 9, левый монитор (стационарный)
+        "[workspace 9 silent] uwsm app -- kitty -e btop"
+        # Слой 4 — Приложения стретчпад
+        "[workspace special:decardos silent] uwsm app -- kitty -d ~/nix -e claude"
         "[workspace special:telegram silent] uwsm app -- Telegram"
-        "uwsm app -- ~/nix/home/scripts/autoHyprsunset.fish"
       ];
 
       # Мышь
@@ -135,7 +137,7 @@
         "CTRL, 3, togglespecialworkspace, c-3"
 
         # === Слой 4 — SUPER+CAPS — Claude Code DecardOS ===
-        "SUPER, Caps_Lock, togglespecialworkspace, claude"
+        "SUPER_SHIFT, TAB, togglespecialworkspace, decardos"
 
         # Telegram
         "SUPER, A, togglespecialworkspace, telegram"
