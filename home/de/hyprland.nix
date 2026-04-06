@@ -16,12 +16,12 @@
 
       # Воркспейсы: 1-4 на правом мониторе, 5 стационарный на левом (btop)
       workspace = [
+        "9,monitor:eDP-1,default:true"
         "1,monitor:DP-2,default:true"
         "2,monitor:DP-2"
         "3,monitor:DP-2"
         "4,monitor:DP-2"
         "5,monitor:DP-2"
-        "9,monitor:eDP-1"
       ];
 
       # Внешний вид
@@ -70,7 +70,7 @@
         "uwsm app -- hyprcursor"
         "uwsm app -- ~/nix/home/scripts/autoHyprsunset.fish"
         # Слой 1 — Приложения
-        "sleep 2 && hyprctl dispatch exec \"[workspace 1 silent] uwsm app -- ~/.local/zed.app/libexec/zed-editor\""
+        "[workspace 1 silent] uwsm app -- zeditor"
         "[workspace 2 silent] uwsm app -- google-chrome-stable"
         # Слой 2 — SUPER терминалы
         "[workspace special:s-grave silent] uwsm app -- kitty"
