@@ -108,6 +108,7 @@
         "SUPER_SHIFT, Q, exec, uwsm app -- virsh -c qemu:///system shutdown win11"
 
         # === Слой 1 — ALT — Воркспейсы (правый монитор) ===
+        "ALT, grave, workspace, 5"
         "ALT, 1, workspace, 1"
         "ALT, 2, workspace, 2"
         "ALT, 3, workspace, 3"
