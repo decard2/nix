@@ -20,7 +20,8 @@
         "2,monitor:DP-2"
         "3,monitor:DP-2"
         "4,monitor:DP-2"
-        "5,monitor:eDP-1,default:true"
+        "5,monitor:DP-2"
+        "9,monitor:eDP-1,default:true"
       ];
 
       # Внешний вид
@@ -108,11 +109,12 @@
         "SUPER_SHIFT, Q, exec, uwsm app -- virsh -c qemu:///system shutdown win11"
 
         # === Слой 1 — ALT — Воркспейсы (правый монитор) ===
-        "ALT, grave, workspace, 5"
+        "ALT, grave, workspace, 9"
         "ALT, 1, workspace, 1"
         "ALT, 2, workspace, 2"
         "ALT, 3, workspace, 3"
         "ALT, 4, workspace, 4"
+        "ALT, 5, workspace, 5"
 
         # Перемещение окон между воркспейсами
         "ALT_SHIFT, 1, movetoworkspace, 1"
