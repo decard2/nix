@@ -8,24 +8,22 @@
     portalPackage = null;
 
     settings = {
-      # 1. Мониторы и воркспейсы
+      # Мониторы
       monitor = [
-        "DP-2,1920x1080@60.0,1500x0,1.0"
-        "eDP-1,3000x2000@59.999001,0x0,2.0"
-      ];
-      workspace = [
-        "1,monitor:eDP-1"
-        "2,monitor:eDP-1"
-        "3,monitor:DP-2"
-        "4,monitor:DP-2"
-        "5,monitor:DP-2"
-        "6,monitor:DP-2"
-        "7,monitor:DP-2"
-        "8,monitor:DP-2"
-        "9,monitor:DP-2"
+        "DP-2,1920x1080@60.0,1500x0,1.0" # Правый
+        "eDP-1,3000x2000@59.999001,0x0,2.0" # Левый
       ];
 
-      # 2. Основные настройки внешнего вида
+      # Воркспейсы: 1-4 на правом мониторе, 5 стационарный на левом (btop)
+      workspace = [
+        "1,monitor:DP-2,default:true"
+        "2,monitor:DP-2"
+        "3,monitor:DP-2"
+        "4,monitor:DP-2"
+        "5,monitor:eDP-1,default:true"
+      ];
+
+      # Внешний вид
       general = {
         gaps_in = 0;
         gaps_out = 0;
@@ -52,72 +50,92 @@
         ];
       };
 
-      # 3. Настройки поведения окон
       dwindle = {
         pseudotile = true;
         preserve_split = true;
         split_width_multiplier = 1.0;
         force_split = 2;
-        special_scale_factor = 0.95;
+        special_scale_factor = 0.975;
       };
 
-      # 4. Настройки ввода
       input = {
         kb_layout = "us,ru";
         kb_options = "grp:win_space_toggle,grp_led:scroll";
         numlock_by_default = true;
       };
 
-      # 5. Правила для окон
-      # windowrule = [ ];
-
-      # 6. Автозапуск
+      # Автозапуск
       exec-once = [
         "uwsm app -- hyprcursor"
-        "[workspace special:term11 silent] uwsm app -- kitty"
-        "[workspace special:term12 silent] uwsm app -- kitty"
-        "[workspace special:term13 silent] uwsm app -- kitty"
-        "[workspace special:term14 silent] uwsm app -- kitty"
-        "[workspace special:term21 silent] uwsm app -- kitty"
-        "[workspace special:term22 silent] uwsm app -- kitty"
-        "[workspace special:term23 silent] uwsm app -- kitty"
-        "[workspace special:term24 silent] uwsm app -- kitty"
-        "[workspace special:btop silent] uwsm app -- kitty -e btop"
+        # Слой 2 — SUPER терминалы
+        "[workspace special:s-grave silent] uwsm app -- kitty"
+        "[workspace special:s-1 silent] uwsm app -- kitty"
+        "[workspace special:s-2 silent] uwsm app -- kitty"
+        "[workspace special:s-3 silent] uwsm app -- kitty"
+        # Слой 3 — CTRL терминалы
+        "[workspace special:c-grave silent] uwsm app -- kitty"
+        "[workspace special:c-1 silent] uwsm app -- kitty"
+        "[workspace special:c-2 silent] uwsm app -- kitty"
+        "[workspace special:c-3 silent] uwsm app -- kitty"
+        # btop — воркспейс 5, левый монитор (стационарный)
+        "[workspace 5 silent] uwsm app -- kitty -e btop"
+        # Слой 4 — Claude Code
+        "[workspace special:claude silent] uwsm app -- kitty -d ~/nix -e claude"
+        # Telegram
         "[workspace special:telegram silent] uwsm app -- Telegram"
         "uwsm app -- ~/nix/home/scripts/autoHyprsunset.fish"
       ];
 
-      # 7. Бинды клавиш и мыши
+      # Мышь
       bindm = [
         "SUPER, mouse:272, movewindow"
         "SUPER, mouse:273, resizewindow"
       ];
 
       bind = [
-        # Основные команды
+        # Утилиты
         "SUPER, D, exec, uwsm app -- yofi"
         "SUPER, Return, exec, uwsm app -- kitty"
         "SUPER, Q, killactive,"
         "SUPER, V, togglefloating,"
         "SUPER, P, pseudo,"
         "SUPER, S, togglesplit,"
+        "SUPER, F, fullscreen, 0"
+        "SUPER_SHIFT, F, fullscreen, 1"
 
         # Виртуалка
         "SUPER_SHIFT, W, exec, uwsm app -- virsh -c qemu:///system start win11; uwsm app -- virt-viewer --connect qemu:///system win11"
         "SUPER_SHIFT, Q, exec, uwsm app -- virsh -c qemu:///system shutdown win11"
 
-        # Скретчпады
-        "CTRL, grave, togglespecialworkspace, term"
-        "CTRL, 1, togglespecialworkspace, term1"
-        "CTRL, 2, togglespecialworkspace, term2"
-        "CTRL, 3, togglespecialworkspace, term3"
-        "SUPER, grave, togglespecialworkspace, term"
-        "SUPER, 1, togglespecialworkspace, term1"
-        "SUPER, 2, togglespecialworkspace, term2"
-        "SUPER, 3, togglespecialworkspace, term3"
-        "SUPER, TAB, togglespecialworkspace, btop"
+        # === Слой 1 — ALT — Воркспейсы (правый монитор) ===
+        "ALT, 1, workspace, 1"
+        "ALT, 2, workspace, 2"
+        "ALT, 3, workspace, 3"
+        "ALT, 4, workspace, 4"
+
+        # Перемещение окон между воркспейсами
+        "ALT_SHIFT, 1, movetoworkspace, 1"
+        "ALT_SHIFT, 2, movetoworkspace, 2"
+        "ALT_SHIFT, 3, movetoworkspace, 3"
+        "ALT_SHIFT, 4, movetoworkspace, 4"
+
+        # === Слой 2 — SUPER — Терминалы (скретчпады) ===
+        "SUPER, grave, togglespecialworkspace, s-grave"
+        "SUPER, 1, togglespecialworkspace, s-1"
+        "SUPER, 2, togglespecialworkspace, s-2"
+        "SUPER, 3, togglespecialworkspace, s-3"
+
+        # === Слой 3 — CTRL — Терминалы (скретчпады) ===
+        "CTRL, grave, togglespecialworkspace, c-grave"
+        "CTRL, 1, togglespecialworkspace, c-1"
+        "CTRL, 2, togglespecialworkspace, c-2"
+        "CTRL, 3, togglespecialworkspace, c-3"
+
+        # === Слой 4 — SUPER+CAPS — Claude Code ===
+        "SUPER, Caps_Lock, togglespecialworkspace, claude"
+
+        # Telegram
         "SUPER, A, togglespecialworkspace, telegram"
-        "SUPER, M, togglespecialworkspace, tidal"
 
         # Управление фокусом
         "SUPER, left, movefocus, l"
@@ -137,39 +155,10 @@
         "SUPER_ALT, up, resizeactive, 0 -20"
         "SUPER_ALT, down, resizeactive, 0 20"
 
-        # Воркспейсы
-        "SUPER, 1, workspace, 1"
-        "SUPER, 2, workspace, 2"
-        "SUPER, 3, workspace, 3"
-        "SUPER, 4, workspace, 4"
-        "SUPER, 5, workspace, 5"
-        "SUPER, 6, workspace, 6"
-        "SUPER, 7, workspace, 7"
-        "SUPER, 8, workspace, 8"
-        "SUPER, 9, workspace, 9"
-
-        # Перемещение workspace
-        "SUPER CTRL, left, movecurrentworkspacetomonitor, l"
-        "SUPER CTRL, right, movecurrentworkspacetomonitor, r"
-
-        # Перемещение окон между воркспейсами
-        "SUPER_SHIFT, 1, movetoworkspace, 1"
-        "SUPER_SHIFT, 2, movetoworkspace, 2"
-        "SUPER_SHIFT, 3, movetoworkspace, 3"
-        "SUPER_SHIFT, 4, movetoworkspace, 4"
-        "SUPER_SHIFT, 5, movetoworkspace, 5"
-        "SUPER_SHIFT, 6, movetoworkspace, 6"
-        "SUPER_SHIFT, 7, movetoworkspace, 7"
-        "SUPER_SHIFT, 8, movetoworkspace, 8"
-        "SUPER_SHIFT, 9, movetoworkspace, 9"
-
-        # Дополнительные хоткеи
-        "SUPER, tab, workspace, previous"
-        "SUPER, F, fullscreen, 0"
-        "SUPER_SHIFT, F, fullscreen, 1"
+        # Скриншот
         ", Print, exec, uwsm app -- hyprshot -m region --clipboard-only"
 
-        # Медиа клавиши
+        # Медиа
         ", XF86AudioPlay, exec, uwsm app -- playerctl play-pause"
         ", XF86AudioNext, exec, uwsm app -- playerctl next"
         ", XF86AudioPrev, exec, uwsm app -- playerctl previous"
