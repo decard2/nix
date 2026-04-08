@@ -84,7 +84,7 @@
         "[workspace special:c-2 silent] uwsm app -- kitty"
         "[workspace special:c-3 silent] uwsm app -- kitty"
         # Приложения скретчпад
-        "[workspace special:decardos silent] uwsm app -- kitty -d ~/nix -e claude"
+        "[workspace special:decardos silent] uwsm app -- kitty -d ~/dos -e claude"
         "[workspace special:telegram silent] uwsm app -- Telegram"
         # Zed последним — без silent, забирает фокус на workspace 1
         "[workspace 1] uwsm app -- zeditor"
