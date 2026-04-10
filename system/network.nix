@@ -8,7 +8,10 @@
   networking = {
     hostName = "emerald";
     wireless.iwd.enable = true;
-    firewall.trustedInterfaces = [ "virbr0" "wgd+" ];
+    firewall.trustedInterfaces = [
+      "virbr0"
+      "wgd+"
+    ];
     localCommands = ''
       ip rule add ipproto icmp lookup main preference 100 2>/dev/null || true
       ip rule add ipproto udp dport 123 lookup main preference 99 2>/dev/null || true
@@ -69,19 +72,13 @@
         {
           tag = "proxy";
           type = "vless";
-          # Stockholm
-          # server = "sw.rolder.net";
-          # Helsinki
-          server = "fi.rolder.net";
+          server = "fipro.rolder.net";
           server_port = 443;
           uuid = "98d48f50-bbe8-4d43-8268-304471947824";
           flow = "xtls-rprx-vision";
           tls = {
             enabled = true;
-            # Stockholm
-            # server_name = "sw.rolder.net";
-            # Helsinki
-            server_name = "fi.rolder.net";
+            server_name = "fipro.rolder.net";
             utls = {
               enabled = true;
               fingerprint = "chrome";
