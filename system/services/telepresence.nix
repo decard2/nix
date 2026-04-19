@@ -6,9 +6,21 @@
 {
   environment.systemPackages = [ pkgs.telepresence2 ];
 
-  # TUN module usually auto-loaded, но на всякий явно: ProtectKernelModules=yes
-  # запрещает загрузку в runtime, модуль должен быть уже в памяти.
+  # TUN module должен быть в памяти: ProtectKernelModules=yes
+  # запрещает runtime загрузку.
   boot.kernelModules = [ "tun" ];
+
+  # Default config (логирование rootd). Upstream postinstall ставит тот же.
+  environment.etc."telepresence/config.yml".text = ''
+    logLevels:
+      rootDaemon: info
+  '';
+
+  # Upstream postinstall.sh создаёт эти пути. systemd CacheDirectory
+  # делает только верхний /var/cache/telepresence, подкаталог нужен отдельно.
+  systemd.tmpfiles.rules = [
+    "d /var/cache/telepresence/rootd 0755 root root -"
+  ];
 
   systemd.services.telepresence-rootd = {
     description = "Telepresence root daemon (managed)";
@@ -16,13 +28,20 @@
     wantedBy = [ "multi-user.target" ];
     after = [ "network.target" ];
 
-    environment = {
-      HOME = "/var/cache/telepresence";
-    };
+    # Telepresence пишет в $HOME при некоторых операциях.
+    # /var/root (upstream default) не существует на Linux, /root закрыт ProtectHome.
+    # Указываем writable путь из CacheDirectory.
+    environment.HOME = "/var/cache/telepresence";
 
     serviceConfig = {
       Type = "simple";
-      ExecStart = "${pkgs.telepresence2}/bin/telepresence rootd --logfile managed --address :4037 --managed";
+      ExecStart = ''
+        ${pkgs.telepresence2}/bin/telepresence rootd \
+          --logfile managed \
+          --config /etc/telepresence/config.yml \
+          --address :4037 \
+          --managed
+      '';
 
       User = "root";
       Group = "root";
@@ -39,13 +58,14 @@
       StandardOutput = "journal";
       StandardError = "journal";
 
-      # Security hardening из upstream unit.
+      # Security hardening (1:1 из upstream unit).
       NoNewPrivileges = true;
       ProtectSystem = "strict";
       ProtectHome = "read-only";
       PrivateTmp = true;
       RestrictSUIDSGID = true;
       RemoveIPC = true;
+      RestrictNamespaces = true;
       ProtectHostname = true;
       ProtectKernelTunables = true;
       ProtectKernelModules = true;
