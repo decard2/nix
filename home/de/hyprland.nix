@@ -87,7 +87,7 @@
         "[workspace special:decardos silent] uwsm app -- kitty -d ~/dos -e claude"
         "[workspace special:telegram silent] uwsm app -- Telegram"
         # Zed последним — без silent, забирает фокус на workspace 1
-        "[workspace 1] uwsm app -- zeditor"
+        "[workspace 1] uwsm app -- zed"
       ];
 
       # Мышь
