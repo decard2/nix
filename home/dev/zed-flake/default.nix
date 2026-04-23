@@ -3,6 +3,22 @@
   inputs,
   ...
 }:
+let
+  floxPkg = inputs.flox.packages.${pkgs.stdenv.hostPlatform.system}.flox;
+  claudeAcpFlox = pkgs.writeShellScript "claude-acp-flox" ''
+    set -eu
+    cwd="''${PWD:-$(pwd)}"
+    prefix="$HOME/.local/share/zed/external_agents/registry/npx/claude-acp"
+    cache="$HOME/.local/share/zed/node/cache"
+    mkdir -p "$prefix" "$cache"
+    acp_cmd="${pkgs.nodejs_22}/bin/npm --prefix $prefix exec --cache=$cache --yes -- @agentclientprotocol/claude-agent-acp@latest"
+    if [ -d "$cwd/.flox" ]; then
+      exec ${floxPkg}/bin/flox activate -d "$cwd" -c "$acp_cmd"
+    else
+      exec sh -c "$acp_cmd"
+    fi
+  '';
+in
 {
   home.packages = with pkgs; [
     nixd
@@ -12,6 +28,7 @@
   programs.zed-editor = {
     enable = true;
     package = inputs.zed.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    mutableUserSettings = false;
 
     extensions = [
       "html"
@@ -28,7 +45,7 @@
       ui_font_size = 14;
       buffer_font_size = 15;
       agent_buffer_font_size = 14;
-      agent_ui_font_size = 18.0;
+      agent_ui_font_size = 20.0;
 
       theme = {
         mode = "system";
@@ -45,7 +62,10 @@
       };
       agent_servers = {
         claude-acp = {
-          type = "registry";
+          type = "custom";
+          command = toString claudeAcpFlox;
+          args = [ ];
+          env = { };
         };
       };
 
