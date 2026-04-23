@@ -42,9 +42,9 @@ in
     ];
 
     userSettings = {
-      ui_font_size = 14;
+      ui_font_size = 15;
       buffer_font_size = 15;
-      agent_buffer_font_size = 14;
+      agent_buffer_font_size = 15;
       agent_ui_font_size = 20.0;
 
       theme = {
