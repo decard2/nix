@@ -6,7 +6,7 @@
 }:
 {
   imports = [
-    ./zed
+    ./zed-flake
     ./roodl.nix
   ];
 
