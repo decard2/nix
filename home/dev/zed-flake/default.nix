@@ -31,13 +31,14 @@
 
       theme = {
         mode = "system";
-        light = "One Light";
-        dark = "One Dark";
+        light = "Ayu Light";
+        dark = "Ayu Dark";
       };
 
       agent = {
         use_modifier_to_send = true;
       };
+      load_direnv = "shell_hook";
       session = {
         trust_all_worktrees = true;
       };
