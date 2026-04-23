@@ -25,9 +25,10 @@
     ];
 
     userSettings = {
-      ui_font_size = 16;
-      buffer_font_size = 16;
-      agent_buffer_font_size = 16;
+      ui_font_size = 14;
+      buffer_font_size = 15;
+      agent_buffer_font_size = 12;
+      agent_ui_font_size = 18.0;
 
       theme = {
         mode = "system";
