@@ -15,7 +15,7 @@
     nixos-generators.url = "github:nix-community/nixos-generators";
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
 
-    zed.url = "github:zed-industries/zed/v0.233.7";
+    zed.url = "github:zed-industries/zed/v0.233.10";
   };
 
   outputs =
