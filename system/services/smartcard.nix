@@ -245,6 +245,13 @@ in {
     SUBSYSTEM=="usb", ATTRS{idVendor}=="0a89", MODE="0666"
   '';
 
+  # Host pcscd (host-level, not in container).
+  # Был выключен раньше потому что distrobox с пользовательскими процессами
+  # внутри запускал свой pcscd, который дрался с хостовым за USB. Теперь
+  # distrobox уходит → конфликта нет, pcscd на хосте — единственный владелец.
+  services.pcscd.enable = true;
+  services.pcscd.plugins = [ pkgs.ccid ];
+
   environment.systemPackages = [
     cryptoproCsp
     cprocspCades
