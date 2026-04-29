@@ -1,20 +1,76 @@
-{ pkgs, ... }:
-{
-  # pcscd на хосте намеренно НЕ включаем: он бы попытался claim'ить
-  # Rutoken по libccid и постоянно отваливался по LIBUSB_ERROR_ACCESS,
-  # что заставляет токен моргать и блокирует контейнер.
-  # Все криптооперации делает pcscd/КриптоПро внутри distrobox-контейнера.
+{ pkgs, lib, ... }:
+let
+  cryptoproCsp = pkgs.stdenv.mkDerivation {
+    pname = "cprocsp";
+    version = "5.0.13003-7";
 
-  environment.systemPackages = with pkgs; [
-    pcsc-tools
-    opensc
-  ];
+    src = pkgs.requireFile {
+      name = "linux-amd64_deb.tgz";
+      hash = "sha256-oM/0hvv2D3a2HTUnSUWzAuUyfQ8SY+RlrU09Kj1f+rQ=";
+      message = ''
+        КриптоПро CSP требует ручной загрузки.
 
-  # Aktiv Co. — Rutoken family (Lite/S/ECP/etc.).
-  # MODE=0666 нужно потому, что pcscd внутри distrobox запускается под
-  # mapped-root (subuid ~100000), и `uaccess`-ACL для UID 1000 ему не
-  # помогает. Безопасно: токен физически подключён к этой машине.
+        1. Зайти на https://cryptopro.ru/products/csp/downloads
+        2. Зарегистрироваться (бесплатно) и залогиниться
+        3. Скачать "КриптоПро CSP для Linux (x64, deb)" — файл linux-amd64_deb.tgz
+        4. nix-store --add-fixed sha256 linux-amd64_deb.tgz
+        5. nix hash file linux-amd64_deb.tgz   # положить вывод в hash выше
+      '';
+    };
+
+    nativeBuildInputs = [ pkgs.dpkg ];
+
+    unpackPhase = ''
+      runHook preUnpack
+      tar xzf $src
+      cd linux-amd64_deb
+      runHook postUnpack
+    '';
+
+    buildPhase = ''
+      runHook preBuild
+      mkdir -p extracted
+      for d in \
+        lsb-cprocsp-base_*.deb \
+        lsb-cprocsp-rdr-64_*.deb \
+        lsb-cprocsp-kc1-64_*.deb \
+        lsb-cprocsp-capilite-64_*.deb \
+        cprocsp-rdr-rutoken-64_*.deb \
+        cprocsp-rdr-pcsc-64_*.deb \
+        cprocsp-rdr-gui-gtk-64_*.deb \
+        lsb-cprocsp-pkcs11-64_*.deb \
+        lsb-cprocsp-ca-certs_*.deb \
+      ; do
+        dpkg-deb -x $d extracted
+      done
+      runHook postBuild
+    '';
+
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out
+      cp -a extracted/opt $out/
+      cp -a extracted/etc $out/ 2>/dev/null || true
+      cp -a extracted/var $out/ 2>/dev/null || true
+      runHook postInstall
+    '';
+
+    dontStrip = true;
+    dontPatchELF = true;       # we patch in Phase 2
+    dontAutoPatchelf = true;
+  };
+in {
+  # Aktiv Co. — Rutoken family. MODE=0666 нужен потому что ранее требовался
+  # mapped-root в distrobox; на нативном хосте `0664` + `uaccess` тоже бы
+  # хватило, но 0666 универсально и не несёт риска (токен физически в твоей
+  # машине). Оставляем как было.
   services.udev.extraRules = ''
     SUBSYSTEM=="usb", ATTRS{idVendor}=="0a89", MODE="0666"
   '';
+
+  environment.systemPackages = [
+    cryptoproCsp
+    pkgs.pcsc-tools
+    pkgs.opensc
+  ];
 }
