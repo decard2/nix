@@ -532,6 +532,26 @@ in {
     "$CPCONFIG" -ini '\config\apppath' -add string xcpui_app     "$SBINDIR/xcpui_app"    >/dev/null 2>&1 || true
     "$CPCONFIG" -ini '\config\Random\Bio_gui' -add string DLL librdrrndmbio_gui_fgtk.so >/dev/null 2>&1 || true
     "$CPCONFIG" -hardware rndm -add bio_gui -name 'rndm GUI GTK' -level 4 >/dev/null 2>&1 || true
+
+    # 4a. cprocsp-pki-cades-64 postinst — apppath libs + policy OIDs + лицензии.
+    #     Без этих apppath-регистраций nmcades крашится с
+    #     'PLUGIN[0x0000006C] available directory not found' на старте.
+    "$CPCONFIG" -ini '\config\apppath' -add string libcades.so        ${cprocspCades}/opt/cprocsp/lib/amd64/libcades.so.2 >/dev/null 2>&1 || true
+    "$CPCONFIG" -ini '\config\apppath' -add string libpkivalidator.so ${cprocspCades}/opt/cprocsp/lib/amd64/libpkivalidator.so.2 >/dev/null 2>&1 || true
+    "$CPCONFIG" -ini '\config\apppath' -add string librevprov.so      ${cprocspCades}/opt/cprocsp/lib/amd64/librevprov.so.2 >/dev/null 2>&1 || true
+
+    "$CPCONFIG" -ini '\config\policy\OIDs' -add string '{A4CC781E-04E9-425C-AAFD-1D74DA8DFAF6}' 'libpkivalidator.so CertDllVerifyOCSPSigningCertificateChainPolicy' >/dev/null 2>&1 || true
+    "$CPCONFIG" -ini '\config\policy\OIDs' -add string '{AF74EE92-A059-492F-9B4B-EAD239B22A1B}' 'libpkivalidator.so CertDllVerifyTimestampSigningCertificateChainPolicy' >/dev/null 2>&1 || true
+    "$CPCONFIG" -ini '\config\policy\OIDs' -add string '{B52FF66F-13A5-402C-B958-A3A6B5300FB6}' 'libpkivalidator.so CertDllVerifySignatureCertificateChainPolicy' >/dev/null 2>&1 || true
+    "$CPCONFIG" -ini '\config\policy\OIDs' -add string '5' 'libpkivalidator.so BasicConstraintsImpl' >/dev/null 2>&1 || true
+    "$CPCONFIG" -ini '\cryptography\OID\EncodingType 1\CertDllVerifyRevocation\DEFAULT' -add string 'DLL' 'librevprov.so' >/dev/null 2>&1 || true
+
+    # OCSP/TSP лицензии — встроены в постинст cprocsp-pki-cades-64.
+    ${cprocspCades}/opt/cprocsp/bin/amd64/ocsputil license -s 0A202-U0030-00ECW-RRLMF-UU2WK >/dev/null 2>&1 || true
+    ${cprocspCades}/opt/cprocsp/bin/amd64/tsputil license -s TA200-G0030-00ECW-RRLNE-BTDVV  >/dev/null 2>&1 || true
+
+    # 4b. cprocsp-pki-plugin-64 postinst — apppath libnpcades.so.
+    "$CPCONFIG" -ini '\config\apppath' -add string libnpcades.so ${cprocspCades}/opt/cprocsp/lib/amd64/libnpcades.so.2 >/dev/null 2>&1 || true
   '';
 
   environment.systemPackages = [
