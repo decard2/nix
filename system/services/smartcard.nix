@@ -181,7 +181,25 @@ let
       hash = "sha256-wdk2EQsSXQWN801nalzZYBKSlJdW0m5jg2ef5gA8fCI=";
     };
 
-    nativeBuildInputs = [ pkgs.dpkg ];
+    nativeBuildInputs = [ pkgs.dpkg pkgs.autoPatchelfHook ];
+
+    buildInputs = with pkgs; [
+      cryptoproCsp
+      gtk3
+      glib
+      cairo
+      stdenv.cc.cc.lib
+    ];
+
+    # autoPatchelfHook ищет CSP-libs только в стандартных путях
+    # buildInputs (типа $foo/lib). У cryptoproCsp libs лежат в
+    # opt/cprocsp/lib/amd64 — расширяем search path вручную.
+    preFixup = ''
+      addAutoPatchelfSearchPath ${cryptoproCsp}/opt/cprocsp/lib/amd64
+    '';
+
+    # appendRunpaths — для рантайма (dlopen). Тот же путь, что и в preFixup.
+    appendRunpaths = [ "${cryptoproCsp}/opt/cprocsp/lib/amd64" ];
 
     unpackPhase = ''
       runHook preUnpack
@@ -198,8 +216,6 @@ let
     '';
 
     dontStrip = true;
-    dontPatchELF = true;       # we patch in Phase 2
-    dontAutoPatchelf = true;
   };
 in {
   # Aktiv Co. — Rutoken family. MODE=0666 нужен потому что ранее требовался
