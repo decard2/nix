@@ -106,6 +106,39 @@ let
     dontPatchELF = true;
     dontAutoPatchelf = true;
   };
+
+  konturPlugin = pkgs.stdenv.mkDerivation {
+    pname = "kontur-plugin";
+    version = "4.13.0.4561";
+
+    src = pkgs.fetchurl {
+      url = "https://api.kontur.ru/drive/v1/public/diag/files/kontur.plugin.002875.deb";
+      hash = "sha256-k6wRzEQHx8v0551/HuJpOPimVneAfQuB34ncqG6JrfY=";
+    };
+
+    nativeBuildInputs = [ pkgs.dpkg ];
+
+    unpackPhase = ''
+      runHook preUnpack
+      mkdir extracted
+      dpkg-deb -x "$src" extracted
+      runHook postUnpack
+    '';
+
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out
+      cp -a extracted/opt $out/
+      # CRITICAL (research/cryptopro-kontur-native-packaging.md):
+      # /opt/kontur.plugin/pkcs11/ triggers a segfault inside the host plugin.
+      rm -rf $out/opt/kontur.plugin/pkcs11
+      runHook postInstall
+    '';
+
+    dontStrip = true;
+    dontPatchELF = true;       # we patch in Phase 2
+    dontAutoPatchelf = true;
+  };
 in {
   # Aktiv Co. — Rutoken family. MODE=0666 нужен потому что ранее требовался
   # mapped-root в distrobox; на нативном хосте `0664` + `uaccess` тоже бы
@@ -118,6 +151,7 @@ in {
   environment.systemPackages = [
     cryptoproCsp
     cprocspCades
+    konturPlugin
     pkgs.pcsc-tools
     pkgs.opensc
   ];
