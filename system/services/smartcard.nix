@@ -87,7 +87,28 @@ let
       '';
     };
 
-    nativeBuildInputs = [ pkgs.dpkg ];
+    nativeBuildInputs = [ pkgs.dpkg pkgs.autoPatchelfHook ];
+
+    buildInputs = with pkgs; [
+      cryptoproCsp
+      gtk3
+      glib
+      cairo
+      openssl
+      stdenv.cc.cc.lib
+    ];
+
+    # nmcades dlopen()-ит libcppki.so.4 и т.д. из cryptoproCsp в рантайме.
+    # runtimeDependencies — добавляет ${cryptoproCsp}/lib в RPATH (но libs там нет!),
+    # appendRunpaths — добавляет нужный путь opt/cprocsp/lib/amd64 в RPATH каждого ELF.
+    appendRunpaths = [ "${cryptoproCsp}/opt/cprocsp/lib/amd64" ];
+
+    # autoPatchelfHook ищет libs только в стандартных lib/ путях buildInputs.
+    # CryptoPro кладёт shared-libs в нестандартный opt/cprocsp/lib/amd64 —
+    # надо явно добавить этот путь в search-path для autoPatchelf.
+    preFixup = ''
+      addAutoPatchelfSearchPath ${cryptoproCsp}/opt/cprocsp/lib/amd64
+    '';
 
     unpackPhase = ''
       runHook preUnpack
@@ -113,8 +134,6 @@ let
     '';
 
     dontStrip = true;
-    dontPatchELF = true;
-    dontAutoPatchelf = true;
   };
 
   konturPlugin = pkgs.stdenv.mkDerivation {
