@@ -145,7 +145,28 @@ let
       hash = "sha256-k6wRzEQHx8v0551/HuJpOPimVneAfQuB34ncqG6JrfY=";
     };
 
-    nativeBuildInputs = [ pkgs.dpkg ];
+    nativeBuildInputs = [ pkgs.dpkg pkgs.autoPatchelfHook ];
+
+    buildInputs = with pkgs; [
+      cryptoproCsp
+      gtk3
+      cairo
+      glib
+      openssl
+      stdenv.cc.cc.lib
+    ];
+
+    # autoPatchelfHook ищет libs только в стандартных lib/ путях buildInputs.
+    # CryptoPro кладёт shared-libs в нестандартный opt/cprocsp/lib/amd64 —
+    # надо явно добавить этот путь в search-path для autoPatchelf.
+    preFixup = ''
+      addAutoPatchelfSearchPath ${cryptoproCsp}/opt/cprocsp/lib/amd64
+    '';
+
+    # appendRunpaths для рантайма: kontur.plugin.host dlopen()-ит CSP-libs.
+    # `runtimeDependencies = [ cryptoproCsp ]` бы добавило ${cryptoproCsp}/lib —
+    # пустой каталог, поэтому идём через явный путь.
+    appendRunpaths = [ "${cryptoproCsp}/opt/cprocsp/lib/amd64" ];
 
     unpackPhase = ''
       runHook preUnpack
@@ -165,8 +186,6 @@ let
     '';
 
     dontStrip = true;
-    dontPatchELF = true;       # we patch in Phase 2
-    dontAutoPatchelf = true;
   };
 
   diagPlugin = pkgs.stdenv.mkDerivation {
