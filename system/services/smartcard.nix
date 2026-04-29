@@ -542,4 +542,55 @@ in {
     pkgs.pcsc-tools
     pkgs.opensc
   ];
+
+  # Native Messaging hosts — Yandex.Browser обнаруживает их по
+  # /etc/chromium/native-messaging-hosts/<name>.json (верифицировано
+  # `strings` бинарника yandex_browser). Path указывает прямо в nix-store —
+  # без bridge-скриптов, без distrobox.
+  environment.etc = {
+    "chromium/native-messaging-hosts/ru.cryptopro.nmcades.json".text =
+      builtins.toJSON {
+        name = "ru.cryptopro.nmcades";
+        description = "CryptoPro CAdES Browser plug-in";
+        path = "${cprocspCades}/opt/cprocsp/bin/amd64/nmcades";
+        type = "stdio";
+        allowed_origins = [
+          "chrome-extension://iifchhfnnmpdbibifmljnfjhpififfog/"
+          "chrome-extension://epebfcehmdedogndhlcacafjaacknbcm/"
+        ];
+      };
+
+    "chromium/native-messaging-hosts/kd.nc.json".text =
+      builtins.toJSON {
+        name = "kd.nc";
+        description = "Diag.Plugin Native Messaging Host";
+        path = "${diagPlugin}/opt/diag.plugin/Diag.Plugin.nc";
+        type = "stdio";
+        allowed_origins = [
+          "chrome-extension://inlmamahcfioibldbpbaechbpeeaelin/"
+          "chrome-extension://pioommjcfaefbcpbdokfoadjhlmahjjm/"
+          "chrome-extension://adipnhhjfmoehhkepljbifddkobenooa/"
+          "chrome-extension://fmdmnjcgegbabdefddkijefeadkhchcn/"
+          "chrome-extension://momffihklfhkoakghidmkdocdkbfmoac/"
+          "chrome-extension://kbeplgmhdbgnbpfkcmndbhjfadkhinhn/"
+          "chrome-extension://nhbmmgegnhdhkcclaandbaipceebnckc/"
+        ];
+      };
+
+    "chromium/native-messaging-hosts/kontur.plugin.json".text =
+      builtins.toJSON {
+        name = "kontur.plugin";
+        description = "Kontur.Plugin";
+        path = "${konturPlugin}/opt/kontur.plugin/kontur.plugin.host";
+        type = "stdio";
+        allowed_origins = [
+          "chrome-extension://hnhppcgejeffnbnioloohhmndpmclaga/"
+          "chrome-extension://nejicfcnfnecdilmajlppdcgbjilgeec/"
+          "chrome-extension://akpjpngckapnibajopggmfhnchfpnkkf/"
+          "chrome-extension://momffihklfhkoakghidmkdocdkbfmoac/"
+          "chrome-extension://kbeplgmhdbgnbpfkcmndbhjfadkhinhn/"
+          "chrome-extension://nhbmmgegnhdhkcclaandbaipceebnckc/"
+        ];
+      };
+  };
 }
