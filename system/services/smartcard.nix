@@ -139,6 +139,39 @@ let
     dontPatchELF = true;       # we patch in Phase 2
     dontAutoPatchelf = true;
   };
+
+  diagPlugin = pkgs.stdenv.mkDerivation {
+    pname = "diag-plugin";
+    version = "3.1.2.425";
+
+    src = pkgs.fetchurl {
+      # Stable redirect: https://help.kontur.ru/files/diag.plugin_amd64.deb →
+      # this versioned file in api.kontur.ru drive. Filename is
+      # `diag.plugin_amd64_signed.<build>.deb` (not `diag.plugin.<build>.deb`).
+      url = "https://api.kontur.ru/drive/v1/public/diag/files/diag.plugin_amd64_signed.002623.deb";
+      hash = "sha256-wdk2EQsSXQWN801nalzZYBKSlJdW0m5jg2ef5gA8fCI=";
+    };
+
+    nativeBuildInputs = [ pkgs.dpkg ];
+
+    unpackPhase = ''
+      runHook preUnpack
+      mkdir -p extracted
+      dpkg-deb -x "$src" extracted
+      runHook postUnpack
+    '';
+
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out
+      cp -a extracted/opt $out/
+      runHook postInstall
+    '';
+
+    dontStrip = true;
+    dontPatchELF = true;       # we patch in Phase 2
+    dontAutoPatchelf = true;
+  };
 in {
   # Aktiv Co. — Rutoken family. MODE=0666 нужен потому что ранее требовался
   # mapped-root в distrobox; на нативном хосте `0664` + `uaccess` тоже бы
@@ -152,6 +185,7 @@ in {
     cryptoproCsp
     cprocspCades
     konturPlugin
+    diagPlugin
     pkgs.pcsc-tools
     pkgs.opensc
   ];
