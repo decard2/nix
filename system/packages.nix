@@ -10,5 +10,6 @@
     mesa
     bluetuith
     sox
+    ghostty
   ];
 }

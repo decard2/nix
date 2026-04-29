@@ -61,7 +61,7 @@ home/             # Home Manager user config
   de/             # Hyprland WM, GTK theme, fonts, yofi launcher
   dev/            # Git, SSH keys, Bun, Flox, Devbox, Zed editor
   shell/          # Fish shell, starship prompt, aliases, functions
-  programs/       # Firefox, Telegram, Kitty terminal, Chrome
+  programs/       # Firefox, Telegram, Chrome
   devops/         # Kubernetes, S3 tools
   scripts/        # Deployment and automation scripts
 ```

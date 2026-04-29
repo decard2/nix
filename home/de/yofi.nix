@@ -9,7 +9,7 @@
   xdg.configFile."yofi/yofi.config".text = ''
     width = 400
     height = 512
-    term = "kitty"
+    term = "ghostty"
 
     corner_radius = "16"
     font = "FiraCode Nerd Font"

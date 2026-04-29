@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  imports = [
+    ./ghostty.nix
+  ];
+
   home.packages = with pkgs; [
     fzf # Для deployRoodl
     jq # Для deployRoodl
@@ -23,7 +27,7 @@
   programs.starship = {
     enable = true;
     enableFishIntegration = true;
-    settings = builtins.fromTOML (builtins.readFile ./starship.toml);
+    settings = fromTOML (builtins.readFile ./starship.toml);
   };
 
   programs.direnv = {

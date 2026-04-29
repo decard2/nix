@@ -72,19 +72,19 @@
         # Приложения
         "[workspace 2 silent] uwsm app -- google-chrome-stable"
         # btop — воркспейс 9, левый монитор (стационарный)
-        "[workspace 9 silent] uwsm app -- kitty -e btop"
+        "[workspace 9 silent] uwsm app -- ghostty -e btop"
         # SUPER терминалы
-        "[workspace special:s-grave silent] uwsm app -- kitty"
-        "[workspace special:s-1 silent] uwsm app -- kitty"
-        "[workspace special:s-2 silent] uwsm app -- kitty"
-        "[workspace special:s-3 silent] uwsm app -- kitty"
+        "[workspace special:s-grave silent] uwsm app -- ghostty"
+        "[workspace special:s-1 silent] uwsm app -- ghostty"
+        "[workspace special:s-2 silent] uwsm app -- ghostty"
+        "[workspace special:s-3 silent] uwsm app -- ghostty"
         # CTRL терминалы
-        "[workspace special:c-grave silent] uwsm app -- kitty"
-        "[workspace special:c-1 silent] uwsm app -- kitty"
-        "[workspace special:c-2 silent] uwsm app -- kitty"
-        "[workspace special:c-3 silent] uwsm app -- kitty"
+        "[workspace special:c-grave silent] uwsm app -- ghostty"
+        "[workspace special:c-1 silent] uwsm app -- ghostty"
+        "[workspace special:c-2 silent] uwsm app -- ghostty"
+        "[workspace special:c-3 silent] uwsm app -- ghostty"
         # Приложения скретчпад
-        "[workspace special:decardos silent] uwsm app -- kitty -d ~/dos -e claude"
+        "[workspace special:decardos silent] uwsm app -- ghostty --working-directory=/home/decard/dos -e claude"
         "[workspace special:telegram silent] uwsm app -- Telegram"
         # Zed последним — без silent, забирает фокус на workspace 1
         "[workspace 1] uwsm app -- zed"
@@ -99,7 +99,7 @@
       bind = [
         # Утилиты
         "SUPER, D, exec, uwsm app -- yofi"
-        "SUPER, Return, exec, uwsm app -- kitty"
+        "SUPER, Return, exec, uwsm app -- ghostty"
         "SUPER, Q, killactive,"
         "SUPER, V, togglefloating,"
         "SUPER, P, pseudo,"
