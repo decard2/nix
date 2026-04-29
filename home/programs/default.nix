@@ -4,6 +4,7 @@
     ./kitty.nix
     ./chrome.nix
     ./virt-manager.nix
+    ./yandex-browser.nix
   ];
 
   home.packages = with pkgs; [
