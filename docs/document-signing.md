@@ -175,6 +175,27 @@ exit 0" | sudo tee /usr/local/bin/systemctl >/dev/null
 - **`#!/usr/bin/env bash` в bridge ломается** под Yandex (PATH=`/usr/bin:/bin`, bash там нет). Использовать `#!/bin/sh`.
 - **distrobox-export Yandex.Browser → нативный Yandex.Browser.** Когда переходишь от distrobox-Yandex (где browser живёт ВНУТРИ контейнера и видит `/opt/...` напрямую) к нативному Yandex (на хосте), пути в NM-манифестах нужно поменять с `/opt/.../binary` на `/home/decard/.local/bin/*-bridge`.
 
+## Где лежит резервная копия
+
+Снапшот рабочей конфигурации (на момент первой удачной подписи реальных
+документов в Точке и Диадоке, **2026-04-29**) — в `~/tmp/tochka-signing-backup/`.
+В git его нет (большой), это локальная копия на этой машине.
+
+```
+~/tmp/tochka-signing-backup/
+├── README.md                          инструкция восстановления
+├── document-signing.md                копия этого файла
+├── tochka-image.tar           2,2 ГБ  podman-образ контейнера со всеми
+│                                      установленными КриптоПро/Cades/Контур
+│                                      и патчами (udev/sudoers/systemctl-stub)
+├── yandex-browser-profile.tar.gz 255 МБ  профиль Yandex без кэшей
+├── bridges/                           bridge-скрипты для NM
+├── nm-manifests/                      манифесты NativeMessagingHosts
+└── installers/                75 МБ   оригинальные deb/tarball'ы для пере-сборки
+```
+
+Восстановление с этого снапшота — раздел в `README.md` рядом.
+
 ## Maintenance
 
 **Обновление КриптоПро CSP / Cades plug-in:** скачать новый tarball, `tar xzf`, `dpkg -i` нужные `.deb`-ы внутри контейнера. Bridge не трогать.
