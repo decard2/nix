@@ -3,6 +3,7 @@ tmp
 target
 .direnv
 result
+.worktrees
 
 # Devenv
 .devenv*
