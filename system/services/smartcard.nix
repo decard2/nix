@@ -18,7 +18,19 @@ let
       '';
     };
 
-    nativeBuildInputs = [ pkgs.dpkg ];
+    nativeBuildInputs = [ pkgs.dpkg pkgs.autoPatchelfHook ];
+
+    buildInputs = with pkgs; [
+      pcsclite
+      gtk3
+      cairo
+      glib
+      pango
+      harfbuzz
+      atk
+      gdk-pixbuf
+      stdenv.cc.cc.lib
+    ];
 
     unpackPhase = ''
       runHook preUnpack
@@ -56,8 +68,6 @@ let
     '';
 
     dontStrip = true;
-    dontPatchELF = true;       # we patch in Phase 2
-    dontAutoPatchelf = true;
   };
 
   cprocspCades = pkgs.stdenv.mkDerivation {
