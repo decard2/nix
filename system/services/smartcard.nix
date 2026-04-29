@@ -59,6 +59,53 @@ let
     dontPatchELF = true;       # we patch in Phase 2
     dontAutoPatchelf = true;
   };
+
+  cprocspCades = pkgs.stdenv.mkDerivation {
+    pname = "cprocsp-cades";
+    version = "2.0.15600-1";
+
+    src = pkgs.requireFile {
+      name = "cades-linux-amd64.tar.gz";
+      hash = "sha256-0+XYOVwhgZmTw4Q4fiamVZp6CTyUwikmIDoBdp9Px54=";
+      message = ''
+        КриптоПро ЭЦП Browser plug-in — ручная загрузка.
+
+        1. https://cryptopro.ru/products/cades/plugin (нужна регистрация на cryptopro.ru)
+        2. Скачать "Linux (deb)" — файл cades-linux-amd64.tar.gz
+        3. nix-store --add-fixed sha256 cades-linux-amd64.tar.gz
+        4. nix hash file cades-linux-amd64.tar.gz
+      '';
+    };
+
+    nativeBuildInputs = [ pkgs.dpkg ];
+
+    unpackPhase = ''
+      runHook preUnpack
+      tar xzf "$src"
+      cd cades-linux-amd64
+      runHook postUnpack
+    '';
+
+    buildPhase = ''
+      runHook preBuild
+      mkdir -p extracted
+      for d in cprocsp-pki-cades-64_*.deb cprocsp-pki-plugin-64_*.deb; do
+        dpkg-deb -x $d extracted
+      done
+      runHook postBuild
+    '';
+
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out
+      cp -a extracted/opt $out/
+      runHook postInstall
+    '';
+
+    dontStrip = true;
+    dontPatchELF = true;
+    dontAutoPatchelf = true;
+  };
 in {
   # Aktiv Co. — Rutoken family. MODE=0666 нужен потому что ранее требовался
   # mapped-root в distrobox; на нативном хосте `0664` + `uaccess` тоже бы
@@ -70,6 +117,7 @@ in {
 
   environment.systemPackages = [
     cryptoproCsp
+    cprocspCades
     pkgs.pcsc-tools
     pkgs.opensc
   ];
