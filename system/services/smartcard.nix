@@ -252,6 +252,23 @@ in {
   services.pcscd.enable = true;
   services.pcscd.plugins = [ pkgs.ccid ];
 
+  # Hard-coded paths in CryptoPro/Контур binaries.
+  # /opt/cprocsp — symlink в nix-store: kontur.plugin.host жёстко читает
+  #   /opt/cprocsp/sbin/amd64/cpconfig, csptest и прочие тулы тоже работают
+  #   с префиксом /opt/cprocsp.
+  # /var/opt/cprocsp/users/<uid>/keys/ — личное хранилище CSP (uMy).
+  # /etc/opt/cprocsp/ — license.ini, config-файлы.
+  systemd.tmpfiles.rules = [
+    "L+ /opt/cprocsp 0755 root root - ${cryptoproCsp}/opt/cprocsp"
+
+    "d  /var/opt/cprocsp                   0755 root   root  -"
+    "d  /var/opt/cprocsp/users             0755 root   root  -"
+    "d  /var/opt/cprocsp/users/1000        0700 decard users -"
+    "d  /var/opt/cprocsp/users/1000/keys   0700 decard users -"
+
+    "d  /etc/opt/cprocsp                   0755 root   root  -"
+  ];
+
   environment.systemPackages = [
     cryptoproCsp
     cprocspCades
