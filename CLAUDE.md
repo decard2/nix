@@ -119,6 +119,13 @@ JSON files in `vpn/nix/containers/remnapanel/configs/` are the **single source o
 - Unfree packages are allowed globally
 - Nix substituters: cache.nixos.org, nix-community.cachix.org, hyprland.cachix.org, cache.flox.dev
 
+## Docs
+
+- `docs/document-signing.md` — рабочая (через distrobox) схема подписи документов
+  Точки/Диадока аппаратным ключом Rutoken Lite. Установка с нуля + грабли.
+- `docs/research/` — исследовательские документы перед крупными изменениями.
+  Индекс: [`docs/research/README.md`](docs/research/README.md).
+
 ## Code Style
 
 - Functional Nix style, avoid imperative patterns
