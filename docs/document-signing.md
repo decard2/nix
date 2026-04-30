@@ -1,211 +1,222 @@
-# Подписание документов аппаратным ключом
+# Подпись документов российским КЭП на NixOS (native)
 
-Стек для подписи документов в Точке, Диадоке и подобных сервисах токеном **Rutoken Lite** (Aktiv USB ID `0a89:0025`) на NixOS — без Windows-VM.
+Рабочая нативная схема подписи в Точке Банк, Контур.Диадок и других веб-сервисах
+аппаратным ключом Aktiv Rutoken Lite. Без Windows VM, без distrobox, без
+proprietary FHS-контейнера. Всё деклартивно через NixOS-конфиг.
+
+## Что используется
+
+- **Токен:** Aktiv Rutoken Lite (USB, VID:PID `0a89:0025`).
+- **Криптопровайдер:** КриптоПро CSP 5.0.13003-7 (proprietary deb).
+- **Browser plugin:** КриптоПро ЭЦП Browser plug-in 2.0.15600 (Cades).
+- **Контур:** kontur.plugin 4.13.0.4561 + Diag.Plugin 3.1.2.425.
+- **Браузер:** Yandex.Browser (Chromium-derivative).
+- **Reader daemon:** pcscd с libccid (NixOS service).
 
 ## Архитектура
 
-КриптоПро CSP, Cades Browser Plug-in и Контур.Плагин не пакетируются в nixpkgs (проприетарные deb-ы). Чтобы не разрушать чистоту хоста, они живут в **distrobox-контейнере на Ubuntu 22.04**, а нативный Yandex.Browser на хосте общается с ними через **bridge-скрипты** (Chrome Native Messaging).
-
 ```
-                          Хост (NixOS)
-┌──────────────────────────────────────────────────────────┐
-│  Yandex.Browser (nix-store, native)                      │
-│      ↕ Native Messaging (stdio)                          │
-│  ~/.local/bin/{nmcades,kd-nc,kontur-plugin}-bridge       │
-│      ↕ exec: distrobox enter --no-tty tochka -- ...      │
-└────────────────────────┬─────────────────────────────────┘
-                         │
-              distrobox-контейнер `tochka` (Ubuntu 22.04)
-┌────────────────────────▼─────────────────────────────────┐
-│  /opt/cprocsp/bin/amd64/nmcades         ← КриптоПро Cades │
-│  /opt/diag.plugin/Diag.Plugin.nc        ← Контур.Диаг.    │
-│  /opt/kontur.plugin/kontur.plugin.host  ← Контур.Плагин   │
-│      ↕                                                    │
-│  pcscd (запускается лениво из bridge через sudo NOPASSWD) │
-│      ↕                                                    │
-│  libccid → /dev/bus/usb/001/N (Rutoken Lite, MODE=0666)  │
-└──────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────┐
+│ Yandex.Browser                                 │
+│ ├─ extension iifchhf...mpdbibifmljnf... (Cades)│
+│ ├─ extension hnhppcg...gejeffnbnio... (Kontur) │
+│ └─ extension inlmamah...cfioibldbpb... (Diag)  │
+└────────────────┬───────────────────────────────┘
+                 │ chrome.runtime.connectNative()
+                 ▼
+┌────────────────────────────────────────────────┐
+│ Native Messaging hosts (3 manifests × 3 dirs)  │
+│ /etc/{chromium,opt/chrome,opt/yandex/browser}/ │
+│   native-messaging-hosts/                      │
+│   ├─ ru.cryptopro.nmcades.json → nmcades-proxy │
+│   ├─ kontur.plugin.json        → kontur.host   │
+│   └─ kd.nc.json                → Diag.Plugin.nc│
+└────────┬──────────────┬────────────────────────┘
+         │              │
+         ▼              ▼
+┌──────────────────┐  ┌──────────────────────────┐
+│ nmcades-proxy.py │  │ kontur.plugin.host       │
+│ (writePython3)   │  │ Diag.Plugin.nc           │
+│ перехват         │  └────────┬─────────────────┘
+│ approved_site    │           │
+│ + zenity diag    │           │
+└────────┬─────────┘           │
+         │ stdin/stdout        │
+         ▼                     ▼
+┌────────────────────────────────────────────────┐
+│ /opt/cprocsp/bin/amd64/nmcades                 │
+│ libcades.so + libpkivalidator.so + librevprov  │
+│ libcsp.so (KC1, GOST 34.10-2012)               │
+└──────────┬─────────────────────────────────────┘
+           │ /opt/cprocsp/lib/amd64/librdrpcsc.so
+           ▼
+┌────────────────────────────────────────────────┐
+│ pcscd (system service, ccid plugin)            │
+│ /run/pcscd/pcscd.comm                          │
+└──────────┬─────────────────────────────────────┘
+           │ libccid → /dev/bus/usb/...
+           ▼
+        Rutoken Lite (USB)
 ```
 
-Решение по «отдельный браузер vs основной Chrome»: Chrome 147 удалил поддержку Manifest V2 (расширение CryptoPro Cades только в MV2 и удалено из Web Store в феврале 2025). КриптоПро официально рекомендует **Yandex.Browser** или Chromium-Gost. Yandex.Browser держит рабочее расширение в Opera Add-ons и MV2 не отключал.
+## Что лежит в репо
 
-## Компоненты в репо
-
-```
-flake.nix                              # input yandex-browser
-home/programs/yandex-browser.nix       # пакет из flake
-system/services/smartcard.nix          # udev MODE=0666 для 0a89:*
-```
-
-`home-manager` НЕ управляет bridge-скриптами и NM-манифестами — они лежат в `~/.local/bin/` и `~/.config/yandex-browser/NativeMessagingHosts/` соответственно. Их можно перенести в home-manager позже, если захочется infra-as-code.
+- `system/services/smartcard.nix` — единственный конфиг-файл всей подписи:
+  - `cryptoproCsp` (монолит CSP+Cades), `konturPlugin`, `diagPlugin`
+  - `nmcadesProxy` (Python-обёртка)
+  - все NM-host JSONы
+  - `services.pcscd.enable`, `services.udev.extraRules` для USB-токена
+  - `systemd.tmpfiles.rules` для `/opt/cprocsp`, `/var/opt/cprocsp/*`,
+    `/etc/opt/skbkontur/plugin`, `/var/tmp/skbkontur/plugin/metrics`
+  - `system.activationScripts.cprocspSetup` — postinst-replication
+    (cpconfig провайдеры, KeyDevices, KeyCarriers, apppath, OIDs, лицензии,
+    bulk-install CA в uRoot/uCA + mRoot/mCA)
+- `system/network.nix` — sing-box bypass для РФ-доменов подписи:
+  `tax.gov.ru`, `nalog.ru`, `reestr-pki.ru`, `cryptopro.ru`, `kontur.ru`,
+  `kontur-extern.ru`, `kontur-ca.ru`, `tochka.com`.
 
 ## Установка с нуля
 
-### 1. Хост (NixOS)
+### 1. Скачать .deb пакеты вручную (EULA-walled)
 
-```bash
-# уже в репо: flake input + home/programs/yandex-browser.nix + udev rule + distrobox/podman в home.packages
+Все proprietary архивы загружаются через `pkgs.requireFile` — пользователь
+кладёт файлы в nix-store через `nix-store --add-fixed`.
+
+```fish
+# КриптоПро CSP
+# Зайти на https://cryptopro.ru/products/csp/downloads (нужна регистрация),
+# скачать "КриптоПро CSP для Linux (x64, deb)":
+nix-store --add-fixed sha256 ~/Downloads/linux-amd64_deb.tgz
+
+# КриптоПро ЭЦП Browser plug-in
+# https://cryptopro.ru/products/cades/plugin → "Linux (deb)":
+nix-store --add-fixed sha256 ~/Downloads/cades-linux-amd64.tar.gz
+
+# ФНС-2024_01 (промежуточный CA для ИП-сертификатов 2025 выпуска).
+# pki.tax.gov.ru недоступен через VPN/sing-box — отключить proxy перед скачиванием.
+sudo systemctl stop sing-box
+curl -fSLo ~/Downloads/ca_fns_russia_2024_01.crt \
+  http://pki.tax.gov.ru/crt/ca_fns_russia_2024_01.crt
+sudo systemctl start sing-box
+nix-store --add-fixed sha256 ~/Downloads/ca_fns_russia_2024_01.crt
+```
+
+Контур.Плагин и Diag.Plugin скачиваются автоматически через `pkgs.fetchurl`
+(CDN api.kontur.ru — публичный).
+
+### 2. Применить конфиг
+
+```fish
 sudo nixos-rebuild switch --flake .#emerald
-# переткнуть токен — udev назначит MODE=0666
 ```
 
-Проверить: `ls -la /dev/bus/usb/001/N` где N — devnum токена → `crw-rw-rw-`.
+При первом switch'e activation script:
 
-### 2. Контейнер
+- создаст `/opt/cprocsp` symlink в nix-store
+- скопирует skeleton `/var/opt/cprocsp/` (stores, dsrf)
+- зарегистрирует все провайдеры/ридеры через cpconfig
+- установит все CA из `tmpcerts/` + Минцифры-2022 + ФНС-2024 в `uRoot`/`uCA`
+  (под decard через runuser) и `mRoot`/`mCA` (под root)
 
-```bash
-distrobox-create --name tochka --image docker.io/library/ubuntu:22.04 --yes
-distrobox enter --no-tty tochka -- bash -c '
-  sudo apt-get update
-  sudo apt-get install -y libccid pcscd libpcsclite1 pcsc-tools opensc usbutils libusb-1.0-0 alien curl gnupg
-'
+### 3. Удалить user-shadow NM-host JSONы (если переходишь с distrobox)
+
+User-level NM-host имеет приоритет над system-level. Если в
+`~/.config/<browser>/NativeMessagingHosts/` остались старые манифесты
+от distrobox-bridges — браузер не увидит наши system-wide.
+
+```fish
+rm -f ~/.config/yandex-browser/NativeMessagingHosts/{kd.nc,kontur.plugin,ru.cryptopro.nmcades}.json
+rm -f ~/.config/google-chrome/NativeMessagingHosts/ru.cryptopro.nmcades.json
+rm -f ~/.config/chromium/NativeMessagingHosts/ru.cryptopro.nmcades.json
+rm -f ~/.local/bin/{kontur-plugin,nmcades,kd-nc}-bridge
 ```
 
-### 3. КриптоПро CSP + Cades Browser Plug-in (внутри контейнера)
+### 4. Воткнуть токен и проверить
 
-Скачать `linux-amd64_deb.tgz` (CSP 5.0 R3) с https://cryptopro.ru/products/csp/downloads (требует регистрации) и `cades-linux-amd64.tar.gz` (Cades 2.0.15600+) с https://cryptopro.ru/products/cades/plugin/get_2_0.
+```fish
+sudo -u decard /opt/cprocsp/bin/amd64/csptest -keyset -enum_cont -fqcn -verifycontext
+# должны увидеть контейнеры '\\.\Aktiv Rutoken lite 00 00\<NNN>@<DATE>-<NAME>'
 
-```bash
-distrobox enter --no-tty tochka -- bash -c '
-  cd /tmp && tar xzf ~/Downloads/linux-amd64_deb.tgz
-  cd /tmp/linux-amd64_deb
-  sudo ./install.sh kc1 cprocsp-rdr-rutoken cprocsp-rdr-pcsc cprocsp-rdr-gui-gtk lsb-cprocsp-pkcs11 cprocsp-pki-cades cprocsp-pki-plugin
+sudo -u decard /opt/cprocsp/bin/amd64/certmgr -list -store uMy
+# должны увидеть свои сертификаты с привязкой Container/Provider
 
-  # Workaround: ifd-rutokens postinst падает на отсутствие udevadm
-  sudo sh -c "echo \"#!/bin/sh\nexit 0\" > /usr/local/bin/udevadm && chmod +x /usr/local/bin/udevadm"
-  sudo dpkg -i ifd-rutokens_1.0.4_amd64.deb
-
-  # обновить cades-plugin до последней версии
-  cd /tmp && tar xzf ~/Downloads/cades-linux-amd64.tar.gz
-  cd /tmp/cades-linux-amd64
-  sudo dpkg -i cprocsp-pki-cades-64_*.deb cprocsp-pki-plugin-64_*.deb
-'
+# Открыть https://cryptopro.ru/sites/default/files/products/cades/demopage/cades_bes_sample.html
+# в Yandex.Browser → выбрать сертификат → "Подписать данные"
+# Цепочка должна показать 3 уровня (твой → УЦ ФНС → НУЦ Минцифры),
+# Статус: Действителен.
 ```
 
-Установить сертификат с токена в личное хранилище CSP:
+## Грабли
 
-```bash
-distrobox enter --no-tty tochka -- bash -c '
-  CONT=$(/opt/cprocsp/bin/amd64/csptest -keyset -enum_cont -fqcn -verifycontext 2>/dev/null \
-    | grep "@" | tail -1 | tr -d " ")
-  /opt/cprocsp/bin/amd64/certmgr -inst -store uMy -cont "$CONT"
-'
-```
+### "PluginException 0x6C: available directory not found"
 
-### 4. NOPASSWD-sudo для pcscd внутри контейнера
-
-```bash
-distrobox enter --no-tty tochka -- bash -c '
-  echo "decard ALL=(root) NOPASSWD: /usr/sbin/pcscd" \
-    | sudo tee /etc/sudoers.d/pcscd >/dev/null
-  sudo chmod 440 /etc/sudoers.d/pcscd
-'
-```
-
-### 5. Контур: diag.plugin + kontur.plugin + kontur.updater
-
-`kontur.plugin.host` — это плагин подписания для Контур.Диадок и других сервисов Контура. Скачать со https://help.kontur.ru/plugin/linux:
-- `diag.plugin_amd64_signed.*.deb`
-- `kontur.plugin.*.deb`
-- `kontur.updater.*.deb`
-
-Postinst-скрипты вызывают `systemctl daemon-reload`, который падает в контейнере без systemd-as-pid-1 — кладём stub перед установкой:
-
-```bash
-distrobox enter --no-tty tochka -- bash -c '
-  echo "#!/bin/sh
-exit 0" | sudo tee /usr/local/bin/systemctl >/dev/null
-  sudo chmod +x /usr/local/bin/systemctl
-
-  sudo dpkg -i ~/Downloads/diag.plugin_amd64_signed.*.deb \
-                ~/Downloads/kontur.updater.*.deb \
-                ~/Downloads/kontur.plugin.*.deb
-
-  sudo rm /usr/local/bin/systemctl
-'
-```
-
-После установки `kontur.plugin` создаст `/etc/chromium/native-messaging-hosts/kontur.plugin.json` — это ссылка на `/opt/kontur.plugin/kontur.plugin.host`, который и будет нашим бэкендом для bridge.
-
-### 6. Bridge-скрипты на хосте
-
-Три скрипта в `~/.local/bin/`. Все одинаковой формы — отличается только бинарь, который exec'ится в контейнере.
-
-**Общая логика, которую важно сохранить:**
-- shebang `#!/bin/sh` (НЕ `/usr/bin/env bash` — у NM-child'а PATH=`/usr/bin:/bin`, а на NixOS там нет bash)
-- `unset LD_PRELOAD LD_LIBRARY_PATH` — Yandex.Browser передаёт ребёнку nix-store-пути, и любой `sh`/`distrobox` падает с `GLIBC_2.38 not found`
-- `export PATH=/etc/profiles/per-user/decard/bin:/run/current-system/sw/bin:/run/wrappers/bin:$PATH` — Yandex даёт пустой PATH, distrobox без него не находит coreutils
-- `pgrep -x pcscd || sudo -n /usr/sbin/pcscd` внутри контейнера — лениво поднимаем pcscd при первом обращении
-
-См. `~/.local/bin/{nmcades,kd-nc,kontur-plugin}-bridge` — они идентичны кроме конечного `exec /opt/.../binary`.
-
-### 7. NM-манифесты для Yandex.Browser
-
-`~/.config/yandex-browser/NativeMessagingHosts/`:
-
-| Файл | Бинарь, который через bridge | Расширение(я) |
-|---|---|---|
-| `ru.cryptopro.nmcades.json` | `nmcades-bridge` → `/opt/cprocsp/bin/amd64/nmcades` | `iifchhfnnmpdbibifmljnfjhpififfog`, `epebfcehmdedogndhlcacafjaacknbcm` |
-| `kd.nc.json` | `kd-nc-bridge` → `/opt/diag.plugin/Diag.Plugin.nc` | 7 ID, среди них Контур.Плагин `momffihklfhkoakghidmkdocdkbfmoac` |
-| `kontur.plugin.json` | `kontur-plugin-bridge` → `/opt/kontur.plugin/kontur.plugin.host` | 6 ID, среди них Контур.Плагин `momffihklfhkoakghidmkdocdkbfmoac` |
-
-`allowed_origins` копировать **из контейнера** один-в-один, чтобы сохранить полный список расширений.
-
-### 8. Расширения в Yandex.Browser
-
-Установить из Opera Add-ons:
-- **CryptoPro Extension for CAdES Browser Plug-in** (ID `epebfcehmdedogndhlcacafjaacknbcm`)
-- **Контур.Плагин** (ID `momffihklfhkoakghidmkdocdkbfmoac`) — обычно ставится автоматически Контуром при первом заходе на check.kontur.ru
-
-### 9. Проверка
-
-- https://www.cryptopro.ru/sites/default/files/products/cades/demopage/cades_bes_sample.html — должно показать «Плагин загружен», версии, и список сертификатов из uMy
-- https://help.kontur.ru/check (или https://check.kontur.ru) — диагностика Контура должна найти Контур.Плагин и сертификаты
-- Реальный тест: войти в Точку и подписать документ; войти в Диадок и подписать документ
-
-## Известные грабли (с которыми реально столкнулись)
-
-- **Хостовый pcscd мешает токену.** Если включить `services.pcscd.enable = true` на хосте, он берёт устройство по libusb и падает на `LIBUSB_ERROR_ACCESS`, циклически отпуская — токен «моргает» и недоступен изнутри контейнера. **Не включать.**
-- **MODE=0664 + uaccess недостаточно.** Внутри distrobox sudo даёт mapped-root (subuid `~100000`), у него нет ACL от `uaccess`. Нужен `MODE=0666`.
-- **Rutoken Lite ≠ HID.** Класс USB-интерфейса 0x0b — это CCID. `libccid 1.7.1` уже знает VID `0x0A89` (1274 поддерживаемых VID/PID), `pcsc_scan` видит токен с ATR `Rutokenlite`. Отдельный `ifd-rutokens` ставить **не обязательно**, но не помешает.
-- **Cades plug-in 2.0.15003 → 2.0.15600.** Tarball `linux-amd64_deb.tgz` идёт с `cprocsp-pki-cades-64_2.0.15003-1`. Это устарело — берём свежий `cades-linux-amd64.tar.gz` со страницы плагина и накатываем поверх.
-- **Кнопка «Установить корневой сертификат ФНС» через apt-get install -fy.** Контурские пакеты ловятся на post-install (`systemctl` без systemd) и могут оставить `kontur.plugin/kontur.updater` в state `rH` (removed half-installed). **Не запускать `apt-get install -fy` если в системе есть kontur-пакеты.** Ставить только конкретные `.deb` через `dpkg -i`.
-- **Manifest V2 в Chrome 147 мёртв.** Расширение CryptoPro Cades только MV2, удалено из Web Store, policy `ExtensionManifestV2Availability` убрана в Chrome 139, Developer-mode unpacked тоже не загрузит. Yandex.Browser — единственный практичный путь.
-- **Yandex от miuirussia/yandex-browser.nix передаёт ребёнку LD_LIBRARY_PATH.** Любой child-процесс пытается слинковаться с nix-store-libs и падает на mismatched glibc. Bridge должен делать `unset LD_LIBRARY_PATH LD_PRELOAD` первым делом.
-- **`#!/usr/bin/env bash` в bridge ломается** под Yandex (PATH=`/usr/bin:/bin`, bash там нет). Использовать `#!/bin/sh`.
-- **distrobox-export Yandex.Browser → нативный Yandex.Browser.** Когда переходишь от distrobox-Yandex (где browser живёт ВНУТРИ контейнера и видит `/opt/...` напрямую) к нативному Yandex (на хосте), пути в NM-манифестах нужно поменять с `/opt/.../binary` на `/home/decard/.local/bin/*-bridge`.
-
-## Где лежит резервная копия
-
-Снапшот рабочей конфигурации (на момент первой удачной подписи реальных
-документов в Точке и Диадоке, **2026-04-29**) — в `~/tmp/tochka-signing-backup/`.
-В git его нет (большой), это локальная копия на этой машине.
+`kontur.plugin.host` падает при старте. Postinst kontur.plugin.deb создаёт
+два каталога:
 
 ```
-~/tmp/tochka-signing-backup/
-├── README.md                          инструкция восстановления
-├── document-signing.md                копия этого файла
-├── tochka-image.tar           2,2 ГБ  podman-образ контейнера со всеми
-│                                      установленными КриптоПро/Cades/Контур
-│                                      и патчами (udev/sudoers/systemctl-stub)
-├── yandex-browser-profile.tar.gz 255 МБ  профиль Yandex без кэшей
-├── bridges/                           bridge-скрипты для NM
-├── nm-manifests/                      манифесты NativeMessagingHosts
-└── installers/                75 МБ   оригинальные deb/tarball'ы для пере-сборки
+/etc/opt/skbkontur/plugin
+/var/tmp/skbkontur/plugin/metrics
 ```
 
-Восстановление с этого снапшота — раздел в `README.md` рядом.
+Без них хост крашится с этим exception, browser показывает "плагин не виден".
+В нашем конфиге создаются через `systemd.tmpfiles.rules`.
 
-## Maintenance
+### nmcades висит на approved_site
 
-**Обновление КриптоПро CSP / Cades plug-in:** скачать новый tarball, `tar xzf`, `dpkg -i` нужные `.deb`-ы внутри контейнера. Bridge не трогать.
+При первом запросе подписи плагин КриптоПро запрашивает у browser-extension
+проверку "trusted site". На NixOS msz-конфиг trusted_sites битый, nmcades
+ждёт ответ бесконечно. Решено через `nmcadesProxy` (Python writePython3) —
+проксирует stdin/stdout, перехватывает `approved_site`, ведёт свой список
+в `~/.config/cryptopro-trusted-sites`, для unknown показывает zenity-диалог.
 
-**Обновление Контур.Плагин:** в норме `kontur.updater` сделает это сам через свой systemd timer — но в контейнере без systemd timer не работает. Ручной апдейт: скачать с https://help.kontur.ru/plugin/linux, dpkg -i (помня про systemctl-stub перед установкой).
+### "Status: Не действителен" (длинный таймаут)
 
-**Срок сертификата токена.** Текущий до 2027-01-13. Перед концом срока — получить новый сертификат у УЦ ФНС, записать на тот же токен, установить в uMy через `certmgr -inst -store uMy -cont '...'`.
+Cades plugin не может построить цепочку или скачать CRL/OCSP. Причины:
 
-**Если Yandex.Browser не видит провайдера:** `tail ~/.cache/{nmcades,kd-nc,kontur-plugin}-bridge.log`. Самые частые сообщения:
-- `distrobox: not found` → bridge запустили без правильного PATH (см. выше)
-- `GLIBC_2.X not found` → bridge запустили без `unset LD_LIBRARY_PATH`
-- `/lib/x86_64-linux-gnu/libc.so.6: not found by ld-linux` → то же
-- `pcscd not running` или сертификаты пустые → токен не вставлен / `MODE=0666` не применилось / переткнуть токен
+1. **Промежуточный CA отсутствует в uCA**. Сертификаты ИП 2025 выпуска
+   подписаны "УЦ ФНС России 2024_01" — этого CA в `lsb-cprocsp-ca-certs.deb`
+   tmpcerts нет. Решено через `pkgs.requireFile ca_fns_russia_2024_01.crt`.
+2. **VPN/sing-box режет CRL/OCSP-fetch**. Cades ходит на `pki.tax.gov.ru`,
+   `cdp.tax.gov.ru`, `reestr-pki.ru` — эти домены должны идти через `direct`,
+   не через VLESS-прокси. Bypass-rule в `system/network.nix`.
+
+### "Inert carrier rutoken"
+
+CSP видит токен, но не может прочитать контейнер. Возможные причины:
+
+- В системе крутится **второй** pcscd (например `/usr/sbin/pcscd` от
+  distrobox-эпохи). Держит токен в exclusive transaction, второй pcscd не
+  может работать. Убить старый: `sudo kill <PID>`.
+- Запущен `podman tochka` контейнер (старый distrobox). Остановить и
+  удалить: `podman stop tochka && podman rm tochka`.
+
+### Browser не видит плагин после rebuild'a
+
+Закрыть Yandex.Browser **полностью** (`pkill -f yandex-browser`) — он
+кэширует список NM-host'ов при старте. После перезапуска подхватит свежие
+JSONы из `/etc/opt/yandex/browser/native-messaging-hosts/`.
+
+### CA в machine-store пустой
+
+Cades plugin запускается из user-context и читает **uRoot/uCA**, не
+**mRoot/mCA**. Поэтому activation script ставит CA в обе пары (через
+`runuser -u decard` и через root напрямую) — uRoot/uCA для browser-плагинов,
+mRoot/mCA для CLI/system-инструментов.
+
+## Связанные документы
+
+- `docs/research/cryptopro-kontur-native-packaging.md` — research-документ
+  перед миграцией с distrobox; содержит сравнение подходов
+  (autoPatchelfHook vs buildFHSEnv vs nix-ld) и шаблоны derivation'ов.
+- `docs/research/yandex-browser-nixos.md` — research по упаковке
+  Yandex.Browser на NixOS и определению путей NM-host'ов.
+
+## Референсы
+
+- [sakost/nixos](https://github.com/sakost/nixos/blob/master/packages/cryptopro-csp.nix)
+  — рабочий public NixOS-конфиг CryptoPro CSP. Главный референс при отладке;
+  паттерн монолита, nmcades-proxy, mass-CA-install — заимствованы оттуда.
+- [SomeoneSerge/pkgs cprocsp](https://github.com/SomeoneSerge/pkgs/tree/master/pkgs/by-name/cp/cprocsp)
+  — академический пример декомпозиции CSP по 30+ компонентам.
+- [msva/mva-overlay](https://github.com/msva/mva-overlay) (Gentoo) —
+  документирует `/opt/kontur.plugin/pkcs11` segfault и сегментацию путей.

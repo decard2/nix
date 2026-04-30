@@ -121,8 +121,9 @@ JSON files in `vpn/nix/containers/remnapanel/configs/` are the **single source o
 
 ## Docs
 
-- `docs/document-signing.md` — рабочая (через distrobox) схема подписи документов
-  Точки/Диадока аппаратным ключом Rutoken Lite. Установка с нуля + грабли.
+- `docs/document-signing.md` — нативная схема подписи Точки/Диадока аппаратным
+  ключом Rutoken Lite (CryptoPro CSP + Cades + Контур.Плагин, без distrobox).
+  Установка с нуля + грабли.
 - `docs/research/` — исследовательские документы перед крупными изменениями.
   Индекс: [`docs/research/README.md`](docs/research/README.md).
 
