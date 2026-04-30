@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   system.stateVersion = "25.05";
 
@@ -222,16 +222,19 @@
     "nvidia"
     "modesetting"
   ];
-  hardware.nvidia.open = false;
-  hardware.nvidia.prime = {
-    offload.enable = true;
-    offload.enableOffloadCmd = true;
-    intelBusId = "PCI:0:2:0";
-    nvidiaBusId = "PCI:1:0:0";
+  hardware.nvidia = {
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
+    open = false;
+    modesetting.enable = true;
+    nvidiaSettings = true;
+    powerManagement.enable = true;
+    prime = {
+      offload.enable = true;
+      offload.enableOffloadCmd = true;
+      intelBusId = "PCI:0:2:0";
+      nvidiaBusId = "PCI:1:0:0";
+    };
   };
-
-  hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
 
   services.greetd = {
     enable = true;
