@@ -1,5 +1,22 @@
 { pkgs, lib, ... }:
 let
+  # Монолит CSP + Cades (как у sakost). Распаковываются в один $out, чтобы
+  # /opt/cprocsp/lib/amd64/ содержал ВСЕ libs обоих пакетов. Без этого
+  # nmcades/CSP делают dlopen("libcades.so") по стандартному пути и не
+  # находят его, потому что cades-libs физически в другом nix-store
+  # каталоге → "inert carrier" при операции подписи.
+  cadesArchive = pkgs.requireFile {
+    name = "cades-linux-amd64.tar.gz";
+    hash = "sha256-0+XYOVwhgZmTw4Q4fiamVZp6CTyUwikmIDoBdp9Px54=";
+    message = ''
+      КриптоПро ЭЦП Browser plug-in — ручная загрузка.
+      1. https://cryptopro.ru/products/cades/plugin (нужна регистрация на cryptopro.ru)
+      2. Скачать "Linux (deb)" — файл cades-linux-amd64.tar.gz
+      3. nix-store --add-fixed sha256 cades-linux-amd64.tar.gz
+      4. nix hash file cades-linux-amd64.tar.gz
+    '';
+  };
+
   cryptoproCsp = pkgs.stdenv.mkDerivation {
     pname = "cprocsp";
     version = "5.0.13003-7";
@@ -29,31 +46,46 @@ let
       harfbuzz
       atk
       gdk-pixbuf
+      openssl
       stdenv.cc.cc.lib
     ];
 
+    # autoPatchelfHook не ходит сам в opt/cprocsp/lib/amd64 — приходится
+    # вручную добавить, чтобы он мог разрешить cross-references между
+    # CSP-libs и cades-libs распакованными в один $out.
+    preFixup = ''
+      addAutoPatchelfSearchPath $out/opt/cprocsp/lib/amd64
+    '';
+
     unpackPhase = ''
       runHook preUnpack
-      tar xzf $src
-      cd linux-amd64_deb
+      mkdir -p source
+      tar xzf $src -C source
+      tar xzf ${cadesArchive} -C source
       runHook postUnpack
     '';
 
     buildPhase = ''
       runHook preBuild
       mkdir -p extracted
-      for d in \
-        lsb-cprocsp-base_*.deb \
-        lsb-cprocsp-rdr-64_*.deb \
-        lsb-cprocsp-kc1-64_*.deb \
-        lsb-cprocsp-capilite-64_*.deb \
-        cprocsp-rdr-rutoken-64_*.deb \
-        cprocsp-rdr-pcsc-64_*.deb \
-        cprocsp-rdr-gui-gtk-64_*.deb \
-        lsb-cprocsp-pkcs11-64_*.deb \
-        lsb-cprocsp-ca-certs_*.deb \
+      # debs из основной CSP-tarball + 2 deba из cades-tarball — все в один
+      # extracted/, чтобы итоговый $out имел ВСЕ libs в общем lib/amd64/.
+      for pattern in \
+        lsb-cprocsp-base \
+        lsb-cprocsp-rdr-64 \
+        lsb-cprocsp-kc1-64 \
+        lsb-cprocsp-capilite-64 \
+        cprocsp-rdr-rutoken-64 \
+        cprocsp-rdr-pcsc-64 \
+        cprocsp-rdr-gui-gtk-64 \
+        lsb-cprocsp-pkcs11-64 \
+        lsb-cprocsp-ca-certs \
+        cprocsp-pki-cades-64 \
+        cprocsp-pki-plugin-64 \
       ; do
-        dpkg-deb -x $d extracted
+        for deb in source/linux-amd64_deb/$pattern*.deb source/cades-linux-amd64/$pattern*.deb; do
+          [ -f "$deb" ] && dpkg-deb -x "$deb" extracted
+        done
       done
       runHook postBuild
     '';
@@ -64,72 +96,6 @@ let
       cp -a extracted/opt $out/
       cp -a extracted/etc $out/ 2>/dev/null || true
       cp -a extracted/var $out/ 2>/dev/null || true
-      runHook postInstall
-    '';
-
-    dontStrip = true;
-  };
-
-  cprocspCades = pkgs.stdenv.mkDerivation {
-    pname = "cprocsp-cades";
-    version = "2.0.15600-1";
-
-    src = pkgs.requireFile {
-      name = "cades-linux-amd64.tar.gz";
-      hash = "sha256-0+XYOVwhgZmTw4Q4fiamVZp6CTyUwikmIDoBdp9Px54=";
-      message = ''
-        КриптоПро ЭЦП Browser plug-in — ручная загрузка.
-
-        1. https://cryptopro.ru/products/cades/plugin (нужна регистрация на cryptopro.ru)
-        2. Скачать "Linux (deb)" — файл cades-linux-amd64.tar.gz
-        3. nix-store --add-fixed sha256 cades-linux-amd64.tar.gz
-        4. nix hash file cades-linux-amd64.tar.gz
-      '';
-    };
-
-    nativeBuildInputs = [ pkgs.dpkg pkgs.autoPatchelfHook ];
-
-    buildInputs = with pkgs; [
-      cryptoproCsp
-      gtk3
-      glib
-      cairo
-      openssl
-      stdenv.cc.cc.lib
-    ];
-
-    # nmcades dlopen()-ит libcppki.so.4 и т.д. из cryptoproCsp в рантайме.
-    # runtimeDependencies — добавляет ${cryptoproCsp}/lib в RPATH (но libs там нет!),
-    # appendRunpaths — добавляет нужный путь opt/cprocsp/lib/amd64 в RPATH каждого ELF.
-    appendRunpaths = [ "${cryptoproCsp}/opt/cprocsp/lib/amd64" ];
-
-    # autoPatchelfHook ищет libs только в стандартных lib/ путях buildInputs.
-    # CryptoPro кладёт shared-libs в нестандартный opt/cprocsp/lib/amd64 —
-    # надо явно добавить этот путь в search-path для autoPatchelf.
-    preFixup = ''
-      addAutoPatchelfSearchPath ${cryptoproCsp}/opt/cprocsp/lib/amd64
-    '';
-
-    unpackPhase = ''
-      runHook preUnpack
-      tar xzf "$src"
-      cd cades-linux-amd64
-      runHook postUnpack
-    '';
-
-    buildPhase = ''
-      runHook preBuild
-      mkdir -p extracted
-      for d in cprocsp-pki-cades-64_*.deb cprocsp-pki-plugin-64_*.deb; do
-        dpkg-deb -x $d extracted
-      done
-      runHook postBuild
-    '';
-
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out
-      cp -a extracted/opt $out/
       runHook postInstall
     '';
 
@@ -236,6 +202,247 @@ let
 
     dontStrip = true;
   };
+
+  # CA-сертификаты нужны для chain validation подписанных ФНС сертификатов.
+  # Без них cades возвращает "Status: Не действителен" — цепочка не строится
+  # до корня. URLs и хэши взяты из sakost/nixos (рабочий референс).
+  fnsCA2023 = pkgs.fetchurl {
+    url = "http://pki.tax.gov.ru/crt/ca_fns_russia_2023_01.crt";
+    hash = "sha256-frQlvE5yojoILBdntVqbl4oL+1+OxHLDCGMbB7QAgxw=";
+  };
+  mintsifryCA2022 = pkgs.fetchurl {
+    url = "http://reestr-pki.ru/cdp/guc2022.crt";
+    hash = "sha256-S7N8x8D/S/KqiT6VB267NWXGkjfuG2FjW+7kwZZklcc=";
+  };
+  # ФНС-2024 — нужен для сертификатов ИП выпуска 2025 (issuer = "УЦ ФНС
+  # России 2024_01"). Сертификат в .deb tmpcerts отсутствует. Скачать через
+  # fetchurl невозможно: pki.tax.gov.ru недоступен из-за sing-box VPN
+  # proxy. Поэтому через requireFile — пользователь скачивает руками
+  # (с отключённым VPN: `curl -fSLo ~/Downloads/ca_fns_russia_2024_01.crt
+  # http://pki.tax.gov.ru/crt/ca_fns_russia_2024_01.crt`) и кладёт в store
+  # через `nix-store --add-fixed sha256 ~/Downloads/ca_fns_russia_2024_01.crt`.
+  fnsCA2024 = pkgs.requireFile {
+    name = "ca_fns_russia_2024_01.crt";
+    hash = "sha256-MoO0T8FkT66xIA3OBKBT6Ddt3K/8nR7GLlf7ptVZcqY=";
+    message = ''
+      Промежуточный CA УЦ ФНС России 2024_01 нужен вручную.
+
+      1. Отключить VPN/sing-box (pki.tax.gov.ru недоступен через прокси).
+      2. curl -fSLo ~/Downloads/ca_fns_russia_2024_01.crt \
+           http://pki.tax.gov.ru/crt/ca_fns_russia_2024_01.crt
+      3. nix hash file ~/Downloads/ca_fns_russia_2024_01.crt
+      4. nix-store --add-fixed sha256 ~/Downloads/ca_fns_russia_2024_01.crt
+    '';
+  };
+
+  # Native messaging proxy для nmcades.
+  #
+  # Без этого nmcades запрашивает у browser-extension'а "is_approved_site",
+  # extension возвращает false (in-memory map пустой), nmcades потом проверяет
+  # свой msz-конфиг trusted_sites — на NixOS он битый — и в результате висит
+  # бесконечно (PluginException 0x0000006C "available directory not found").
+  #
+  # Прокси перехватывает approved_site, ведёт свой список доверенных origin'ов
+  # в ~/.config/cryptopro-trusted-sites и спрашивает пользователя через zenity
+  # для неизвестных. Точка/Диадок попадают в список после первого диалога.
+  #
+  # Код заимствован из github.com/sakost/nixos (commit 2026-02-21) — рабочий
+  # референс CryptoPro CSP на NixOS.
+  nmcadesProxy = pkgs.writers.writePython3 "nmcades-proxy" {
+    flakeIgnore = [ "E401" "E501" ];
+  } ''
+    import struct, json, subprocess, os, sys, select, fcntl
+    from urllib.parse import urlparse
+
+    NMCADES = "${cryptoproCsp}/opt/cprocsp/bin/amd64/nmcades"
+    LD_PATH = "${cryptoproCsp}/opt/cprocsp/lib/amd64"
+    ZENITY = "${pkgs.zenity}/bin/zenity"
+    TRUSTED_FILE = os.path.expanduser(
+        "~/.config/cryptopro-trusted-sites"
+    )
+
+
+    def load_trusted():
+        try:
+            with open(TRUSTED_FILE) as f:
+                return set(
+                    line.strip() for line in f if line.strip()
+                )
+        except FileNotFoundError:
+            return set()
+
+
+    def save_site(site):
+        os.makedirs(os.path.dirname(TRUSTED_FILE), exist_ok=True)
+        with open(TRUSTED_FILE, "a") as f:
+            fcntl.flock(f, fcntl.LOCK_EX)
+            f.write(site + "\n")
+
+
+    def site_origin(url):
+        p = urlparse(url)
+        return f"{p.scheme}://{p.netloc}" if p.netloc else url
+
+
+    def is_trusted(url, trusted):
+        origin = site_origin(url)
+        for pattern in trusted:
+            if pattern == origin:
+                return True
+            if pattern.startswith("https://*."):
+                domain = pattern[len("https://*."):]
+                host = urlparse(url).hostname or ""
+                if host == domain or host.endswith("." + domain):
+                    return True
+            if pattern.startswith("http://*."):
+                domain = pattern[len("http://*."):]
+                host = urlparse(url).hostname or ""
+                if host == domain or host.endswith("." + domain):
+                    return True
+        return False
+
+
+    def ask_user(url):
+        origin = site_origin(url)
+        try:
+            rc = subprocess.call([
+                ZENITY, "--question",
+                "--title=CryptoPro CAdES",
+                "--text="
+                f"Сайт <b>{origin}</b> запрашивает доступ "
+                "к криптографическому плагину CryptoPro.\n\n"
+                "Разрешить?",
+                "--ok-label=Разрешить",
+                "--cancel-label=Запретить",
+                "--width=400",
+            ])
+            return rc == 0
+        except Exception:
+            return False
+
+
+    env = {**os.environ, "LD_LIBRARY_PATH": LD_PATH}
+    try:
+        proc = subprocess.Popen(
+            [NMCADES] + sys.argv[1:],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            env=env,
+        )
+    except OSError:
+        sys.exit(1)
+
+    stdin_fd = sys.stdin.buffer
+    stdout_fd = sys.stdout.buffer
+
+
+    def read_msg(stream):
+        raw = stream.read(4)
+        if not raw or len(raw) < 4:
+            return None
+        length = struct.unpack("<I", raw)[0]
+        data = stream.read(length)
+        if len(data) < length:
+            return None
+        return json.loads(data)
+
+
+    def write_msg(stream, msg):
+        data = json.dumps(msg, separators=(",", ":")).encode("utf-8")
+        stream.write(struct.pack("<I", len(data)))
+        stream.write(data)
+        stream.flush()
+
+
+    trusted_sites = load_trusted()
+
+    try:
+        while proc.poll() is None:
+            readable, _, _ = select.select(
+                [stdin_fd, proc.stdout], [], [], 1.0
+            )
+            for fd in readable:
+                if fd is stdin_fd:
+                    msg = read_msg(stdin_fd)
+                    if msg is None:
+                        proc.terminate()
+                        sys.exit(0)
+                    write_msg(proc.stdin, msg)
+                elif fd is proc.stdout:
+                    msg = read_msg(proc.stdout)
+                    if msg is None:
+                        sys.exit(0)
+                    dtype = msg.get("data", {}).get("type", "")
+                    if dtype == "approved_site":
+                        value = msg.get("data", {}).get("value", "")
+                        if value.startswith("is_approved_site:"):
+                            url = value[len("is_approved_site:"):].lstrip()
+                            approved = is_trusted(url, trusted_sites)
+                            if not approved:
+                                approved = ask_user(url)
+                                if approved:
+                                    origin = site_origin(url)
+                                    trusted_sites.add(origin)
+                                    save_site(origin)
+                            resp = {
+                                **msg,
+                                "data": {
+                                    **msg["data"],
+                                    "params": [{"type": "boolean", "value": approved}],
+                                },
+                            }
+                            write_msg(proc.stdin, resp)
+                            continue
+                    write_msg(stdout_fd, msg)
+    except (BrokenPipeError, OSError):
+        pass
+    finally:
+        proc.terminate()
+  '';
+
+  # Общий JSON-объект NM-host для nmcades, чтобы дублировать в 3 каталога.
+  nmcadesNmHost = builtins.toJSON {
+    name = "ru.cryptopro.nmcades";
+    description = "CryptoPro CAdES Browser plug-in";
+    # Browser запускает прокси-обёртку, которая внутри стартует nmcades из
+    # ${cryptoproCsp} (после слияния cades в монолит).
+    path = "${nmcadesProxy}";
+    type = "stdio";
+    allowed_origins = [
+      "chrome-extension://iifchhfnnmpdbibifmljnfjhpififfog/"
+      "chrome-extension://epebfcehmdedogndhlcacafjaacknbcm/"
+    ];
+  };
+  diagNmHost = builtins.toJSON {
+    name = "kd.nc";
+    description = "Diag.Plugin Native Messaging Host";
+    path = "${diagPlugin}/opt/diag.plugin/Diag.Plugin.nc";
+    type = "stdio";
+    allowed_origins = [
+      "chrome-extension://inlmamahcfioibldbpbaechbpeeaelin/"
+      "chrome-extension://pioommjcfaefbcpbdokfoadjhlmahjjm/"
+      "chrome-extension://adipnhhjfmoehhkepljbifddkobenooa/"
+      "chrome-extension://fmdmnjcgegbabdefddkijefeadkhchcn/"
+      "chrome-extension://momffihklfhkoakghidmkdocdkbfmoac/"
+      "chrome-extension://kbeplgmhdbgnbpfkcmndbhjfadkhinhn/"
+      "chrome-extension://nhbmmgegnhdhkcclaandbaipceebnckc/"
+    ];
+  };
+  konturNmHost = builtins.toJSON {
+    name = "kontur.plugin";
+    description = "Kontur.Plugin";
+    path = "${konturPlugin}/opt/kontur.plugin/kontur.plugin.host";
+    type = "stdio";
+    allowed_origins = [
+      "chrome-extension://hnhppcgejeffnbnioloohhmndpmclaga/"
+      "chrome-extension://nejicfcnfnecdilmajlppdcgbjilgeec/"
+      "chrome-extension://akpjpngckapnibajopggmfhnchfpnkkf/"
+      "chrome-extension://momffihklfhkoakghidmkdocdkbfmoac/"
+      "chrome-extension://kbeplgmhdbgnbpfkcmndbhjfadkhinhn/"
+      "chrome-extension://nhbmmgegnhdhkcclaandbaipceebnckc/"
+    ];
+  };
 in {
   # Aktiv Co. — Rutoken family. MODE=0666 нужен потому что ранее требовался
   # mapped-root в distrobox; на нативном хосте `0664` + `uaccess` тоже бы
@@ -275,6 +482,17 @@ in {
     # cpconfig пишет lock-файлы в /var/opt/cprocsp/tmp; без него -hardware
     # reader -add бесконечно ретраит O_CREAT|O_EXCL.
     "d  /var/opt/cprocsp/tmp               1777 root   root  -"
+
+    # Контур.Плагин postinst создаёт эти каталоги. Без них kontur.plugin.host
+    # падает на старте с `PluginException 0x6C: available directory not found`,
+    # browser-extension получает Aborted при connectNative() и в UI рисует
+    # "плагин не виден". plugin_settings.json внутри хост создаёт сам
+    # при первом успешном запуске — нужно только существование самой папки.
+    "d  /etc/opt/skbkontur                 0755 root   root  -"
+    "d  /etc/opt/skbkontur/plugin          0755 root   root  -"
+    "d  /var/tmp/skbkontur                 0777 root   root  -"
+    "d  /var/tmp/skbkontur/plugin          0777 root   root  -"
+    "d  /var/tmp/skbkontur/plugin/metrics  0777 root   root  -"
   ];
 
   system.activationScripts.cprocspSetup = lib.stringAfter [ "etc" ] ''
@@ -534,11 +752,11 @@ in {
     "$CPCONFIG" -hardware rndm -add bio_gui -name 'rndm GUI GTK' -level 4 >/dev/null 2>&1 || true
 
     # 4a. cprocsp-pki-cades-64 postinst — apppath libs + policy OIDs + лицензии.
-    #     Без этих apppath-регистраций nmcades крашится с
-    #     'PLUGIN[0x0000006C] available directory not found' на старте.
-    "$CPCONFIG" -ini '\config\apppath' -add string libcades.so        ${cprocspCades}/opt/cprocsp/lib/amd64/libcades.so.2 >/dev/null 2>&1 || true
-    "$CPCONFIG" -ini '\config\apppath' -add string libpkivalidator.so ${cprocspCades}/opt/cprocsp/lib/amd64/libpkivalidator.so.2 >/dev/null 2>&1 || true
-    "$CPCONFIG" -ini '\config\apppath' -add string librevprov.so      ${cprocspCades}/opt/cprocsp/lib/amd64/librevprov.so.2 >/dev/null 2>&1 || true
+    #     После слияния cades в cryptoproCsp libs доступны через $LIBDIR.
+    "$CPCONFIG" -ini '\config\apppath' -add string libcades.so        "$LIBDIR/libcades.so"        >/dev/null 2>&1 || true
+    "$CPCONFIG" -ini '\config\apppath' -add string libcppcades.so     "$LIBDIR/libcppcades.so"     >/dev/null 2>&1 || true
+    "$CPCONFIG" -ini '\config\apppath' -add string libpkivalidator.so "$LIBDIR/libpkivalidator.so" >/dev/null 2>&1 || true
+    "$CPCONFIG" -ini '\config\apppath' -add string librevprov.so      "$LIBDIR/librevprov.so"      >/dev/null 2>&1 || true
 
     "$CPCONFIG" -ini '\config\policy\OIDs' -add string '{A4CC781E-04E9-425C-AAFD-1D74DA8DFAF6}' 'libpkivalidator.so CertDllVerifyOCSPSigningCertificateChainPolicy' >/dev/null 2>&1 || true
     "$CPCONFIG" -ini '\config\policy\OIDs' -add string '{AF74EE92-A059-492F-9B4B-EAD239B22A1B}' 'libpkivalidator.so CertDllVerifyTimestampSigningCertificateChainPolicy' >/dev/null 2>&1 || true
@@ -547,70 +765,97 @@ in {
     "$CPCONFIG" -ini '\cryptography\OID\EncodingType 1\CertDllVerifyRevocation\DEFAULT' -add string 'DLL' 'librevprov.so' >/dev/null 2>&1 || true
 
     # OCSP/TSP лицензии — встроены в постинст cprocsp-pki-cades-64.
-    ${cprocspCades}/opt/cprocsp/bin/amd64/ocsputil license -s 0A202-U0030-00ECW-RRLMF-UU2WK >/dev/null 2>&1 || true
-    ${cprocspCades}/opt/cprocsp/bin/amd64/tsputil license -s TA200-G0030-00ECW-RRLNE-BTDVV  >/dev/null 2>&1 || true
+    "$SBINDIR/../bin/amd64/ocsputil" license -s 0A202-U0030-00ECW-RRLMF-UU2WK >/dev/null 2>&1 || true
+    "$SBINDIR/../bin/amd64/tsputil"  license -s TA200-G0030-00ECW-RRLNE-BTDVV  >/dev/null 2>&1 || true
 
     # 4b. cprocsp-pki-plugin-64 postinst — apppath libnpcades.so.
-    "$CPCONFIG" -ini '\config\apppath' -add string libnpcades.so ${cprocspCades}/opt/cprocsp/lib/amd64/libnpcades.so.2 >/dev/null 2>&1 || true
+    "$CPCONFIG" -ini '\config\apppath' -add string libnpcades.so "$LIBDIR/libnpcades.so" >/dev/null 2>&1 || true
+
+    # 5. Per-user CA install. Cades plugin запускается из user-context,
+    #    поэтому проверка цепочки идёт через user-stores (uRoot/uCA), НЕ
+    #    machine-stores (mRoot/mCA). Без правильно установленных CA в
+    #    user-stores Точка/Диадок отвечают "Status: Не действителен".
+    #    Идемпотентно: certmgr -inst при дубликате печатает warning и
+    #    возвращает нон-зеро, мы это глотаем через '|| true'.
+    mkdir -p /var/opt/cprocsp/users/decard
+    # chown -R: предыдущие попытки могли оставить root-owned файлы (когда
+    # certmgr запускали через sudo), runuser certmgr не сможет их перезаписать.
+    chown -R decard:users /var/opt/cprocsp/users/decard
+    chmod 0700 /var/opt/cprocsp/users/decard
+    # Если в users/global.ini нет файла — копируем skeleton (cp -rn выше
+    # его поднимет, но на пустом /var активация может опередить cp на
+    # самом первом rebuild — подстраховка):
+    if [ ! -f /var/opt/cprocsp/users/global.ini ] && \
+       [ -f ${cryptoproCsp}/var/opt/cprocsp/users/global.ini ]; then
+      cp ${cryptoproCsp}/var/opt/cprocsp/users/global.ini /var/opt/cprocsp/users/global.ini
+      chmod 0644 /var/opt/cprocsp/users/global.ini
+    fi
+    # Mass-install всех CA из .deb tmpcerts. Это и есть постинст
+    # lsb-cprocsp-ca-certs. Ставится в обе пары stores: u (под decard,
+    # для browser-плагинов) и m (под root, для CLI/system контекстов).
+    # Без полного набора Cades не строит цепочку для свежих ФНС-сертов
+    # (например, ИП 2024 года выдан УЦ ФНС России 2024_01).
+    CERTMGR=${cryptoproCsp}/opt/cprocsp/bin/amd64/certmgr
+    TMP_ROOT=${cryptoproCsp}/var/opt/cprocsp/tmpcerts/root
+    TMP_CA=${cryptoproCsp}/var/opt/cprocsp/tmpcerts/ca
+
+    # mRoot/mCA — system-wide (как обычный postinst через root)
+    for c in "$TMP_ROOT"/*.cer; do
+      [ -f "$c" ] || continue
+      echo 'o' | "$CERTMGR" -inst -file "$c" -store mRoot >/dev/null 2>&1 || true
+    done
+    for c in "$TMP_CA"/*.cer; do
+      [ -f "$c" ] || continue
+      "$CERTMGR" -inst -file "$c" -store mCA >/dev/null 2>&1 || true
+    done
+
+    # uRoot/uCA — per-user (для browser-плагинов под decard)
+    ${pkgs.util-linux}/bin/runuser -u decard -- ${pkgs.bash}/bin/bash -c "
+      for c in $TMP_ROOT/*.cer; do
+        [ -f \"\$c\" ] || continue
+        echo 'o' | $CERTMGR -inst -file \"\$c\" -store uRoot >/dev/null 2>&1 || true
+      done
+      for c in $TMP_CA/*.cer; do
+        [ -f \"\$c\" ] || continue
+        $CERTMGR -inst -file \"\$c\" -store uCA >/dev/null 2>&1 || true
+      done
+      # Дополнительно — отдельно скачанные актуальные корневой и промежуточные
+      # (.deb tmpcerts отстаёт от выпускаемых ФНС/Минцифрой обновлений).
+      # ФНС-2024_01 критичен для сертификатов ИП 2025 года выпуска.
+      echo 'o' | $CERTMGR -inst -file ${mintsifryCA2022} -store uRoot >/dev/null 2>&1 || true
+      $CERTMGR -inst -file ${fnsCA2023} -store uCA >/dev/null 2>&1 || true
+      $CERTMGR -inst -file ${fnsCA2024} -store uCA >/dev/null 2>&1 || true
+    " || true
+    # И в machine stores тоже — не помешает.
+    "$CERTMGR" -inst -file ${fnsCA2024} -store mCA >/dev/null 2>&1 || true
   '';
 
   environment.systemPackages = [
     cryptoproCsp
-    cprocspCades
     konturPlugin
     diagPlugin
     pkgs.pcsc-tools
     pkgs.opensc
   ];
 
-  # Native Messaging hosts — Yandex.Browser обнаруживает их по
-  # /etc/chromium/native-messaging-hosts/<name>.json (верифицировано
-  # `strings` бинарника yandex_browser). Path указывает прямо в nix-store —
-  # без bridge-скриптов, без distrobox.
+  # Native Messaging hosts — кладём в три места:
+  #   /etc/chromium/native-messaging-hosts/             — Chromium и
+  #     Chromium-derivative'ы которые не оверрайдят manifest path.
+  #   /etc/opt/chrome/native-messaging-hosts/           — Google Chrome.
+  #   /etc/opt/yandex/browser/native-messaging-hosts/   — Yandex.Browser.
+  # Yandex может работать через chromium-fallback, но первичный путь —
+  # /etc/opt/yandex/browser/. Дубликат гарантирует обнаружение.
   environment.etc = {
-    "chromium/native-messaging-hosts/ru.cryptopro.nmcades.json".text =
-      builtins.toJSON {
-        name = "ru.cryptopro.nmcades";
-        description = "CryptoPro CAdES Browser plug-in";
-        path = "${cprocspCades}/opt/cprocsp/bin/amd64/nmcades";
-        type = "stdio";
-        allowed_origins = [
-          "chrome-extension://iifchhfnnmpdbibifmljnfjhpififfog/"
-          "chrome-extension://epebfcehmdedogndhlcacafjaacknbcm/"
-        ];
-      };
+    "chromium/native-messaging-hosts/ru.cryptopro.nmcades.json".text       = nmcadesNmHost;
+    "opt/chrome/native-messaging-hosts/ru.cryptopro.nmcades.json".text     = nmcadesNmHost;
+    "opt/yandex/browser/native-messaging-hosts/ru.cryptopro.nmcades.json".text = nmcadesNmHost;
 
-    "chromium/native-messaging-hosts/kd.nc.json".text =
-      builtins.toJSON {
-        name = "kd.nc";
-        description = "Diag.Plugin Native Messaging Host";
-        path = "${diagPlugin}/opt/diag.plugin/Diag.Plugin.nc";
-        type = "stdio";
-        allowed_origins = [
-          "chrome-extension://inlmamahcfioibldbpbaechbpeeaelin/"
-          "chrome-extension://pioommjcfaefbcpbdokfoadjhlmahjjm/"
-          "chrome-extension://adipnhhjfmoehhkepljbifddkobenooa/"
-          "chrome-extension://fmdmnjcgegbabdefddkijefeadkhchcn/"
-          "chrome-extension://momffihklfhkoakghidmkdocdkbfmoac/"
-          "chrome-extension://kbeplgmhdbgnbpfkcmndbhjfadkhinhn/"
-          "chrome-extension://nhbmmgegnhdhkcclaandbaipceebnckc/"
-        ];
-      };
+    "chromium/native-messaging-hosts/kd.nc.json".text       = diagNmHost;
+    "opt/chrome/native-messaging-hosts/kd.nc.json".text     = diagNmHost;
+    "opt/yandex/browser/native-messaging-hosts/kd.nc.json".text = diagNmHost;
 
-    "chromium/native-messaging-hosts/kontur.plugin.json".text =
-      builtins.toJSON {
-        name = "kontur.plugin";
-        description = "Kontur.Plugin";
-        path = "${konturPlugin}/opt/kontur.plugin/kontur.plugin.host";
-        type = "stdio";
-        allowed_origins = [
-          "chrome-extension://hnhppcgejeffnbnioloohhmndpmclaga/"
-          "chrome-extension://nejicfcnfnecdilmajlppdcgbjilgeec/"
-          "chrome-extension://akpjpngckapnibajopggmfhnchfpnkkf/"
-          "chrome-extension://momffihklfhkoakghidmkdocdkbfmoac/"
-          "chrome-extension://kbeplgmhdbgnbpfkcmndbhjfadkhinhn/"
-          "chrome-extension://nhbmmgegnhdhkcclaandbaipceebnckc/"
-        ];
-      };
+    "chromium/native-messaging-hosts/kontur.plugin.json".text       = konturNmHost;
+    "opt/chrome/native-messaging-hosts/kontur.plugin.json".text     = konturNmHost;
+    "opt/yandex/browser/native-messaging-hosts/kontur.plugin.json".text = konturNmHost;
   };
 }
