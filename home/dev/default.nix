@@ -14,8 +14,6 @@
     inputs.flox.packages.${pkgs.stdenv.hostPlatform.system}.flox
     gh
     uv
-    distrobox
-    podman
   ];
 
   programs = {
