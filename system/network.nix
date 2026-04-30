@@ -125,7 +125,21 @@
             tag = "direct";
             rules = [
               {
-                domain_suffix = [ "reddit.com" ];
+                domain_suffix = [
+                  "reddit.com"
+                  # Подпись документов российским КЭП — CRL/OCSP/CA-cert URLs
+                  # должны идти напрямую, иначе VLESS-прокси режет соединение
+                  # к pki.tax.gov.ru/cdp.tax.gov.ru/reestr-pki.ru, и Cades
+                  # plugin таймаутит на проверке цепочки → "Не действителен".
+                  "tax.gov.ru"        # ФНС: pki, cdp, ocsp, crt
+                  "nalog.ru"          # ФНС: альтернативный домен УЦ
+                  "reestr-pki.ru"     # Минцифры: корневой CA + reestr
+                  "cryptopro.ru"      # КриптоПро: cades demo, updates
+                  "kontur.ru"         # Контур: extern, диадок
+                  "kontur-extern.ru"
+                  "kontur-ca.ru"
+                  "tochka.com"        # Точка Банк
+                ];
               }
             ];
           }
