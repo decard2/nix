@@ -15,7 +15,7 @@
     nixos-generators.url = "github:nix-community/nixos-generators";
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
 
-    zed.url = "github:zed-industries/zed/v0.233.10";
+    zed.url = "github:zed-industries/zed/v1.0.0";
 
     yandex-browser = {
       url = "github:miuirussia/yandex-browser.nix";
