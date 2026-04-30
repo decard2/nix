@@ -5,6 +5,7 @@
       background = "#201f22";
       background-opacity = 0.90;
       background-opacity-cells = true;
+      keybind = [ "super+space=ignore" ];
     };
   };
 }
