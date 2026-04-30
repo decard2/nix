@@ -70,7 +70,7 @@
         "uwsm app -- hyprcursor"
         "uwsm app -- ~/nix/home/scripts/autoHyprsunset.fish"
         # Приложения
-        "[workspace 2 silent] uwsm app -- google-chrome-stable"
+        "[workspace 2 silent] uwsm app -- yandex-browser-stable"
         # btop — воркспейс 9, левый монитор (стационарный)
         "[workspace 9 silent] uwsm app -- ghostty -e btop"
         # SUPER терминалы
