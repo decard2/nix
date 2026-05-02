@@ -139,6 +139,11 @@
                   "kontur-extern.ru"
                   "kontur-ca.ru"
                   "tochka.com"        # Точка Банк
+                  # VK Play GameCenter — лаунчер тянет апдейты и контент
+                  # через российский CDN, который у некоторых VLESS-нод
+                  # выходит за пределы РФ → срабатывает гео-блок.
+                  "vkplay.ru"         # static.gc, dl, сайт
+                  "my.games"          # legacy-CDN VK Play GameCenter
                 ];
               }
             ];
