@@ -61,6 +61,23 @@
           auto_redirect = true;
           strict_route = true;
           exclude_interface = [ "docker0" ];
+          # VK Play Cloud (стрим Mail.Ru) после TCP-handshake с Manager
+          # открывает UDP audio/input на отдельных серверах. Manager
+          # сообщает им ожидаемый client (IP, port). Через TUN+sing-box
+          # UDP уходит из своего внутреннего сокета с другим source-port
+          # (даже при EIM-NAT, который у стека mixed/system включён по
+          # умолчанию — стабильность маппинга есть, но не равенство
+          # исходному порту vkplaycloud). Сервер шлёт ответы на порт,
+          # которого у нас нет → "Network error timeout".
+          # `route_exclude_address` (sing-box ≥1.10) исключает эти
+          # подсети из default-route в TUN, трафик идёт штатным kernel-
+          # сокетом vkplaycloud без подмены порта — как при выключенном
+          # VPN.
+          route_exclude_address = [
+            "95.163.0.0/16"   # Mail.Ru / VK Play (cgw.clgrtc.ru, *.cg.net)
+            "176.112.0.0/16"  # VK Play game/audio/input servers, playkey
+            "185.30.172.0/22" # Mail.Ru CDN/auth
+          ];
         }
       ];
 
@@ -110,7 +127,15 @@
             outbound = "direct";
           }
           {
-            process_name = [ "transmission-daemon" ];
+            process_name = [
+              "transmission-daemon"
+              # VK Play GameCenter — лаунчер и потоковый клиент. Стрим из
+              # VK Play Cloud чувствителен к RTT, а часть бэкендов лаунчера
+              # отдают 403 при выходе из не-РФ AS. Гонять оба через VLESS
+              # бессмысленно.
+              "GameCenterShowcase"
+              "vkplaycloud"
+            ];
             outbound = "direct";
           }
           {
@@ -144,6 +169,14 @@
                   # выходит за пределы РФ → срабатывает гео-блок.
                   "vkplay.ru"         # static.gc, dl, сайт
                   "my.games"          # legacy-CDN VK Play GameCenter
+                  # VK Play Cloud — стрим игр. Гео-DNS отдаёт нужный
+                  # streaming-gateway по IP резолвера; через remote DNS
+                  # (1.1.1.1 → VLESS-нода в Хельсинки) гейт получается
+                  # европейский и сразу рвёт сессию.
+                  "clgrtc.ru"         # cgw — потоковый gateway
+                  "mrgcdn.ru"         # Mail.Ru group CDN (mgc)
+                  "playkey.net"       # бэкенд Cloud (configurator, logstash)
+                  "cg.net"            # региональные кластеры NN.cg.net
                 ];
               }
             ];
