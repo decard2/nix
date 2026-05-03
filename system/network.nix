@@ -11,6 +11,10 @@
     firewall.trustedInterfaces = [
       "virbr0"
       "wgd+"
+      # docker0: telepresence в --docker режиме держит daemon в контейнере;
+      # intercept-handler из контейнера подключается к dev-серверу на host
+      # через docker bridge — без trust порт на host'е заблокирован NixOS firewall.
+      "docker0"
     ];
     localCommands = ''
       ip rule add ipproto icmp lookup main preference 100 2>/dev/null || true
@@ -73,10 +77,18 @@
           # подсети из default-route в TUN, трафик идёт штатным kernel-
           # сокетом vkplaycloud без подмены порта — как при выключенном
           # VPN.
+          #
+          # Также исключаем cluster CIDR'ы Cozystack: telepresence-rootd
+          # создаёт свой TUN с маршрутами на cluster-подсети, но
+          # strict_route sing-box перебивает их и тянет cluster-трафик
+          # в VPN — обратные пакеты intercept-туннеля теряются.
           route_exclude_address = [
             "95.163.0.0/16"   # Mail.Ru / VK Play (cgw.clgrtc.ru, *.cg.net)
             "176.112.0.0/16"  # VK Play game/audio/input servers, playkey
             "185.30.172.0/22" # Mail.Ru CDN/auth
+            "10.96.0.0/16"    # cozy services CIDR (telepresence)
+            "10.244.0.0/16"   # cozy pods CIDR — control plane (telepresence)
+            "10.245.0.0/16"   # cozy pods CIDR — worker nodes (telepresence)
           ];
         }
       ];
