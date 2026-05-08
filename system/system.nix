@@ -95,6 +95,7 @@
   security = {
     rtkit.enable = true;
     polkit.enable = true;
+    pam.services.greetd.enableGnomeKeyring = true;
     sudo = {
       enable = true;
       extraConfig = ''
@@ -130,6 +131,8 @@
       HandleLidSwitchExternalPower = "suspend";
       HandleLidSwitch = "suspend";
     };
+
+    gnome.gnome-keyring.enable = true;
 
     # udev.extraRules = ''
     #   # Remove NVIDIA USB xHCI Host Controller devices, if present

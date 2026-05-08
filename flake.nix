@@ -21,6 +21,11 @@
       url = "github:miuirussia/yandex-browser.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    max-messenger = {
+      url = "github:spiage/max-messenger";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

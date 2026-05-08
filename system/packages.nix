@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
   environment.systemPackages = with pkgs; [
     libxkbcommon
@@ -10,5 +10,6 @@
     mesa
     sox
     ghostty
+    inputs.max-messenger.packages.${pkgs.system}.default
   ];
 }
