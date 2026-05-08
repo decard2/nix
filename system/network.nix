@@ -163,6 +163,14 @@
             rules = [
               {
                 domain_suffix = [
+                  # Собственный прод Rolder — мимо VLESS, иначе DoT-резолв
+                  # 1.1.1.1 и TLS-handshake к 92.255.58.{19,211,93} (YC BM
+                  # в Москве) лагают через proxy: DNS даёт «Resolving timed
+                  # out after 5000 ms» (rolder catalog add), а HTTPS — TLS
+                  # handshake stall (~12% запросов).
+                  "rolder.net"
+                  "rolder.cloud"
+                  "rolder.app"
                   "reddit.com"
                   # Подпись документов российским КЭП — CRL/OCSP/CA-cert URLs
                   # должны идти напрямую, иначе VLESS-прокси режет соединение
