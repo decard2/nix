@@ -17,7 +17,7 @@
       "https://nix-community.cachix.org"
       "https://hyprland.cachix.org"
       "https://cache.flox.dev"
-      "https://s3.rolder.cloud/bucket-49ae790d-e70f-40d1-8103-d9693674dfb8"
+      "https://s3.rolder.cloud/bucket-354361c2-67b3-4edd-806c-436346b2761d"
     ];
 
     trusted-public-keys = [
@@ -101,13 +101,17 @@
       extraConfig = ''
         Defaults timestamp_timeout=1440
       '';
-      extraRules = [{
-        users = [ "decard" ];
-        commands = [{
-          command = "/nix/store/*/bin/wg-quick *";
-          options = [ "NOPASSWD" ];
-        }];
-      }];
+      extraRules = [
+        {
+          users = [ "decard" ];
+          commands = [
+            {
+              command = "/nix/store/*/bin/wg-quick *";
+              options = [ "NOPASSWD" ];
+            }
+          ];
+        }
+      ];
     };
   };
 

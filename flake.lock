@@ -148,11 +148,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1778185145,
-        "narHash": "sha256-2n50u7o42CSZGc3WKwwmVFZD8of5uoiT5/sevjIQGJw=",
+        "lastModified": 1778270816,
+        "narHash": "sha256-+R2KHf1osgt/1MLtpe9svUbLO9lwe4sBPFgK55GWANc=",
         "owner": "flox",
         "repo": "flox",
-        "rev": "3995babed61fd588f4a088320d032aa90c73cd19",
+        "rev": "6836e1d5b0705e1e86cc53825b1f99c3d56df651",
         "type": "github"
       },
       "original": {
@@ -190,11 +190,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1778144356,
-        "narHash": "sha256-dGM+QCstz/DyLB68+JK5GWyMx4QSqmOJEVgZmy63d/g=",
+        "lastModified": 1778535464,
+        "narHash": "sha256-kkUQYSv70wynJ/DfnGals6r98I6bK3CVNVTN1zbAd7Y=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "e4419d3123b780d5f4c0bceeace450424387638c",
+        "rev": "b659c7ffd40fc9e3bb60d420c79c67e769b9f4ab",
         "type": "github"
       },
       "original": {
@@ -211,11 +211,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777572548,
-        "narHash": "sha256-BFgsb6JIcxiAj4kvoGweuhmomaYUwpeBEsQH6fICgs4=",
+        "lastModified": 1778236861,
+        "narHash": "sha256-icsaR8UlNx9OHgrngBkjG/3cTRzpyu0WG68tARO1Lv4=",
         "owner": "spiage",
         "repo": "max-messenger",
-        "rev": "105211164c6b9686481f820227643ed85de0ea19",
+        "rev": "7b44dce095e48d607d57766ae7bd3fb1ade4fc75",
         "type": "github"
       },
       "original": {
