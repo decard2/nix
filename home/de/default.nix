@@ -6,6 +6,7 @@
     ./hyprland.nix
     ./yofi.nix
     ./hyprpolkitagent.nix
+    ./mako.nix
     ./fileAssociations.nix
   ];
 
