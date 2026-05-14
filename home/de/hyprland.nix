@@ -23,6 +23,19 @@
         "3,monitor:DP-2"
         "4,monitor:DP-2"
         "5,monitor:DP-2"
+
+        # Скретчпады: фиксированный отступ со всех сторон
+        # (вместо относительного special_scale_factor — одинаково на обоих мониторах)
+        "special:s-grave,gapsout:10"
+        "special:s-1,gapsout:10"
+        "special:s-2,gapsout:10"
+        "special:s-3,gapsout:10"
+        "special:c-grave,gapsout:10"
+        "special:c-1,gapsout:10"
+        "special:c-2,gapsout:10"
+        "special:c-3,gapsout:10"
+        "special:decardos,gapsout:10"
+        "special:telegram,gapsout:10"
       ];
 
       # Внешний вид
@@ -57,7 +70,6 @@
         preserve_split = true;
         split_width_multiplier = 1.0;
         force_split = 2;
-        special_scale_factor = 0.975;
       };
 
       input = {
@@ -89,7 +101,7 @@
         "[workspace special:c-3 silent] uwsm-app -- ghostty"
         # Приложения скретчпад
         # claude падает, если стартует до готовности keyring/D-Bus — даём фору
-        ''[workspace special:decardos silent] uwsm-app -- sh -c 'sleep 15; exec ghostty --working-directory=/home/decard/dos -e claude' ''
+        "[workspace special:decardos silent] uwsm-app -- sh -c 'sleep 15; exec ghostty --working-directory=/home/decard/dos -e claude' "
         "[workspace special:telegram silent] uwsm-app -- Telegram"
         # Zed последним — без silent, забирает фокус на workspace 1
         "[workspace 1] uwsm-app -- zed"
