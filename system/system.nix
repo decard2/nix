@@ -95,7 +95,7 @@
   security = {
     rtkit.enable = true;
     polkit.enable = true;
-    pam.services.greetd.enableGnomeKeyring = true;
+    pam.services.login.enableGnomeKeyring = true;
     sudo = {
       enable = true;
       extraConfig = ''
@@ -210,12 +210,6 @@
       enable = true;
       withUWSM = true;
     };
-    regreet = {
-      enable = true;
-      settings.GTK = {
-        application_prefer_dark_theme = true;
-      };
-    };
     dconf.enable = true;
   };
 
@@ -243,30 +237,4 @@
     };
   };
 
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.dbus}/bin/dbus-run-session ${pkgs.hyprland}/bin/start-hyprland -- --config ${pkgs.writeText "hyprland-greeter.conf" ''
-          # Автоопределение всех мониторов
-          monitor=,preferred,auto,1
-
-          # Запускаем ReGreet
-          exec-once = ${pkgs.regreet}/bin/regreet; hyprctl dispatch exit
-
-          # Дополнительные настройки Hyprland для ReGreet
-          misc {
-            disable_hyprland_logo = true
-            disable_splash_rendering = true
-            disable_hyprland_guiutils_check = true
-          }
-
-          # Отключаем порталы для ускорения запуска
-          env = GTK_USE_PORTAL,0
-          env = GDK_DEBUG,no-portals
-        ''}";
-        user = "greeter";
-      };
-    };
-  };
 }

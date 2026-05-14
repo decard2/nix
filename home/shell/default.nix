@@ -15,8 +15,11 @@
       set fish_greeting # Отключаем приветствие
       fish_config theme choose "ayu Dark"
 
-      uwsm check may-start
-      if test $status = 0; and not test $DISPLAY; and not test $WAYLAND_DISPLAY
+      if status is-login
+          and test (tty) = /dev/tty1
+          and not set -q WAYLAND_DISPLAY
+          and not set -q DISPLAY
+          and uwsm check may-start
           exec uwsm start hyprland-uwsm.desktop
       end
     '';
