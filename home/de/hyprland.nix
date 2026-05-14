@@ -88,7 +88,8 @@
         "[workspace special:c-2 silent] uwsm-app -- ghostty"
         "[workspace special:c-3 silent] uwsm-app -- ghostty"
         # Приложения скретчпад
-        "[workspace special:decardos silent] uwsm-app -- ghostty --working-directory=/home/decard/dos -e claude"
+        # claude падает, если стартует до готовности keyring/D-Bus — даём фору
+        ''[workspace special:decardos silent] uwsm-app -- sh -c 'sleep 15; exec ghostty --working-directory=/home/decard/dos -e claude' ''
         "[workspace special:telegram silent] uwsm-app -- Telegram"
         # Zed последним — без silent, забирает фокус на workspace 1
         "[workspace 1] uwsm-app -- zed"
