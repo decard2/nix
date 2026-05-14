@@ -1,5 +1,6 @@
 {
   wayland.windowManager.hyprland = {
+    configType = "hyprlang";
     systemd.enable = true;
     systemd.variables = [ "--all" ];
     enable = true;
@@ -67,27 +68,27 @@
 
       # Автозапуск
       exec-once = [
-        "uwsm app -- hyprcursor"
-        "uwsm app -- ~/nix/home/scripts/autoHyprsunset.fish"
+        "uwsm-app hyprcursor"
+        "uwsm-app ~/nix/home/scripts/autoHyprsunset.fish"
         # Приложения
-        "[workspace 2 silent] uwsm app -- yandex-browser-stable"
+        "[workspace 2 silent] uwsm-app yandex-browser-stable"
         # btop — воркспейс 9, левый монитор (стационарный)
-        "[workspace 9 silent] uwsm app -- ghostty -e btop"
+        "[workspace 9 silent] uwsm-app ghostty -e btop"
         # SUPER терминалы
-        "[workspace special:s-grave silent] uwsm app -- ghostty"
-        "[workspace special:s-1 silent] uwsm app -- ghostty"
-        "[workspace special:s-2 silent] uwsm app -- ghostty"
-        "[workspace special:s-3 silent] uwsm app -- ghostty"
+        "[workspace special:s-grave silent] uwsm-app ghostty"
+        "[workspace special:s-1 silent] uwsm-app ghostty"
+        "[workspace special:s-2 silent] uwsm-app ghostty"
+        "[workspace special:s-3 silent] uwsm-app ghostty"
         # CTRL терминалы
-        "[workspace special:c-grave silent] uwsm app -- ghostty"
-        "[workspace special:c-1 silent] uwsm app -- ghostty"
-        "[workspace special:c-2 silent] uwsm app -- ghostty"
-        "[workspace special:c-3 silent] uwsm app -- ghostty"
+        "[workspace special:c-grave silent] uwsm-app ghostty"
+        "[workspace special:c-1 silent] uwsm-app ghostty"
+        "[workspace special:c-2 silent] uwsm-app ghostty"
+        "[workspace special:c-3 silent] uwsm-app ghostty"
         # Приложения скретчпад
-        # "[workspace special:decardos silent] uwsm app -- ghostty --working-directory=/home/decard/dos -e claude"
-        "[workspace special:telegram silent] uwsm app -- Telegram"
+        # "[workspace special:decardos silent] uwsm-app ghostty --working-directory=/home/decard/dos -e claude"
+        "[workspace special:telegram silent] uwsm-app Telegram"
         # Zed последним — без silent, забирает фокус на workspace 1
-        "[workspace 1] uwsm app -- zed"
+        "[workspace 1] uwsm-app zed"
       ];
 
       # Мышь
@@ -98,8 +99,8 @@
 
       bind = [
         # Утилиты
-        "SUPER, D, exec, uwsm app -- yofi"
-        "SUPER, Return, exec, uwsm app -- ghostty"
+        "SUPER, D, exec, uwsm-app hyprlauncher"
+        "SUPER, Return, exec, uwsm-app ghostty"
         "SUPER, Q, killactive,"
         "SUPER, V, togglefloating,"
         "SUPER, P, pseudo,"
@@ -108,8 +109,8 @@
         "SUPER_SHIFT, F, fullscreen, 1"
 
         # Виртуалка
-        "SUPER_SHIFT, W, exec, uwsm app -- virsh -c qemu:///system start win11; uwsm app -- virt-viewer --connect qemu:///system win11"
-        "SUPER_SHIFT, Q, exec, uwsm app -- virsh -c qemu:///system shutdown win11"
+        "SUPER_SHIFT, W, exec, uwsm-app virsh -c qemu:///system start win11; uwsm-app virt-viewer --connect qemu:///system win11"
+        "SUPER_SHIFT, Q, exec, uwsm-app virsh -c qemu:///system shutdown win11"
 
         # === Слой 1 — ALT — Воркспейсы (правый монитор) ===
         "ALT, grave, workspace, 9"
@@ -162,23 +163,23 @@
         "SUPER_ALT, down, resizeactive, 0 20"
 
         # Скриншот
-        ", Print, exec, uwsm app -- hyprshot -m region --clipboard-only"
+        ", Print, exec, uwsm-app hyprshot -m region --clipboard-only"
 
         # Медиа
-        ", XF86AudioPlay, exec, uwsm app -- playerctl play-pause"
-        ", XF86AudioNext, exec, uwsm app -- playerctl next"
-        ", XF86AudioPrev, exec, uwsm app -- playerctl previous"
-        ", XF86AudioStop, exec, uwsm app -- playerctl stop"
+        ", XF86AudioPlay, exec, uwsm-app playerctl play-pause"
+        ", XF86AudioNext, exec, uwsm-app playerctl next"
+        ", XF86AudioPrev, exec, uwsm-app playerctl previous"
+        ", XF86AudioStop, exec, uwsm-app playerctl stop"
 
         # Звук
-        ", XF86AudioRaiseVolume, exec, uwsm app -- wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
-        ", XF86AudioLowerVolume, exec, uwsm app -- wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-        ", XF86AudioMute, exec, uwsm app -- wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-        ", XF86AudioMicMute, exec, uwsm app -- wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+        ", XF86AudioRaiseVolume, exec, uwsm-app wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+        ", XF86AudioLowerVolume, exec, uwsm-app wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+        ", XF86AudioMute, exec, uwsm-app wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+        ", XF86AudioMicMute, exec, uwsm-app wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
 
         # Яркость
-        ", XF86MonBrightnessUp, exec, uwsm app -- brightnessctl set 1%+"
-        ", XF86MonBrightnessDown, exec, uwsm app -- brightnessctl set 1%-"
+        ", XF86MonBrightnessUp, exec, uwsm-app brightnessctl set 1%+"
+        ", XF86MonBrightnessDown, exec, uwsm-app brightnessctl set 1%-"
       ];
     };
   };

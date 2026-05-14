@@ -4,7 +4,7 @@
     ./fonts.nix
     ./theme.nix
     ./hyprland.nix
-    ./yofi.nix
+    ./hyprlauncher.nix
     ./hyprpolkitagent.nix
     ./mako.nix
     ./fileAssociations.nix
@@ -29,7 +29,6 @@
     wlsunset
     hyprsunset
     hyprpolkitagent
-    yofi
     papirus-icon-theme
     gtk3
     xdg-utils

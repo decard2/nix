@@ -10,6 +10,6 @@
     mesa
     sox
     ghostty
-    inputs.max-messenger.packages.${pkgs.system}.default
+    inputs.max-messenger.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 }
