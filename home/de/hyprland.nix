@@ -66,7 +66,6 @@
       };
 
       dwindle = {
-        pseudotile = true;
         preserve_split = true;
         split_width_multiplier = 1.0;
         force_split = 2;
@@ -120,7 +119,6 @@
         "SUPER, Q, killactive,"
         "SUPER, V, togglefloating,"
         "SUPER, P, pseudo,"
-        "SUPER, S, togglesplit,"
         "SUPER, F, fullscreen, 0"
         "SUPER_SHIFT, F, fullscreen, 1"
 
