@@ -35,6 +35,7 @@
         "special:c-2,gapsout:10"
         "special:c-3,gapsout:10"
         "special:decardos,gapsout:10"
+        "special:dosobsidian,gapsout:10"
         "special:telegram,gapsout:10"
       ];
 
@@ -101,6 +102,7 @@
         # Приложения скретчпад
         # claude падает, если стартует до готовности keyring/D-Bus — даём фору
         "[workspace special:decardos silent] uwsm-app -- sh -c 'sleep 15; exec ghostty --working-directory=/home/decard/dos -e claude' "
+        "[workspace special:dosobsidian silent] uwsm-app -- obsidian"
         "[workspace special:telegram silent] uwsm-app -- Telegram"
         # Zed последним — без silent, забирает фокус на workspace 1
         "[workspace 1] uwsm-app -- zed"
@@ -154,6 +156,7 @@
 
         # === Слой 4 — SUPER+CAPS — Claude Code DecardOS ===
         "ALT, F1, togglespecialworkspace, decardos"
+        "ALT, F2, togglespecialworkspace, dosobsidian"
 
         # Telegram
         "SUPER, A, togglespecialworkspace, telegram"
