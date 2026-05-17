@@ -15,6 +15,8 @@
       set fish_greeting # Отключаем приветствие
       fish_config theme choose "ayu Dark"
 
+      devenv hook fish | source
+
       if status is-login
           and test (tty) = /dev/tty1
           and not set -q WAYLAND_DISPLAY
