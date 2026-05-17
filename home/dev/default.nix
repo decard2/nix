@@ -13,7 +13,7 @@
   home.packages = with pkgs; [
     inputs.flox.packages.${pkgs.stdenv.hostPlatform.system}.flox
     gh
-    uv
+    devenv
   ];
 
   programs = {

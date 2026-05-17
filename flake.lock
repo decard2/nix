@@ -148,11 +148,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1778699218,
-        "narHash": "sha256-eskdUPA7PEANU+SPMPVxZEjrVf/biMn+rgA5YDKQRgI=",
+        "lastModified": 1778799523,
+        "narHash": "sha256-OmWwSfqKb/5zA2TQwroCaDTHPCaOrc2dnLbpv+OKWZI=",
         "owner": "flox",
         "repo": "flox",
-        "rev": "6e424aabb4be04d66bcae4f691b62de499e7bebe",
+        "rev": "ecf29c4db1d4955c0c7d183fd4796dcdbf528c7f",
         "type": "github"
       },
       "original": {
@@ -190,11 +190,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1778706808,
-        "narHash": "sha256-ihH1UnI6nYSOkjAg4QsOadg6sp2LxXnWO9urPbo3/hw=",
+        "lastModified": 1778858474,
+        "narHash": "sha256-uOh5fCoxOgdFa50WymuhCwJKuEVv/Eo4VYjK0SgzlPs=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "9760b31dab3016fc6e422ca241cfeac605fb89c9",
+        "rev": "ca77575d39c908de876c10f93704532689df546f",
         "type": "github"
       },
       "original": {
